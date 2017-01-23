@@ -73,23 +73,11 @@ namespace Scene
 
 	void CrScene::AddPointLight(CrPointLight * a_PointLight)
 	{
-		if (a_PointLight == nullptr)
-		{	
-			CrAssert(0, "Point light was nullptr!");
-			return;
-		}
-
 		m_PointLights.push_back(a_PointLight);
 	}
 
 	void CrScene::SetDirectionalLight(CrDirectionalLight * a_DirectionalLight)
 	{
-		if (a_DirectionalLight == nullptr)
-		{
-			CrAssert(0, "Directional light was nullptr!");
-			return;
-		}
-
 		m_DirectionalLight = a_DirectionalLight;
 	}
 }
