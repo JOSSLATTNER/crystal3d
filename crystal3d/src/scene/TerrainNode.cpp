@@ -35,7 +35,7 @@ namespace Scene
 	void CrTerrainNode::SetTerrain(Resources::CrTerrain * a_Terrain)
 	{
 		m_Terrain = a_Terrain;
-		m_Material = new Resources::CrMaterial;
+		m_Material = new Resources::CrMaterial();
 
 		for (uint32_t i = 0; i < m_Terrain->diffuseTextures.size(); i++)
 		{

@@ -19,6 +19,7 @@ namespace Window
 
 			void Show() override;
 			void SetTitle(const std::string& a_Ttitle) override;
+			glm::vec2 GetSize() const override;
 
 			virtual void OnClose(std::function<void()> a_Callback) override;
 			virtual void OnFocus(std::function<void()> a_Callback) override;

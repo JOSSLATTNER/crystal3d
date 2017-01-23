@@ -21,9 +21,6 @@
     <ClInclude Include="src\core\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\GameTimer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -639,9 +636,6 @@
     <ClInclude Include="src\scene\SceneNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene\SceneRenderingInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\scene\ScriptComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -666,12 +660,12 @@
     <ClInclude Include="src\crystal3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\GameTimer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\GameTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\opengl\GLContext.cpp">

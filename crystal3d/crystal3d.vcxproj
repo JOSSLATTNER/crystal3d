@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
-    <ClInclude Include="src\core\GameTimer.h" />
+    <ClInclude Include="src\core\GameTimer.hpp" />
     <ClInclude Include="src\core\Platform.h" />
     <ClInclude Include="src\core\Singleton.hpp" />
     <ClInclude Include="src\crystal3d.h" />
@@ -338,7 +338,6 @@
     <ClInclude Include="src\scene\PointLight.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneNode.h" />
-    <ClInclude Include="src\scene\SceneRenderingInfo.h" />
     <ClInclude Include="src\scene\ScriptComponent.h" />
     <ClInclude Include="src\scene\TerrainNode.h" />
     <ClInclude Include="src\window\interface\IWindow.h" />
@@ -347,7 +346,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Engine.cpp" />
-    <ClCompile Include="src\core\GameTimer.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />
     <ClCompile Include="src\graphics\opengl\GLCubemap.cpp" />
     <ClCompile Include="src\graphics\opengl\GLDebugRenderer.cpp" />

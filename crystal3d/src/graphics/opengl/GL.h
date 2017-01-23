@@ -4,6 +4,10 @@
 
 #define INVALID_GL_HANDLE(h) h<=0
 
+//@DEBUG
+#define CR_GRAPHICS_DEBUG
+//#define CR_GRAPHICS_DEBUG_LEVEL_HIGH
+
 namespace Graphics
 {
 	namespace OpenGL
@@ -69,21 +73,25 @@ namespace Graphics
 			}
 		}
 
-		static void CALLBACK ErrorCallback(GLenum source,
+		static void __stdcall ErrorCallback
+		(
+			GLenum source,
 			GLenum type,
 			GLuint id,
 			GLenum severity,
 			GLsizei length,
-			const GLchar *msg,
-			const void *data)
+			const GLchar* message,
+			void* userParam)
 		{
+
+#ifdef CR_GRAPHICS_DEBUG_LEVEL_HIGH
 			std::cout << std::endl << "**********OpenGL Debug Output**************" << std::endl;
 			std::cout << "source: " << GetStringForSource(source).c_str() << std::endl;
 			std::cout << "type: " << GetStringForType(type).c_str() << std::endl;
 			std::cout << "severity: " << GetStringForSeverity(severity).c_str() << std::endl;
-			std::cout << "debug call: " << msg << std::endl;
+			std::cout << "debug call: " << message << std::endl;
 			std::cout << "*******************************************" << std::endl;
-
+#endif
 			CrAssert(severity != GL_DEBUG_SEVERITY_HIGH, "GL_DEBUG_SEVERITY_HIGH");
 		}
 

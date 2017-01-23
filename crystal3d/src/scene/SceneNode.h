@@ -17,7 +17,7 @@ namespace Scene
 			CrSceneNode(Scene::CrTransform& a_Transform);
 
 			virtual ~CrSceneNode();
-			virtual void Update(float& a_Delta_Time);
+			virtual void Update(float& a_DeltaTime);
 
 			void AddComponent(Components::IComponent* a_Component);
 			void RemoveComponent(Components::IComponent* a_Component);

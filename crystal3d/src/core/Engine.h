@@ -1,7 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Platform.h"
-#include "GameTimer.h"
+#include "GameTimer.hpp"
 
 #include "window\interface\IWindow.h"
 #include "graphics\interface\IRenderer.h"

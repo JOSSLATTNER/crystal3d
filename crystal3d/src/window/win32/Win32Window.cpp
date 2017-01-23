@@ -99,6 +99,13 @@ namespace Window
 			return DefWindowProc(a_Hwnd, a_Message, a_WParam, a_LPARAM);
 		}
 
+		glm::vec2 Win32Window::GetSize() const
+		{
+			RECT rect{};
+			GetWindowRect(m_Handle, &rect);
+			return { rect.right - rect.left , rect.bottom - rect.top };
+		}
+
 		void Win32Window::OnClose(std::function<void()> a_Callback)
 		{
 			m_WindowCallbacks.insert({ WM_CLOSE, a_Callback });

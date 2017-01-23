@@ -1,12 +1,12 @@
 #pragma once
+#include "window\interface\IWindow.h"
 #include "core\Core.h"
 
 namespace Graphics 
 {
-	class CrRendererContext
+	struct CrRendererContext
 	{
-	public:
-		void* windowHandle;
+		Window::IWindow* targetWindow;
 		uint32_t viewportWidth;
 		uint32_t viewportHeight;
 	};

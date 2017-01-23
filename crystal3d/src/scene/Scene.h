@@ -2,7 +2,6 @@
 
 //Scene Graph
 #include "SceneNode.h"
-#include "SceneRenderingInfo.h"
 #include "CameraNode.h"
 #include "PointLight.h"
 #include "DirectionalLight.h"
@@ -16,7 +15,7 @@ namespace Scene
 	{
 	public:
 		CrScene(const std::string& a_Script);
-		virtual ~CrScene();
+		~CrScene();
 	
 		void Initialize();
 		void Update(float& delta);
@@ -25,7 +24,6 @@ namespace Scene
 		void SetDirectionalLight(CrDirectionalLight* a_DirectionalLight);
 
 	public:
-		CrSceneRenderInfo m_SceneRenderingInfo;
 		CrCameraNode* m_CameraNode;
 
 	private:

@@ -95,8 +95,6 @@ function Update(delta)
 	cameraRotationSpeed = delta * 100
 	treshold = 0.2
 
-	print(Input:GetAxis(0,1))
-
 	if Input:IsKeyPressed(87) or Input:GetAxis(0,1) > treshold then --W
 		this.Camera.Transform.Translation.X = this.Camera.Transform.Translation.X - this.Camera:GetLook().X * cameraMovementSpeed
 		this.Camera.Transform.Translation.Y = this.Camera.Transform.Translation.Y - this.Camera:GetLook().Y * cameraMovementSpeed

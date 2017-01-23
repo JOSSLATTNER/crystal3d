@@ -35,19 +35,17 @@ namespace Graphics
 				glDeleteBuffers(1, &m_Handle);
 			}
 
-			//glBufferSubData
 			template <typename MT>
-			void Subdata(MT* a_Data, uint32_t a_Offset)
+			void Subdata(MT* a_Data, uint32_t a_Offset = 0)
 			{
 				auto data_Size = sizeof(MT);
 				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 				glBufferSubData(GL_UNIFORM_BUFFER, a_Offset, data_Size, a_Data);
 			}
 
-			//TODO: Performance Issue?!
 			void Map(std::function<void(T*)> a_Callback, GLbitfield a_Options = GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT)
 			{
-				GLState::BindBuffer(GL_UNIFORM_BUFFER, m_Handle);
+				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 
 				GLvoid* pMapData = glMapBuffer(GL_UNIFORM_BUFFER, a_Options);
 				T* pData = static_cast<T*>(pMapData);
@@ -56,14 +54,14 @@ namespace Graphics
 
 				if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
 				{
-					CrAssert(0, "Unable to flush data to gpu.");
+					CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
 				}
 			}
 
 			template <typename MT>
 			void MapRange(std::function<void(MT*)> a_Callback, uint32_t a_Offset, GLbitfield a_Options = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT)
 			{
-				GLState::BindBuffer(GL_UNIFORM_BUFFER, m_Handle);
+				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 
 				GLvoid* pMapData = glMapBufferRange(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Options);
 				MT* pData = static_cast<MT*>(pMapData);
@@ -72,7 +70,7 @@ namespace Graphics
 
 				if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
 				{
-					CrAssert(0, "Unable to flush data to gpu.");
+					CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
 				}
 			}
 	
@@ -81,20 +79,23 @@ namespace Graphics
 				GLint blockIndex = glGetUniformBlockIndex(a_ShaderProgram, m_BlockName.c_str());
 				if (blockIndex==-1)
 				{
-					CrLog("Block %s not found!", m_BlockName.c_str()); 
+					CrLog("Block %s not found! Uniform may have been optimized out by glsl compiler.", m_BlockName.c_str()); 
 					return;
 				}
 
 				glUniformBlockBinding(a_ShaderProgram, blockIndex, m_BindingPoint);
 			}
 
-		public:
-			GLuint m_Handle;
+			GLuint GetHandle() const
+			{
+				return m_Handle;
+			}
 
 		private:
 			std::string m_BlockName;
 			GLenum m_Usage;
 			GLuint m_BindingPoint;
+			GLuint m_Handle;
 			
 		};
 	}

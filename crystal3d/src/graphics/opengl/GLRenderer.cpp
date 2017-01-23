@@ -16,6 +16,7 @@ namespace Graphics
 			m_UniformUtilityBuffer = nullptr;
 			m_GeometryBuffer = nullptr;
 			m_DeferredRenderer = nullptr;
+			m_rGameTimer = nullptr;
 		}
 
 		GLRenderer::~GLRenderer()
@@ -35,7 +36,9 @@ namespace Graphics
 		bool GLRenderer::Initialize(CrRendererContext& a_Context)
 		{
 			m_CurrentContext = new GLContext();
-			if (!m_CurrentContext->CreateContext(a_Context.windowHandle))
+			m_Window = a_Context.targetWindow;
+
+			if (!m_CurrentContext->CreateContext(m_Window->GetHandle()))
 			{
 				CrAssert(0, "Could not create OpenGL Context!");
 				return false;
@@ -58,8 +61,8 @@ namespace Graphics
 			glClearColor(0., 0., 0., 1.);
 			glViewport(0, 0, a_Context.viewportWidth, a_Context.viewportHeight);
 
-#ifdef GL_DEBUG
-			glEnable(GL_DEBUG_OUTPUT);
+#ifdef CR_GRAPHICS_DEBUG
+			glEnable(GL_DEBUG_OUTPUT);	
 
 			glDebugMessageCallback(ErrorCallback, NULL);
 
@@ -86,11 +89,12 @@ namespace Graphics
 			m_DeferredRenderer = new GLDeferredRenderer();
 			m_DeferredRenderer->Initialize(deferredContext);
 
+			m_rGameTimer = SEngine->GetGameTimer();
 			return true;
 		}
 
 
-		void GLRenderer::Render(Scene::CrSceneRenderInfo& a_Info)
+		void GLRenderer::Render(Scene::CrScene* a_Scene)
 		{
 			/*
 			Deferred Pipeline:
@@ -99,17 +103,15 @@ namespace Graphics
 			3) Additional Passes: Shadows, Reflections, PostFX
 			*/
 
-			if ((*a_Info.m_Camera) == nullptr)
-			{
-				return;
-			}
+			MVP mvp{};
+			mvp.modelMatrix = glm::mat4(0);
+			mvp.projectionMatrix = a_Scene->m_CameraNode->m_ProjectionMatrix;
+			mvp.viewMatrix = a_Scene->m_CameraNode->m_ViewMatrix;
+			m_UniformMVPBuffer->Subdata(&mvp,0);
 
-			m_UniformMVPBuffer->Subdata<glm::mat4>(&(*a_Info.m_Camera)->m_ViewMatrix, MVP_BUFFER_OFFSET_VIEW);
-			m_UniformMVPBuffer->Subdata<glm::mat4>(&(*a_Info.m_Camera)->m_ProjectionMatrix, MVP_BUFFER_OFFSET_PROJECTION);
-
-			auto pTimer = SEngine->GetGameTimer();
-			float time = pTimer->GetTotal();
-			m_UniformUtilityBuffer->Subdata<float>(&time,0);
+			ShaderUtil util{};
+			util.globalTime = m_rGameTimer->GetElapsed<float_t>();
+			m_UniformUtilityBuffer->Subdata(&util,0);
 
 			m_GeometryBuffer->Bind();
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

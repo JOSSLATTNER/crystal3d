@@ -104,9 +104,9 @@ namespace Graphics
 			m_RenderPasses.push_back(a_RenderPass);
 		}
 
-		void GLDeferredRenderer::Render(Scene::CrSceneRenderInfo& a_Info)
+		void GLDeferredRenderer::Render(Scene::CrScene* a_Scene)
 		{
-			this->UpdateLightBuffer(a_Info);
+			this->UpdateLightBuffer(a_Scene);
 
 			for (uint32_t i = 0; i < m_RenderPasses.size() - 1; i++)
 			{
@@ -117,15 +117,14 @@ namespace Graphics
 				m_RenderPassFramebuffer->Unbind();
 			}
 
-			//Final pass: draw into backbuffer
 			m_RenderPasses.back()->Render();
 		}
 
-		void GLDeferredRenderer::UpdateLightBuffer(Scene::CrSceneRenderInfo& a_Info) const
+		void GLDeferredRenderer::UpdateLightBuffer(Scene::CrScene* a_Scene) const
 		{
 
 			GLDeferredLightInfo lightInfo;
-			lightInfo.hasDirectionalLight = uint32_t(*a_Info.m_DirectionalLight != nullptr);
+			lightInfo.hasDirectionalLight = uint32_t(a_Scene->);
 			lightInfo.numPointLights = float(a_Info.m_PointLights->size());
 			lightInfo.cameraPosition = (*a_Info.m_Camera)->m_Transform.Translation;
 

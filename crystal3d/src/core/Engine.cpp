@@ -57,7 +57,7 @@ namespace Core
 		m_Renderer = new Graphics::OpenGL::GLRenderer();
 
 		Graphics::CrRendererContext rendererContext{};
-		rendererContext.windowHandle = this->m_MainWindow->GetHandle();
+		rendererContext.targetWindow = m_MainWindow;
 		rendererContext.viewportHeight = windowContext.height;
 		rendererContext.viewportWidth = windowContext.width;
 
@@ -77,8 +77,7 @@ namespace Core
 
 		while (m_IsRunning)
 		{
-			double delta = m_GameTimer->GetDelta();
-			float deltaf = static_cast<float>(delta);
+			float_t delta = m_GameTimer->GetDelta<float_t>();
 
 			if (delta >= 1.0 / MAX_FPS)
 			{
@@ -90,7 +89,7 @@ namespace Core
 				}
 
 				m_InputManager->Poll();
-				this->Update(deltaf);
+				this->Update(delta);
 				this->Render();
 
 				m_GameTimer->Reset();
@@ -150,7 +149,7 @@ namespace Core
 	{
 		if (m_ActiveScene != nullptr)
 		{
-			m_Renderer->Render(m_ActiveScene->m_SceneRenderingInfo);
+			m_Renderer->Render(m_ActiveScene);
 		}
 	}
 

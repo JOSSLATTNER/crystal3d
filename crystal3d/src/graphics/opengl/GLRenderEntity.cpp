@@ -21,22 +21,11 @@ namespace Graphics
 
 		void GLRenderEntity::SetTransform(Scene::CrTransform * a_Transform)
 		{
-			if (a_Transform == nullptr)
-			{
-				CrAssert(0, "Transform was nullptr!");
-				return;
-			}
 			m_Transform = a_Transform;
 		}
 
 		void GLRenderEntity::SetProgram(GLShaderProgram* a_Program)
 		{
-			if (a_Program == nullptr)
-			{
-				CrAssert(0, "Program was nullptr!");
-				return;
-			}
-
 			if (m_ShaderProgram != nullptr)
 				delete m_ShaderProgram;
 
@@ -48,12 +37,6 @@ namespace Graphics
 
 		void GLRenderEntity::SetVertexArray(GLVertexArray* a_VertexArray)
 		{
-			if (a_VertexArray == nullptr)
-			{
-				CrAssert(0, "VAO was nullptr!");
-				return;
-			}
-
 			if (m_VertexArray != nullptr)
 				delete m_VertexArray;
 
@@ -93,7 +76,7 @@ namespace Graphics
 			if (m_Transform != nullptr)
 			{
 				glm::mat4 worldMatrix = m_Transform->WorldMatrix();
-				GLRenderer::m_UniformMVPBuffer->Subdata(&worldMatrix, MVP_BUFFER_OFFSET_MODEL);
+				GLRenderer::m_UniformMVPBuffer->Subdata(&worldMatrix, 0);
 			}
 		}
 

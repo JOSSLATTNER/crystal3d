@@ -42,7 +42,7 @@ namespace Graphics
 			~GLDeferredRenderer();
 
 			void Initialize(GLDeferredRendererContext& a_Context);
-			void Render(Scene::CrSceneRenderInfo& a_Info);
+			void Render(Scene::CrScene* a_Scene);
 			void CreateRenderPass(GLRenderPass* a_RenderPass);
 
 		public:
@@ -53,7 +53,7 @@ namespace Graphics
 			GLFramebuffer* m_RenderPassFramebuffer;
 
 		private:
-			void UpdateLightBuffer(Scene::CrSceneRenderInfo& a_Info) const;
+			void UpdateLightBuffer(Scene::CrScene* a_Scene) const;
 
 		private:
 			GLFramebuffer* m_GeometryBuffer;

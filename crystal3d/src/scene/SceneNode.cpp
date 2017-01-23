@@ -43,6 +43,7 @@ namespace Scene
 		{
 			m_Components.erase(a_Component);
 			a_Component->OnDetach();
+			delete a_Component;
 		}
 	}
 

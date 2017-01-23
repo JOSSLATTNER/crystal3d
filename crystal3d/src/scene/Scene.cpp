@@ -9,10 +9,6 @@ namespace Scene
 		m_CameraNode = nullptr;
 		auto pResources = SEngine->GetResourceManager();
 		m_Behaviour = pResources->FetchResource<Scripting::CrScript>(a_Script);
-
-		m_SceneRenderingInfo.m_PointLights = &m_PointLights;
-		m_SceneRenderingInfo.m_DirectionalLight = &m_DirectionalLight;
-		m_SceneRenderingInfo.m_Camera = &m_CameraNode;
 	}
 
 	CrScene::~CrScene()
@@ -54,13 +50,8 @@ namespace Scene
 	
 	void CrScene::AddNode(CrSceneNode* a_Node)
 	{
-		if (a_Node == nullptr)
-		{
-			CrAssert(0, "Node was nullptr!");
-			return;
-		}
-
 		//TODO: PLACE INTO TREE
+		//!!!!!!!!!!!!!!!!!!!!!
 		auto renderable = dynamic_cast<Graphics::IRenderable*>(a_Node);
 		if (renderable != nullptr)
 		{
