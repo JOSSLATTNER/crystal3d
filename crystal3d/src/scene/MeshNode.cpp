@@ -56,6 +56,11 @@ namespace Scene
 		m_BoundingBoxTransformed.m_Min = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Min, 1.0f)*modelMatrix);
 	}
 
+	ENodeType CrMeshNode::GetType()
+	{
+		return ENodeType::MESH_NODE;
+	}
+
 	Math::AABB* CrMeshNode::GetBoundingBox()
 	{
 		return &m_BoundingBoxTransformed;

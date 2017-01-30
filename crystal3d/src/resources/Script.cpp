@@ -24,10 +24,7 @@ namespace Scripting
 	{
 
 		m_State.new_usertype<CrScene>("Scene",
-			"AddNode", &CrScene::AddNode,
-			"AddPointLight", &CrScene::AddPointLight,
-			"SetDirectionalLight", &CrScene::SetDirectionalLight,
-			"Camera", &CrScene::m_CameraNode);
+			"AddNode", &CrScene::AddNode);
 
 		m_State["CurrentScene"] = SEngine->GetCurrentScene();
 
@@ -132,17 +129,17 @@ namespace Scripting
 		sol::table primitives = m_State.create_named_table("Primitives");
 		primitives.set_function("Make_Plane", &Primitives::Make_Plane);
 
-		m_State.new_usertype<CrDirectionalLight, glm::vec3>("DirectionalLight",
-			"Direction", &CrDirectionalLight::m_Direction,
-			"Ambient", &CrDirectionalLight::m_AmbientFactor,
-			"Diffuse", &CrDirectionalLight::m_DiffuseColor,
-			"Specular", &CrDirectionalLight::m_SpecularFactor);
+		//m_State.new_usertype<CrDirectionalLightNode, glm::vec3>("DirectionalLight",
+		//	"Direction", &CrDirectionalLightNode::m_Direction,
+		//	"Ambient", &CrDirectionalLightNode::m_AmbientFactor,
+		//	"Diffuse", &CrDirectionalLightNode::m_DiffuseColor,
+		//	"Specular", &CrDirectionalLightNode::m_SpecularFactor);
 
-		m_State.new_usertype<CrPointLight, glm::vec3>("PointLight",
-			"Position", &CrPointLight::m_Position,
-			"Radius", &CrPointLight::m_Radius,
-			"Diffuse", &CrPointLight::m_DiffuseColor,
-			"Specular", &CrPointLight::m_SpecularColor);
+		//m_State.new_usertype<CrPointLight, glm::vec3>("PointLight",
+		//	"Position", &CrPointLight::m_Position,
+		//	"Radius", &CrPointLight::m_Radius,
+		//	"Diffuse", &CrPointLight::m_DiffuseColor,
+		//	"Specular", &CrPointLight::m_SpecularColor);
 
 		m_State.new_usertype<CrFrustum>("Frustum",
 			"FOV", &CrFrustum::fov,

@@ -20,7 +20,8 @@ namespace Scene
 		Scene::CrTransform* GetTransform() override;
 
 		// Inherited via CrSceneNode
-		void Update(float& a_Delta_Time) override;
+		void Update(float& a_DeltaTime) override;
+		ENodeType GetType() override;
 
 		void SetMesh(Resources::CrMesh& a_Mesh);
 		void SetMaterial(Resources::CrMaterial& a_Material);

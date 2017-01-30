@@ -32,6 +32,11 @@ namespace Scene
 		return Graphics::ERenderMode::Triangle_Strip;
 	}
 
+	ENodeType CrTerrainNode::GetType()
+	{
+		return ENodeType::TERRAIN_NODE;
+	}
+
 	void CrTerrainNode::SetTerrain(Resources::CrTerrain * a_Terrain)
 	{
 		m_Terrain = a_Terrain;

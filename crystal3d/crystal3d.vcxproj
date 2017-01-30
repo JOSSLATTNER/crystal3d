@@ -323,7 +323,6 @@
     <ClInclude Include="src\packages\sol\SOL.HPP" />
     <ClInclude Include="src\packages\tinyobj\tiny_obj_loader.h" />
     <ClInclude Include="src\resources\Animation.h" />
-    <ClInclude Include="src\resources\IResource.h" />
     <ClInclude Include="src\resources\Material.h" />
     <ClInclude Include="src\resources\Mesh.h" />
     <ClInclude Include="src\resources\Model.h" />
@@ -332,12 +331,13 @@
     <ClInclude Include="src\resources\Skybox.h" />
     <ClInclude Include="src\resources\Terrain.h" />
     <ClInclude Include="src\scene\CameraNode.h" />
-    <ClInclude Include="src\scene\DirectionalLight.h" />
+    <ClInclude Include="src\scene\DirectionalLightNode.h" />
     <ClInclude Include="src\scene\interface\IComponent.h" />
     <ClInclude Include="src\scene\MeshNode.h" />
-    <ClInclude Include="src\scene\PointLight.h" />
+    <ClInclude Include="src\scene\PointLightNode.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneNode.h" />
+    <ClInclude Include="src\scene\SceneNodeType.h" />
     <ClInclude Include="src\scene\ScriptComponent.h" />
     <ClInclude Include="src\scene\TerrainNode.h" />
     <ClInclude Include="src\window\interface\IWindow.h" />
@@ -369,7 +369,9 @@
     <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\resources\Script.cpp" />
     <ClCompile Include="src\scene\CameraNode.cpp" />
+    <ClCompile Include="src\scene\DirectionalLightNode.cpp" />
     <ClCompile Include="src\scene\MeshNode.cpp" />
+    <ClCompile Include="src\scene\PointLightNode.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneNode.cpp" />
     <ClCompile Include="src\scene\ScriptComponent.cpp" />

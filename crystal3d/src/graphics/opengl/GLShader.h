@@ -3,7 +3,6 @@
 
 #include "GL.h"
 #include "graphics\ShaderType.h"
-#include "resources\IResource.h"
 
 #define SHADER_DEBUG_BUFFER 500
 
@@ -12,21 +11,11 @@ namespace Graphics
 	namespace OpenGL
 	{
 
-		struct GLShaderCreateInfo 
-			: Resources::ResourceCreateInfo
-		{
-			EShaderType type;
-		};
-
 		class GLShader 
-			: public Resources::IResource
 		{
 		public:
-			GLShader();
-
-			//Inherited via IResource
-			~GLShader() override;
-			void LoadFromFile(const std::string& a_File, Resources::ResourceCreateInfo* a_Info) override;
+			GLShader(const std::string& a_Filename, EShaderType a_Type);
+			~GLShader();
 
 			void Compile() const;
 			GLuint GetHandle() const;

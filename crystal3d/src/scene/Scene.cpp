@@ -5,8 +5,6 @@ namespace Scene
 {
 	CrScene::CrScene(const std::string& a_Script)
 	{
-		m_DirectionalLight = nullptr;
-		m_CameraNode = nullptr;
 		auto pResources = SEngine->GetResourceManager();
 		m_Behaviour = pResources->FetchResource<Scripting::CrScript>(a_Script);
 	}
@@ -15,9 +13,8 @@ namespace Scene
 	{
 		for (auto& node : m_Nodes)
 		{
-			delete node;
+			delete node.second;
 		}
-		delete m_CameraNode;
 	}
 
 	void CrScene::Initialize()
@@ -37,38 +34,26 @@ namespace Scene
 			m_Behaviour->Invoke<void, float>("Update", a_Delta);
 		}
 
-		if (m_CameraNode != nullptr)
-		{
-			m_CameraNode->Update(a_Delta);
-		}
-
 		for (auto& node : m_Nodes)
 		{
-			node->Update(a_Delta);
+			node.second->_Update(a_Delta);
 		}
 	}
 	
 	void CrScene::AddNode(CrSceneNode* a_Node)
 	{
-		//TODO: PLACE INTO TREE
-		//!!!!!!!!!!!!!!!!!!!!!
-		auto renderable = dynamic_cast<Graphics::IRenderable*>(a_Node);
-		if (renderable != nullptr)
-		{
-			auto pRenderer = SEngine->GetRenderer();
-			pRenderer->AddRenderable(renderable);
-		}
-
-		m_Nodes.push_back(a_Node);
+		m_Nodes[a_Node->GetType()] = a_Node;
 	}
 
-	void CrScene::AddPointLight(CrPointLight * a_PointLight)
+	CrSceneNode * CrScene::GetNode(ENodeType a_Type)
 	{
-		m_PointLights.push_back(a_PointLight);
+		auto range = m_Nodes.equal_range(a_Type);
+		return range.first->second;
 	}
 
-	void CrScene::SetDirectionalLight(CrDirectionalLight * a_DirectionalLight)
+	std::vector<CrSceneNode*> CrScene::GetNodes(ENodeType a_Type)
 	{
-		m_DirectionalLight = a_DirectionalLight;
+		auto range = m_Nodes.equal_range(a_Type);
+		return {range.first, range.second};
 	}
 }

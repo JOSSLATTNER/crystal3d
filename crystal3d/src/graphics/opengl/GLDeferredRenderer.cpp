@@ -12,7 +12,7 @@ namespace Graphics
 			m_ViewportWidth = 0;
 			m_ViewportHeight = 0;
 			m_PointLightUniformBuffer = new GLUniformBuffer<Scene::CrPointLight>("PointLightBlock", GL_DYNAMIC_DRAW);
-			m_DirectionalLightUniformBuffer = new GLUniformBuffer<Scene::CrDirectionalLight>("DirectionalLightBlock", GL_DYNAMIC_DRAW);
+			m_DirectionalLightUniformBuffer = new GLUniformBuffer<Scene::CrDirectionalLightNode>("DirectionalLightBlock", GL_DYNAMIC_DRAW);
 			m_LightInfoBuffer = new GLUniformBuffer<GLDeferredLightInfo>("LightInfoBlock", GL_DYNAMIC_DRAW);
 			m_RenderPassFramebuffer = nullptr;
 		}
@@ -122,19 +122,24 @@ namespace Graphics
 
 		void GLDeferredRenderer::UpdateLightBuffer(Scene::CrScene* a_Scene) const
 		{
+			auto camNode = (a_Scene->GetNode(Scene::CAMERA_NODE));
+			auto dirLightNode = (a_Scene->GetNode(Scene::DIRECTIONAL_LIGHT_NODE));
+			auto pointLights = (a_Scene->GetNodes(Scene::POINT_LIGHT_NODE));
 
 			GLDeferredLightInfo lightInfo;
-			lightInfo.hasDirectionalLight = uint32_t(a_Scene->);
-			lightInfo.numPointLights = float(a_Info.m_PointLights->size());
-			lightInfo.cameraPosition = (*a_Info.m_Camera)->m_Transform.Translation;
+			lightInfo.hasDirectionalLight = uint32_t(dirLightNode != nullptr);
+			lightInfo.numPointLights = uint32_t(pointLights.size());
+			lightInfo.cameraPosition = camNode->m_Transform.Translation;
 
 			m_LightInfoBuffer->Subdata(&lightInfo, 0);
 		
 			//TODO: UNIFORM ENTIRE ARRAY
 			if (lightInfo.numPointLights > 0)
 			{
-				m_PointLightUniformBuffer->Subdata(a_Info.m_PointLights->at(0), 0);
+				Scene::CrPointLightNode::LightData data = pointLights[0]->
+				m_PointLightUniformBuffer->Subdata(pointLights[0]->, 0);
 			}
+
 			if (lightInfo.hasDirectionalLight)
 			{
 				m_DirectionalLightUniformBuffer->Subdata(*a_Info.m_DirectionalLight, 0);

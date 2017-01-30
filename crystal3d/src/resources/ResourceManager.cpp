@@ -7,19 +7,19 @@ namespace Resources
 	}
 	CrResourceManager::~CrResourceManager()
 	{
-		for (auto& r : m_Data)
-		{
-			delete r.second;
-		}
-		m_Data.clear();
+		this->FreeAll();
 	}
-
 
 	std::string CrResourceManager::GetFullPath(const std::string& a_FileName) const
 	{
 		std::wstring wstr(ASSET_PATH);
 		const std::string assetPath(wstr.begin(), wstr.end());
 		return assetPath + a_FileName;
+	}
+
+	void CrResourceManager::FreeAll()
+	{
+		m_Data.clear();
 	}
 
 	CrResourceHandle CrResourceManager::GenerateHandle(const std::string& a_String) const

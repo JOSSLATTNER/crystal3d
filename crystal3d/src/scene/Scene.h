@@ -1,13 +1,13 @@
 #pragma once
 
-//Scene Graph
+#include "core\Core.h"
 #include "SceneNode.h"
-#include "CameraNode.h"
-#include "PointLight.h"
-#include "DirectionalLight.h"
-
 #include "graphics\interface\IRenderable.h"
 #include "resources\Script.h"
+
+#include "DirectionalLightNode.h"
+#include "PointLightNode.h"
+#include "CameraNode.h"
 
 namespace Scene
 {
@@ -20,16 +20,12 @@ namespace Scene
 		void Initialize();
 		void Update(float& delta);
 		void AddNode(CrSceneNode* a_Node);
-		void AddPointLight(CrPointLight* a_PointLight);
-		void SetDirectionalLight(CrDirectionalLight* a_DirectionalLight);
 
-	public:
-		CrCameraNode* m_CameraNode;
+		CrSceneNode* GetNode(ENodeType a_Type);
+		std::vector<CrSceneNode*> GetNodes(ENodeType a_Type);
 
 	private:
-		std::vector<CrSceneNode*> m_Nodes;
-		std::vector<CrPointLight*> m_PointLights;
-		CrDirectionalLight* m_DirectionalLight;
+		std::unordered_map<ENodeType, CrSceneNode*> m_Nodes;
 		Scripting::CrScript* m_Behaviour;
 
 	};

@@ -21,6 +21,9 @@ namespace Scene
 			Math::AABB* GetBoundingBox() override;
 			Scene::CrTransform* GetTransform() override;
 
+			//Inherited via CrSceneNode
+			ENodeType GetType() override;
+
 			void SetTerrain(Resources::CrTerrain* a_Terrain);
 
 	private:

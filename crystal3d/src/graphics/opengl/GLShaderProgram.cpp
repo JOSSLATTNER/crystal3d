@@ -106,11 +106,7 @@ namespace Graphics
 
 		void GLShaderProgram::AttachTexture(GLTexture2D* a_Texture, const std::string& a_Attribute)
 		{
-			if (!m_IsLinked)
-			{
-				CrAssert(0, "Shader program not linked!");
-				return;
-			}
+			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_Attribute);
 			m2DTextures[slot] = a_Texture;
@@ -118,11 +114,7 @@ namespace Graphics
 
 		void GLShaderProgram::AttachTexture(GLTexture2D * a_Texture, const GLuint a_AttributeLocation)
 		{
-			if (!m_IsLinked)
-			{
-				CrAssert(0, "Shader program not linked!");
-				return;
-			}
+			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_AttributeLocation);
 			m2DTextures[slot] = a_Texture;
@@ -130,11 +122,7 @@ namespace Graphics
 
 		void GLShaderProgram::AttachCubemap(GLCubemap* a_Texture, const std::string& a_Attribute)
 		{
-			if (!m_IsLinked)
-			{
-				CrAssert(0, "Shader program not linked!");
-				return;
-			}
+			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_Attribute);
 			m_CubemapTextures[slot] = a_Texture;

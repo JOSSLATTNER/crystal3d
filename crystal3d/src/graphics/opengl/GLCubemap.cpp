@@ -5,11 +5,40 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
 		GLCubemap::GLCubemap() 
 			: m_Handle(0)
 		{
 		}
+
+		GLCubemap::GLCubemap(const std::string & a_Filename)
+		{
+			auto pResources = SEngine->GetResourceManager();
+
+			std::string fullPath = pResources->GetFullPath(a_File);
+			m_Handle = SOIL_load_OGL_single_cubemap
+			(
+				fullPath.c_str(),
+				"WNESUD", /*WNESUD*/
+				SOIL_LOAD_AUTO,
+				SOIL_CREATE_NEW_ID,
+				SOIL_FLAG_MIPMAPS
+			);
+
+			if (INVALID_GL_HANDLE(m_Handle))
+			{
+				CrAssert(0, "SOIL loading error: '%s'", SOIL_last_result());
+				return;
+			}
+
+			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			this->SetParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			this->SetParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			this->SetParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+			CrLog("Cubemap was loaded: %s", a_File.c_str());
+		}
+
 		GLCubemap::~GLCubemap()
 		{
 			glDeleteTextures(1, &m_Handle);
@@ -50,34 +79,6 @@ namespace Graphics
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, a_Option, a_Value);
 		}
 
-		void GLCubemap::LoadFromFile(const std::string& a_File, Resources::ResourceCreateInfo* a_Info)
-		{
-			auto pResources = SEngine->GetResourceManager();
-
-			std::string fullPath = pResources->GetFullPath(a_File);
-			m_Handle = SOIL_load_OGL_single_cubemap
-			(
-				fullPath.c_str(),
-				"WNESUD", /*WNESUD*/
-				SOIL_LOAD_AUTO,
-				SOIL_CREATE_NEW_ID,
-				SOIL_FLAG_MIPMAPS
-			);
-
-			if (INVALID_GL_HANDLE(m_Handle))
-			{
-				CrAssert(0, "SOIL loading error: '%s'", SOIL_last_result());
-				return;
-			}
-
-			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			this->SetParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			this->SetParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			this->SetParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-			CrLog("Cubemap was loaded: %s", a_File.c_str());
-		}
 
 
 	}

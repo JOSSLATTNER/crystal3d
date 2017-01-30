@@ -47,7 +47,7 @@ namespace Graphics
 
 		public:
 			GLUniformBuffer<Scene::CrPointLight>* m_PointLightUniformBuffer;
-			GLUniformBuffer<Scene::CrDirectionalLight>* m_DirectionalLightUniformBuffer;
+			GLUniformBuffer<Scene::CrDirectionalLightNode>* m_DirectionalLightUniformBuffer;
 			GLUniformBuffer<GLDeferredLightInfo>* m_LightInfoBuffer;
 
 			GLFramebuffer* m_RenderPassFramebuffer;
