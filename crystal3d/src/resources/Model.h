@@ -7,16 +7,11 @@
 
 namespace Resources
 {
-	class CrModel 
-		: public Resources::IResource
+	class CrModel
 	{
-
 	public:
-		CrModel();
-
-		// Inherited via IResource
-		~CrModel() override;
-		void LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo * a_Info) override;
+		CrModel(const std::string & a_File);
+		~CrModel();
 
 	public:
 		std::vector<CrMesh*> m_MeshEntries;

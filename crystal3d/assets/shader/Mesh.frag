@@ -64,7 +64,7 @@ vec3 GetNormal()
 {
 	mat3 rotation = mat3(transformMatrix);
 	
-	//TODO: USE PRECOMPUTED NORMALS
+	//TODO: USE PRECOMPUTED TANGENTS
 
 	//#1: http://www.thetenthplanet.de/archives/1180
 	vec3 camPos = inverse(viewMatrix)[3].xyz;

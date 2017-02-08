@@ -7,16 +7,7 @@
 
 namespace Resources
 {
-
-	CrModel::CrModel()
-	{
-	}
-
-	CrModel::~CrModel()
-	{
-	}
-
-	void CrModel::LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo * a_Info)
+	CrModel::CrModel(const std::string & a_File)
 	{
 		auto pResources = SEngine->GetResourceManager();
 		std::string fullPath = pResources->GetFullPath(a_File);
@@ -56,11 +47,11 @@ namespace Resources
 					mesh->vertices.push_back(vx);
 					mesh->vertices.push_back(vy);
 					mesh->vertices.push_back(vz);
-							
+
 					mesh->normals.push_back(nx);
 					mesh->normals.push_back(ny);
 					mesh->normals.push_back(nz);
-							
+
 					mesh->texCoords.push_back(tx);
 					mesh->texCoords.push_back(ty);
 					mesh->indices.push_back(uint32_t(mesh->indices.size()));
@@ -101,4 +92,9 @@ namespace Resources
 			m_MaterialEntries.push_back(material);
 		}
 	}
+
+	CrModel::~CrModel()
+	{
+	}
+
 }

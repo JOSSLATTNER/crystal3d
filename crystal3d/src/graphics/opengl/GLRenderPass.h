@@ -16,7 +16,6 @@ namespace Graphics
 		const unsigned char BUFFER_FLAG_GEOMETRY = 0x20;
 		const unsigned char BUFFER_FLAG_UTILITY = 0x40;
 
-
 		struct GLRenderPassContext
 		{
 			uint32_t viewportHeight;

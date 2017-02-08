@@ -8,14 +8,10 @@
 namespace Scripting
 {
 	class CrScript 
-		: public Resources::IResource
 	{
 	public:
-		CrScript();
-
-		// Inherited via IResource
-		void LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo * a_Info) override;
-		~CrScript() override;
+		CrScript(const std::string & a_File);
+		~CrScript();
 
 	public:
 		void Run();

@@ -3,7 +3,7 @@
 
 #include "Script.h"
 #include "Model.h"
-#include "Sha"
+#include "Script.h"
 
 namespace Resources
 {
@@ -14,25 +14,21 @@ namespace Resources
 
 	class CrResourceManager
 	{
-
 	public:
 		CrResourceManager();
 		~CrResourceManager();
 
 	public:
-
-
-		void FreeAll();
-
+		CrResourcePtr<Scripting::CrScript> LoadScript(const std::string& a_Filename);
+		CrResourcePtr<CrModel> LoadModel(const std::string& a_Filename);
+	
+	private:
 		CrResourceHandle GenerateHandle(const std::string& a_String) const;
-		std::string GetFullPath(const std::string& a_FileName) const;
+		const std::string GetFullPath(const std::string& a_FileName) const;
 
 	private:
-		
-
-
-
-
+		std::unordered_map<CrResourceHandle, CrResourcePtr<CrModel>> m_Models;
+		std::unordered_map<CrResourceHandle, CrResourcePtr<Scripting::CrScript>> m_Scripts;
 
 	};
 }

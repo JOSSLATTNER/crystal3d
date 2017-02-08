@@ -5,16 +5,11 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLCubemap::GLCubemap() 
-			: m_Handle(0)
-		{
-		}
-
 		GLCubemap::GLCubemap(const std::string & a_Filename)
 		{
 			auto pResources = SEngine->GetResourceManager();
+			std::string fullPath = pResources->GetFullPath(a_Filename);
 
-			std::string fullPath = pResources->GetFullPath(a_File);
 			m_Handle = SOIL_load_OGL_single_cubemap
 			(
 				fullPath.c_str(),
@@ -24,11 +19,7 @@ namespace Graphics
 				SOIL_FLAG_MIPMAPS
 			);
 
-			if (INVALID_GL_HANDLE(m_Handle))
-			{
-				CrAssert(0, "SOIL loading error: '%s'", SOIL_last_result());
-				return;
-			}
+			CrAssert(m_Handle != 0, "SOIL loading error: '%s'", SOIL_last_result());
 
 			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -36,7 +27,7 @@ namespace Graphics
 			this->SetParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			this->SetParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-			CrLog("Cubemap was loaded: %s", a_File.c_str());
+			CrLog("Cubemap was loaded: %s", a_Filename.c_str());
 		}
 
 		GLCubemap::~GLCubemap()
@@ -78,8 +69,5 @@ namespace Graphics
 			glBindTexture(GL_TEXTURE_CUBE_MAP, m_Handle);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, a_Option, a_Value);
 		}
-
-
-
 	}
 }

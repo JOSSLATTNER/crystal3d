@@ -10,7 +10,6 @@ namespace Graphics
 		virtual ~IRenderer() {}
 		virtual bool Initialize(CrRendererContext& a_RendererContext) = 0;
 		virtual void Render(Scene::CrScene* a_Scene) = 0;
-		virtual void AddRenderable(Graphics::IRenderable* a_Node) = 0;
 
 	};
 }

@@ -9,11 +9,8 @@ namespace Graphics
 		GLShader::GLShader(const std::string& a_Filename, EShaderType a_Type)
 			: m_Type(a_Type)
 		{
-			auto pResources = SEngine->GetResourceManager();
-			std::string fullPath = pResources->GetFullPath(a_Filename);
-
-			std::ifstream stream(fullPath);
-			CrAssert(stream.good(), "Shader file not found! (%s)", fullPath.c_str());
+			std::ifstream stream(a_Filename);
+			CrAssert(stream.good(), "Shader file not found! (%s)", a_Filename.c_str());
 
 			m_Source = { std::istreambuf_iterator<char>(stream),
 				std::istreambuf_iterator<char>() };

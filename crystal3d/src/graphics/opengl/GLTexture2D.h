@@ -11,12 +11,10 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
 		class GLTexture2D 
-			: public Resources::IResource
 		{
 		public:
-			GLTexture2D();
+			GLTexture2D(const std::string & a_File);
 			GLTexture2D(GLvoid* a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_Type, GLenum a_Format);
 			~GLTexture2D();
 
@@ -28,11 +26,6 @@ namespace Graphics
 
 			GLuint GetHandle() const;
 			ETextureType GetType() const;
-
-		public:
-			//Inherited via IResource
-			void LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo* a_Info) override;
-
 		private:
 			GLuint m_Handle;
 			ETextureType m_Type;

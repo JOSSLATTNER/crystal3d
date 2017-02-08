@@ -16,6 +16,5 @@ namespace Graphics
 		virtual Graphics::ERenderMode GetRenderMode() = 0;
 		virtual Math::AABB* GetBoundingBox() = 0;
 		virtual Scene::CrTransform* GetTransform() = 0;
-
 	};
 }

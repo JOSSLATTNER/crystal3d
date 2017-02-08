@@ -81,6 +81,7 @@ namespace Core
 
 			if (delta >= 1.0 / MAX_FPS)
 			{
+				//move windows specific stuff
 				MSG msg{};
 				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 				{

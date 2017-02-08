@@ -3,15 +3,35 @@
 
 namespace Graphics
 {
-	namespace OpenGL {
-
-		GLTexture2D::GLTexture2D() 
+	namespace OpenGL
+	{
+		GLTexture2D::GLTexture2D(const std::string & a_File)
 			: m_Handle(0), m_Type(ETextureType::Diffuse)
 		{
+			m_Handle = SOIL_load_OGL_texture
+			(
+				a_File.c_str(),
+				SOIL_LOAD_AUTO,
+				SOIL_CREATE_NEW_ID,
+				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
+			);
+
+			CrAssert(m_Handle != 0, "SOIL loading error: '%s'", SOIL_last_result());
+
+			float aniso = 0.0f;
+			glBindTexture(GL_TEXTURE_2D, m_Handle);
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+
+			this->SetParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+			CrLog("Texture2D was loaded: %s", a_File.c_str());
 		}
 
 		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_Type, GLenum a_Format)
-			: GLTexture2D()
 		{
 			glGenTextures(1, &m_Handle);
 			glBindTexture(GL_TEXTURE_2D, m_Handle);
@@ -67,38 +87,6 @@ namespace Graphics
 		ETextureType GLTexture2D::GetType() const
 		{
 			return m_Type;
-		}
-
-		void GLTexture2D::LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo* a_Info)
-		{
-			auto pResources = SEngine->GetResourceManager();
-			std::string fullPath = pResources->GetFullPath(a_File);
-
-			m_Handle = SOIL_load_OGL_texture
-			(
-				fullPath.c_str(),
-				SOIL_LOAD_AUTO,
-				SOIL_CREATE_NEW_ID,
-				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-			);
-
-			if (INVALID_GL_HANDLE(m_Handle))
-			{
-				CrAssert(0, "SOIL loading error: '%s'", SOIL_last_result());
-				return;
-			}
-
-			float aniso = 0.0f;
-			glBindTexture(GL_TEXTURE_2D, m_Handle);
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
-
-			this->SetParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
-			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-			CrLog("Texture2D was loaded: %s", a_File.c_str());
 		}
 
 	}

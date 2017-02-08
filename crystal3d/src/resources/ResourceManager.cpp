@@ -7,19 +7,37 @@ namespace Resources
 	}
 	CrResourceManager::~CrResourceManager()
 	{
-		this->FreeAll();
 	}
 
-	std::string CrResourceManager::GetFullPath(const std::string& a_FileName) const
+	CrResourcePtr<Scripting::CrScript> CrResourceManager::LoadScript(const std::string & a_Filename)
+	{
+		auto fullPath = this->GetFullPath(a_Filename);
+		auto hash = this->GenerateHandle(a_Filename);
+
+		auto it = m_Scripts.find(hash);
+		if (it != m_Scripts.end())
+			return (*it).second;
+
+		return std::make_shared<Scripting::CrScript>(fullPath);
+	}
+
+	CrResourcePtr<CrModel> CrResourceManager::LoadModel(const std::string & a_Filename)
+	{
+		auto fullPath = this->GetFullPath(a_Filename);
+		auto hash = this->GenerateHandle(a_Filename);
+
+		auto it = m_Models.find(hash);
+		if (it != m_Models.end())
+			return (*it).second;
+
+		return std::make_shared<CrModel>(fullPath);
+	}
+
+	const std::string CrResourceManager::GetFullPath(const std::string& a_FileName) const
 	{
 		std::wstring wstr(ASSET_PATH);
 		const std::string assetPath(wstr.begin(), wstr.end());
 		return assetPath + a_FileName;
-	}
-
-	void CrResourceManager::FreeAll()
-	{
-		m_Data.clear();
 	}
 
 	CrResourceHandle CrResourceManager::GenerateHandle(const std::string& a_String) const

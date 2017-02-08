@@ -1,6 +1,8 @@
 #pragma once
 #include "core\Core.h"
-#include "scene\SceneRenderingInfo.h"
+#include "scene\Scene.h"
+#include "math\glm\GLM.h"
+#include "scene\LightNode.h"
 
 #include "GL.h"
 #include "GLUniformBuffer.hpp"
@@ -9,7 +11,6 @@
 #include "GLFramebuffer.hpp"
 #include "GLSkyboxPass.h"
 #include "GLSSAOPass.h"
-#include "GLPipelineScript.h"
 
 //Globals
 #define MAX_POINT_LIGHT 1
@@ -18,7 +19,6 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
 		struct GLDeferredRendererContext
 		{
 			uint32_t viewportWidth;
@@ -27,11 +27,27 @@ namespace Graphics
 		};
 
 		CrSupressWarning(4324,
-			struct alignas(16) GLDeferredLightInfo
+			struct alignas(16) LightInfo
 			{
 				uint32_t hasDirectionalLight;
 				alignas(16) glm::vec3 cameraPosition;
 				float numPointLights;
+			};
+
+			struct PointLight
+			{
+				glm::vec3 position;
+				float radius;
+				glm::vec3 diffuse;
+				glm::vec3 specular;
+			};
+
+			struct DirectionalLight
+			{
+				glm::vec3 direction;
+				float ambientFactor;
+				glm::vec3 diffuse;
+				float specularFactor;
 			};
 		)
 
@@ -46,9 +62,9 @@ namespace Graphics
 			void CreateRenderPass(GLRenderPass* a_RenderPass);
 
 		public:
-			GLUniformBuffer<Scene::CrPointLight>* m_PointLightUniformBuffer;
-			GLUniformBuffer<Scene::CrDirectionalLightNode>* m_DirectionalLightUniformBuffer;
-			GLUniformBuffer<GLDeferredLightInfo>* m_LightInfoBuffer;
+			GLUniformBuffer<PointLight>* m_PointLightBuffer;
+			GLUniformBuffer<DirectionalLight>* m_DirectionalLightBuffer;
+			GLUniformBuffer<LightInfo>* m_LightInfoBuffer;
 
 			GLFramebuffer* m_RenderPassFramebuffer;
 
@@ -62,7 +78,6 @@ namespace Graphics
 			uint32_t m_ViewportHeight;
 
 			std::vector<GLRenderPass*> m_RenderPasses;
-			GLPipelineScript* m_PipelineScript;
 
 		};
 	}

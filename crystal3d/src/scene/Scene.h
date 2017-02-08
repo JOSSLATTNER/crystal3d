@@ -24,6 +24,19 @@ namespace Scene
 		CrSceneNode* GetNode(ENodeType a_Type);
 		std::vector<CrSceneNode*> GetNodes(ENodeType a_Type);
 
+		template<typename T>
+		T* GetNode(ENodeType a_Type)
+		{
+			return static_cast<T*>(GetNode(a_Type));
+		}
+
+		template<typename T>
+		std::vector<T*> GetNodes(ENodeType a_Type)
+		{
+			auto nodes = GetNodes(a_Type);
+			return{ nodes.begin(), nodes.end() };
+		}
+
 	private:
 		std::unordered_map<ENodeType, CrSceneNode*> m_Nodes;
 		Scripting::CrScript* m_Behaviour;

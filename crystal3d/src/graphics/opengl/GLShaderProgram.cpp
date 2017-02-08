@@ -68,12 +68,7 @@ namespace Graphics
 
 		void GLShaderProgram::Bind() const
 		{
-			if (!m_IsLinked)
-			{
-				CrAssert(0, "Shader program not linked!");
-				return;
-			}
-
+			CrAssert(m_IsLinked, "Shader program not linked!");
 			glUseProgram(m_Handle);
 
 			for (auto& texture: m2DTextures)

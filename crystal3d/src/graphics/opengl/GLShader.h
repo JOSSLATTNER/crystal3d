@@ -10,8 +10,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
-		class GLShader 
+		class GLShader
 		{
 		public:
 			GLShader(const std::string& a_Filename, EShaderType a_Type);

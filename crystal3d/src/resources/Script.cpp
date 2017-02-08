@@ -20,8 +20,17 @@ using namespace Components;
 namespace Scripting
 {
 
-	CrScript::CrScript()
+	CrScript::CrScript(const std::string & a_File)
 	{
+		auto pResources = SEngine->GetResourceManager();
+
+		std::string scriptPath = pResources->GetFullPath(a_File);
+		m_Script = m_State.load_file(scriptPath);
+
+		m_State.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
+			sol::lib::table, sol::lib::string, sol::lib::bit32);
+
+		CrLog("Script was loaded: %s", a_File.c_str());
 
 		m_State.new_usertype<CrScene>("Scene",
 			"AddNode", &CrScene::AddNode);
@@ -120,8 +129,8 @@ namespace Scripting
 			"GetAxis", &IInputManager::GetAxis);
 
 		m_State.new_usertype<CrResourceManager>("__Resources__",
-			"LoadScript", &CrResourceManager::FetchResource<CrScript>,
-			"LoadModel", &CrResourceManager::FetchResource<CrModel>);
+			"LoadScript", &CrResourceManager::LoadScript,
+			"LoadModel", &CrResourceManager::LoadModel);
 
 		m_State["Input"] = SEngine->GetInputManager();
 		m_State["Resources"] = SEngine->GetResourceManager();
@@ -129,17 +138,6 @@ namespace Scripting
 		sol::table primitives = m_State.create_named_table("Primitives");
 		primitives.set_function("Make_Plane", &Primitives::Make_Plane);
 
-		//m_State.new_usertype<CrDirectionalLightNode, glm::vec3>("DirectionalLight",
-		//	"Direction", &CrDirectionalLightNode::m_Direction,
-		//	"Ambient", &CrDirectionalLightNode::m_AmbientFactor,
-		//	"Diffuse", &CrDirectionalLightNode::m_DiffuseColor,
-		//	"Specular", &CrDirectionalLightNode::m_SpecularFactor);
-
-		//m_State.new_usertype<CrPointLight, glm::vec3>("PointLight",
-		//	"Position", &CrPointLight::m_Position,
-		//	"Radius", &CrPointLight::m_Radius,
-		//	"Diffuse", &CrPointLight::m_DiffuseColor,
-		//	"Specular", &CrPointLight::m_SpecularColor);
 
 		m_State.new_usertype<CrFrustum>("Frustum",
 			"FOV", &CrFrustum::fov,
@@ -171,18 +169,5 @@ namespace Scripting
 		{
 			CrAssert(0, "Lua [sol2.0] error occurred: %s", err.what());
 		}
-	}
-
-	void CrScript::LoadFromFile(const std::string & a_File, Resources::ResourceCreateInfo* a_Info)
-	{
-		Resources::CrResourceManager* pResources = SEngine->GetResourceManager();
-
-		std::string scriptPath = pResources->GetFullPath(a_File);
-		m_Script = m_State.load_file(scriptPath);
-
-		m_State.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
-			sol::lib::table, sol::lib::string, sol::lib::bit32);
-
-		CrLog("Script was loaded: %s", a_File.c_str());
 	}
 }

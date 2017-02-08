@@ -55,9 +55,8 @@ layout(std140) uniform LightInfoBlock
 {
 	uint hasDirectionalLight;
 	vec3 cameraPosition;
-	float numPointLights;
+	int numPointLights;
 } lightInfo;
-
 
 vec3 CalcPointLight(int i, vec3 normal, vec3 fragPos, vec3 viewDir)
 {

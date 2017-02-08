@@ -62,8 +62,7 @@ namespace Graphics
 			glViewport(0, 0, a_Context.viewportWidth, a_Context.viewportHeight);
 
 #ifdef CR_GRAPHICS_DEBUG
-			glEnable(GL_DEBUG_OUTPUT);	
-
+			glEnable(GL_DEBUG_OUTPUT);
 			glDebugMessageCallback(ErrorCallback, NULL);
 
 			GLuint unusedIds = 0;
@@ -103,10 +102,15 @@ namespace Graphics
 			3) Additional Passes: Shadows, Reflections, PostFX
 			*/
 
+
+
+
+			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>(Scene::CAMERA_NODE);
+
 			MVP mvp{};
 			mvp.modelMatrix = glm::mat4(0);
-			mvp.projectionMatrix = a_Scene->m_CameraNode->m_ProjectionMatrix;
-			mvp.viewMatrix = a_Scene->m_CameraNode->m_ViewMatrix;
+			mvp.projectionMatrix = camNode->m_ProjectionMatrix;
+			mvp.viewMatrix = camNode->m_ViewMatrix;
 			m_UniformMVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};
@@ -121,7 +125,7 @@ namespace Graphics
 				}
 			m_GeometryBuffer->Unbind();
 
-			m_DeferredRenderer->Render(a_Info);
+			m_DeferredRenderer->Render(a_Scene);
 			m_CurrentContext->SwapBuffer();
 		}
 

@@ -1,6 +1,3 @@
---GLOBALS
-total = 0
-
 function Init()
 	--Camera
 	cameraTransform = Transform.new(Vector3.new(0,50,50), Vector3.new(0,180,0), Vector3.new(0,0,0))
@@ -14,12 +11,11 @@ function Init()
 	playerNode = CreateSceneNode(Transform.new(Vector3.new(150,120,150), Vector3.new(0,0,0), Vector3.new(3,3,3)))
 
 	--Player Script
-	sc01 = CreateScriptComponent()
-	playerScript = Resources:LoadScript("Scripts\\Test.lua", nil)
-	sc01:SetScript(playerScript)
-	playerNode:AddComponent(sc01)
-	this:AddNode(playerNode)
-
+	--sc01 = CreateScriptComponent()
+	--playerScript = Resources:LoadScript("Scripts\\Test.lua", nil)
+	--sc01:SetScript(playerScript)
+	--playerNode:AddComponent(sc01)
+	--this:AddNode(playerNode)
 
 	--print(#model1.Meshes.." Meshes and "..#model1.Materials.." Materials.")
 
@@ -68,22 +64,20 @@ function Init()
 	this:AddNode(terrainNode01)
 	
 	--Lights
-	dirLight = DirectionalLight.new(Vector3.new(0,-1,0))
-	dirLight.Specular = 0.0
-	dirLight.Ambient = 0.8
-	this:SetDirectionalLight(dirLight)
-	
-	pointLight1 = PointLight.new(Vector3.new(0,120,0))
-	pointLight1.Radius = 50
-	pointLight1.Diffuse = Vector3.new(1,0,0)
-	this:AddPointLight(pointLight1)
+	--dirLight = DirectionalLight.new(Vector3.new(0,-1,0))
+	--dirLight.Specular = 0.0
+	--dirLight.Ambient = 0.8
+	--this:SetDirectionalLight(dirLight)
+	--
+	--pointLight1 = PointLight.new(Vector3.new(0,120,0))
+	--pointLight1.Radius = 50
+	--pointLight1.Diffuse = Vector3.new(1,0,0)
+	--this:AddPointLight(pointLight1)
 end
 
 function Update(delta)
-	total = total + 0.1
-	
-	pointLight1.Position.X = math.sin(total)*80
-	pointLight1.Position.Z = math.cos(total)*80
+	--pointLight1.Position.X = math.sin(total)*80
+	--pointLight1.Position.Z = math.cos(total)*80
 
 	--this.Camera.Transform.Rotation.Y = playerNode.Transform.Rotation.Y - 180
 	--this.Camera.Transform.Rotation.X = 0
