@@ -5,10 +5,6 @@
 #include "graphics\interface\IRenderable.h"
 #include "resources\Script.h"
 
-#include "DirectionalLightNode.h"
-#include "PointLightNode.h"
-#include "CameraNode.h"
-
 namespace Scene
 {
 	class CrScene
@@ -39,7 +35,7 @@ namespace Scene
 
 	private:
 		std::unordered_map<ENodeType, CrSceneNode*> m_Nodes;
-		Scripting::CrScript* m_Behaviour;
+		Resources::CrResourcePtr<Scripting::CrScript> m_Behaviour;
 
 	};
 }

@@ -109,8 +109,8 @@ namespace Graphics
 
 			MVP mvp{};
 			mvp.modelMatrix = glm::mat4(0);
-			mvp.projectionMatrix = camNode->m_ProjectionMatrix;
-			mvp.viewMatrix = camNode->m_ViewMatrix;
+			mvp.projectionMatrix = camNode->GetProjectionMatrix();
+			mvp.viewMatrix = camNode->GetViewMatrix();
 			m_UniformMVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};

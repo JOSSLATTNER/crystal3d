@@ -38,46 +38,45 @@ namespace Graphics
 			template <typename MT>
 			void Subdata(MT* a_Data, uint32_t a_Offset = 0)
 			{
-				auto data_Size = sizeof(MT);
 				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
-				glBufferSubData(GL_UNIFORM_BUFFER, a_Offset, data_Size, a_Data);
+				glBufferSubData(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Data);
 			}
 
-			void Map(std::function<void(T*)> a_Callback, GLbitfield a_Options = GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT)
-			{
-				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
+			//void Map(std::function<void(T*)> a_Callback, GLbitfield a_Options = GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT)
+			//{
+			//	glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 
-				GLvoid* pMapData = glMapBuffer(GL_UNIFORM_BUFFER, a_Options);
-				T* pData = static_cast<T*>(pMapData);
+			//	GLvoid* pMapData = glMapBuffer(GL_UNIFORM_BUFFER, a_Options);
+			//	T* pData = static_cast<T*>(pMapData);
 
-				a_Callback(pData);
+			//	a_Callback(pData);
 
-				if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
-				{
-					CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
-				}
-			}
+			//	if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
+			//	{
+			//		CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
+			//	}
+			//}
 
-			template <typename MT>
-			void MapRange(std::function<void(MT*)> a_Callback, uint32_t a_Offset, GLbitfield a_Options = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT)
-			{
-				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
+			//template <typename MT>
+			//void MapRange(std::function<void(MT*)> a_Callback, uint32_t a_Offset, GLbitfield a_Options = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT)
+			//{
+			//	glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 
-				GLvoid* pMapData = glMapBufferRange(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Options);
-				MT* pData = static_cast<MT*>(pMapData);
+			//	GLvoid* pMapData = glMapBufferRange(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Options);
+			//	MT* pData = static_cast<MT*>(pMapData);
 
-				a_Callback(pData);
+			//	a_Callback(pData);
 
-				if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
-				{
-					CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
-				}
-			}
+			//	if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
+			//	{
+			//		CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
+			//	}
+			//}
 	
 			void Bind(GLuint a_ShaderProgram) const
 			{
 				GLint blockIndex = glGetUniformBlockIndex(a_ShaderProgram, m_BlockName.c_str());
-				if (blockIndex==-1)
+				if (blockIndex != -1)
 				{
 					CrLog("Block %s not found! Uniform may have been optimized out by glsl compiler.", m_BlockName.c_str()); 
 					return;

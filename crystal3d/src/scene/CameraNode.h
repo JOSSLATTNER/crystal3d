@@ -33,6 +33,9 @@ namespace Scene
 		glm::vec3 GetLook() const;
 		glm::vec3 GetRight() const;
 		glm::vec3 GetUp() const;
+
+		glm::mat4& GetProjectionMatrix();
+		glm::mat4& GetViewMatrix();
 	
 	public:
 		EProjection m_Projection;

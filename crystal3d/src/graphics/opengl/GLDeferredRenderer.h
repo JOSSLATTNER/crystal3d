@@ -3,14 +3,22 @@
 #include "scene\Scene.h"
 #include "math\glm\GLM.h"
 #include "scene\LightNode.h"
+#include "scene\CameraNode.h"
 
 #include "GL.h"
 #include "GLUniformBuffer.hpp"
 #include "GLShaderProgram.h"
 #include "GLRenderPass.h"
 #include "GLFramebuffer.hpp"
-#include "GLSkyboxPass.h"
-#include "GLSSAOPass.h"
+
+//Buffer flags
+const unsigned char BUFFER_FLAG_DIRECTIONAL_LIGHT = 0x01;
+const unsigned char BUFFER_FLAG_POINT_LIGHT = 0x02;
+const unsigned char BUFFER_FLAG_LIGHT_INFO = 0x04;
+const unsigned char BUFFER_FLAG_PREVIOUS_PASS = 0x08;
+const unsigned char BUFFER_FLAG_DEPTH = 0x10;
+const unsigned char BUFFER_FLAG_GEOMETRY = 0x20;
+const unsigned char BUFFER_FLAG_UTILITY = 0x40;
 
 //Globals
 #define MAX_POINT_LIGHT 1
@@ -59,7 +67,7 @@ namespace Graphics
 
 			void Initialize(GLDeferredRendererContext& a_Context);
 			void Render(Scene::CrScene* a_Scene);
-			void CreateRenderPass(GLRenderPass* a_RenderPass);
+			void RegisterRenderPass(GLRenderPass* a_RenderPass, unsigned int a_BufferFlags);
 
 		public:
 			GLUniformBuffer<PointLight>* m_PointLightBuffer;

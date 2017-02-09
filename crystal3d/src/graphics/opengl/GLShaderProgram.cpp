@@ -5,31 +5,23 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
 		GLShaderProgram::GLShaderProgram(Resources::CrMaterial* a_Material) 
 			: GLShaderProgram()
 		{
 			auto pResources = SEngine->GetResourceManager();
 
-			GLShaderCreateInfo vsCI{};
-			vsCI.type = EShaderType::VertexShader;
-			auto vertShader = pResources->FetchResource<GLShader>(a_Material->vertexShader, &vsCI);
+			GLShader* vertShader = new GLShader(a_Material->vertexShader, EShaderType::VertexShader);
 			vertShader->Compile();
 			this->AttachShader(vertShader);
 
-			GLShaderCreateInfo fsCI{};
-			fsCI.type = EShaderType::FragmentShader;
-			auto fragShader = pResources->FetchResource<GLShader>(a_Material->fragmentShader, &fsCI);
+			GLShader* fragShader = new GLShader(a_Material->fragmentShader, EShaderType::FragmentShader);
 			fragShader->Compile();
 			this->AttachShader(fragShader);
 
 			if (!a_Material->geometryShader.empty())
 			{
-				GLShaderCreateInfo gsCI{};
-				gsCI.type = EShaderType::GeometryShader;
-				auto geoShader = pResources->FetchResource<GLShader>(a_Material->geometryShader, &gsCI);
+				GLShader* geoShader = new GLShader(a_Material->geometryShader, EShaderType::GeometryShader);
 				geoShader->Compile();
-
 				this->AttachShader(geoShader);
 			}
 
@@ -37,14 +29,12 @@ namespace Graphics
 
 			for (auto &g : a_Material->textures)
 			{
-				auto texture = pResources->FetchResource<GLTexture2D>(g.second, nullptr);
-				this->AttachTexture(texture, g.first);
+				this->AttachTexture(new GLTexture2D(g.second), g.first);
 			}
 
 			for (auto &g : a_Material->cubemaps)
 			{
-				auto cubemap = pResources->FetchResource<GLCubemap>(g.second, nullptr);
-				this->AttachCubemap(cubemap, g.first);
+				this->AttachCubemap(new GLCubemap(g.second), g.first);
 			}
 
 			m_Uniforms = a_Material->properties;

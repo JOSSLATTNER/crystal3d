@@ -22,6 +22,11 @@ namespace Graphics
 			delete m_DirectionalLightBuffer;
 			delete m_LightInfoBuffer;
 			delete m_RenderPassFramebuffer;
+
+			for (auto& rp : m_RenderPasses)
+			{
+				delete rp;
+			}
 		}
 
 		void GLDeferredRenderer::Initialize(GLDeferredRendererContext& a_Context)
@@ -31,40 +36,59 @@ namespace Graphics
 			m_GeometryBuffer = a_Context.geometryBuffer;
 
 			GLFramebufferContext ctx{};
-			ctx.formats = {GL_RGBA};
+			ctx.formats = { GL_RGBA };
 			ctx.height = m_ViewportHeight;
 			ctx.width = m_ViewportWidth;
 			ctx.useDepthTexture = false;
 
 			m_RenderPassFramebuffer = new GLFramebuffer(ctx);
+
+			//Lighting pass
+			GLRenderPassContext lpCx{};
+			lpCx.vertexShaderFile = "Base_Deferred.vert";
+			lpCx.fragmentShaderFile = "Lighting.frag";
+			lpCx.viewportHeight = m_ViewportHeight;
+			lpCx.viewportWidth = m_ViewportWidth;
+
+			GLRenderPass* lightingPass = new GLRenderPass(lpCx);
+			this->RegisterRenderPass(lightingPass, BUFFER_FLAG_POINT_LIGHT | BUFFER_FLAG_DIRECTIONAL_LIGHT | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_LIGHT_INFO);
+
+			//Skybox pass
+			GLRenderPassContext sbpCx{};
+			lpCx.vertexShaderFile = "Base_Deferred.vert";
+			lpCx.fragmentShaderFile = "Skybox.frag";
+			lpCx.viewportHeight = m_ViewportHeight;
+			lpCx.viewportWidth = m_ViewportWidth;
+
+			GLRenderPass* skyboxPass = new GLRenderPass(sbpCx);
+			this->RegisterRenderPass(skyboxPass, BUFFER_FLAG_PREVIOUS_PASS | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_DEPTH);
 		}
 
-		void GLDeferredRenderer::CreateRenderPass(GLRenderPass* a_RenderPass)
+		void GLDeferredRenderer::RegisterRenderPass(GLRenderPass* a_RenderPass, unsigned int a_BufferFlags)
 		{
-			unsigned char bufferFlags = a_RenderPass->m_Context.bufferFlags;
 			auto spHandle = a_RenderPass->m_ShaderProgram->GetHandle();
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_DIRECTIONAL_LIGHT))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_DIRECTIONAL_LIGHT))
 			{
 				m_DirectionalLightBuffer->Bind(spHandle);
 			}
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_POINT_LIGHT))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_POINT_LIGHT))
 			{
 				m_PointLightBuffer->Bind(spHandle);
 			}
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_LIGHT_INFO))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_LIGHT_INFO))
 			{
 				m_LightInfoBuffer->Bind(spHandle);
 			}
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_UTILITY))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_UTILITY))
 			{
 				GLRenderer::m_UniformUtilityBuffer->Bind(spHandle);
 			}
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_GEOMETRY))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_GEOMETRY))
 			{
 				auto gBufferTextures = m_GeometryBuffer->GetTextures();
 				for (uint32_t i = 0; i < gBufferTextures.size(); i++)
@@ -74,13 +98,13 @@ namespace Graphics
 			}
 
 			auto depthTexture = m_GeometryBuffer->GetDepthTexture();
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_DEPTH)
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_DEPTH)
 				&& depthTexture != nullptr)
 			{
 				a_RenderPass->m_ShaderProgram->AttachTexture(depthTexture, "tDepthTexture");
 			}
 
-			if (BIT_HAS_FLAG(bufferFlags, BUFFER_FLAG_PREVIOUS_PASS))
+			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_PREVIOUS_PASS))
 			{
 				GLTexture2D* previousPass = m_RenderPassFramebuffer->GetTextures()[0];
 				a_RenderPass->m_ShaderProgram->AttachTexture(previousPass, "tPreviousPass");

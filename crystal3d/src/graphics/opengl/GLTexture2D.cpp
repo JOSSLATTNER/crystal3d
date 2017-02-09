@@ -59,7 +59,7 @@ namespace Graphics
 
 		GLuint GLTexture2D::BindUniform(GLuint a_Program, const GLint a_AttributeLocation) const
 		{
-			uint32_t textureUnit = GLState::AcquireUnit(GL_TEXTURE_2D);
+			GLuint textureUnit = GLState::AcquireUnit(GL_TEXTURE_2D);
 
 			glUseProgram(a_Program);
 			glUniform1i(a_AttributeLocation, textureUnit);

@@ -50,4 +50,14 @@ namespace Scene
 		return glm::normalize(glm::vec3(m_ViewMatrix[1][0], m_ViewMatrix[1][1], m_ViewMatrix[1][2]));
 	}
 
+	glm::mat4 & CrCameraNode::GetProjectionMatrix()
+	{
+		return m_ProjectionMatrix;
+	}
+
+	glm::mat4 & CrCameraNode::GetViewMatrix()
+	{
+		return m_ViewMatrix;
+	}
+
 }
