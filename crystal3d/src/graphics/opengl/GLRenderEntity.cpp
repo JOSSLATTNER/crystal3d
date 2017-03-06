@@ -6,11 +6,14 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLRenderEntity::GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode) 
+		GLRenderEntity::GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode, Scene::CrTransform* a_Transform, Math::AABB* a_BoundingBox)
 			: m_Mode(a_Mode)
 		{
 			this->SetVertexArray(a_VAO);
 			this->SetProgram(a_Program);
+			this->SetMode(a_Mode);
+			this->SetTransform(a_Transform);
+			this->SetBoundingBox(a_BoundingBox);
 		}
 
 		GLRenderEntity::~GLRenderEntity()
@@ -30,8 +33,6 @@ namespace Graphics
 				delete m_ShaderProgram;
 
 			m_ShaderProgram = a_Program;
-
-			//Bind MVP buffer
 			GLRenderer::m_UniformMVPBuffer->Bind(m_ShaderProgram->GetHandle());
 		}
 
@@ -48,27 +49,25 @@ namespace Graphics
 			m_BoundingBox = a_BoundingBox;
 		}
 
+		void GLRenderEntity::SetMode(GLenum a_Mode)
+		{
+			m_Mode = a_Mode;
+		}
+
 		void GLRenderEntity::Render()
 		{
-			if (m_ShaderProgram != nullptr && m_VertexArray != nullptr)
-			{
-				m_ShaderProgram->Bind();
-				this->BufferTransform();
+			m_ShaderProgram->Bind();
+			this->BufferTransform();
 
-				glPushAttrib(GL_POLYGON_BIT);
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPushAttrib(GL_POLYGON_BIT);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 				
-				m_VertexArray->Bind();
-				glDrawElements(m_Mode, m_VertexArray->m_ElementCount, GL_UNSIGNED_INT, 0);
-				m_VertexArray->Unbind();
+			m_VertexArray->Bind();
+			glDrawElements(m_Mode, m_VertexArray->m_ElementCount, GL_UNSIGNED_INT, 0);
+			m_VertexArray->Unbind();
 
-				glPopAttrib();
-				m_ShaderProgram->Unbind();
-
-				//@Debug
-				//if (m_BoundingBox!=nullptr)
-					//GLDebugRenderer::SharedInstance()->DrawAABB(*m_BoundingBox);
-			}
+			glPopAttrib();
+			m_ShaderProgram->Unbind();
 		}
 
 		void GLRenderEntity::BufferTransform()

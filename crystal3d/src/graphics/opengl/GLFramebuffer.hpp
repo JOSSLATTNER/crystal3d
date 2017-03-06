@@ -108,12 +108,12 @@ namespace Graphics
 				glPopAttrib();
 			}
 
-			virtual std::vector<GLTexture2D*>& GetTextures()
+			std::vector<GLTexture2D*>& GetTextures()
 			{
 				return m_Textures;
 			}
 
-			virtual GLTexture2D * GetDepthTexture()
+			GLTexture2D * GetDepthTexture()
 			{
 				return m_DepthTexture;
 			}

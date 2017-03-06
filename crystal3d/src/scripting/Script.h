@@ -1,13 +1,14 @@
 #pragma once
 #include "core\Core.h"
-#include "resources\ResourceManager.h"
-
 #include <packages/sol/sol.hpp>
-#define SOL_BASE(...) sol::base_classes, sol::bases<##__VA_ARGS__>()
+
+#include "resources\interface\Resource.h"
+#include "Framework.h"
 
 namespace Scripting
 {
-	class CrScript 
+	class CrScript :
+		public Resources::CrResource
 	{
 	public:
 		CrScript(const std::string & a_File);
@@ -17,9 +18,9 @@ namespace Scripting
 		void Run();
 
 		template <typename T>
-		void BindGlobal(const std::string& a_Name, T a_Value) 
+		void BindGlobal(const std::string& a_Name, T&& a_Value) 
 		{
-			m_State[a_Name] = a_Value;
+			m_State[a_Name] = std::move(value);
 		}
 
 		template <typename RET, typename...ARGS>
@@ -27,18 +28,6 @@ namespace Scripting
 		{
 			std::function<RET(ARGS...)> func = m_State[a_Name];
 			return func(params...);
-		}
-
-		template <typename T>
-		static T* HeapAlloc0()
-		{
-			return new T();
-		}
-
-		template <typename T, typename Arg0>
-		static T* HeapAlloc1(Arg0 a_Arg0)
-		{
-			return new T(a_Arg0);
 		}
 
 	protected:

@@ -10,15 +10,6 @@ function Init()
 	model1 = Resources:LoadModel("Meshes\\gunslinger.obj", nil)
 	playerNode = CreateSceneNode(Transform.new(Vector3.new(150,120,150), Vector3.new(0,0,0), Vector3.new(3,3,3)))
 
-	--Player Script
-	--sc01 = CreateScriptComponent()
-	--playerScript = Resources:LoadScript("Scripts\\Test.lua", nil)
-	--sc01:SetScript(playerScript)
-	--playerNode:AddComponent(sc01)
-	--this:AddNode(playerNode)
-
-	--print(#model1.Meshes.." Meshes and "..#model1.Materials.." Materials.")
-
 	for i=1,#model1.Meshes do
 		local meshNode = CreateMeshNode(Transform.new())
 
@@ -32,16 +23,7 @@ function Init()
 		this:AddNode(meshNode)
 	end
 	
-	--waterPlane = Primitives.Make_Plane(10,10)
-	--meshNode02 = MeshNode.new(Transform.new(Vector3.new(0,0,0), Vector3.new(0,0,0), Vector3.new(50,1,50)))
-	--meshNode02:SetRenderMode(1)
-	--meshNode02:SetMesh(waterPlane)
-	--
-	--waterMat = Material.new("Shader\\base.vert", "Shader\\baseWater.frag")
-	--waterMat.Textures["tDiffuse"] = "Textures\\uvcheck.png"
-	--meshNode02:SetMaterial(waterMat)
-	--
-	--this:AddNode(meshNode02)
+
 	
 	--Terrain
 	terrainNode01 = CreateTerrainNode(Transform.new(Vector3.new(-200,0,-200), Vector3.new(0,0,0), Vector3.new(5,1,5)))

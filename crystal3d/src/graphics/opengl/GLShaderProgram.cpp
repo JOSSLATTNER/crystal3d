@@ -5,22 +5,22 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLShaderProgram::GLShaderProgram(Resources::CrMaterial* a_Material) 
+		GLShaderProgram::GLShaderProgram(Graphics::CrMaterial* a_Material) 
 			: GLShaderProgram()
 		{
 			auto pResources = SEngine->GetResourceManager();
 
-			GLShader* vertShader = new GLShader(a_Material->vertexShader, EShaderType::VertexShader);
+			auto vertShader = pResources->LoadResource<GLShader>(a_Material->vertexShader, EShaderType::VertexShader);
 			vertShader->Compile();
 			this->AttachShader(vertShader);
 
-			GLShader* fragShader = new GLShader(a_Material->fragmentShader, EShaderType::FragmentShader);
+			auto fragShader = pResources->LoadResource<GLShader>(a_Material->fragmentShader, EShaderType::FragmentShader);
 			fragShader->Compile();
 			this->AttachShader(fragShader);
 
 			if (!a_Material->geometryShader.empty())
 			{
-				GLShader* geoShader = new GLShader(a_Material->geometryShader, EShaderType::GeometryShader);
+				auto geoShader = pResources->LoadResource<GLShader>(a_Material->geometryShader, EShaderType::GeometryShader);
 				geoShader->Compile();
 				this->AttachShader(geoShader);
 			}
@@ -83,13 +83,13 @@ namespace Graphics
 			glUseProgram(0);
 		}
 
-		void GLShaderProgram::AttachShader(GLShader* a_Shader)
+		void GLShaderProgram::AttachShader(Resources::CrResourcePtr<GLShader> a_Shader)
 		{
 			glAttachShader(m_Handle, a_Shader->GetHandle());
 			m_Shader[a_Shader->GetType()] = a_Shader;
 		}
 
-		void GLShaderProgram::AttachTexture(GLTexture2D* a_Texture, const std::string& a_Attribute)
+		void GLShaderProgram::AttachTexture(Resources::CrResourcePtr<GLTexture2D> a_Texture, const std::string& a_Attribute)
 		{
 			CrAssert(m_IsLinked, "Shader program not linked!");
 
@@ -97,7 +97,7 @@ namespace Graphics
 			m2DTextures[slot] = a_Texture;
 		}
 
-		void GLShaderProgram::AttachTexture(GLTexture2D * a_Texture, const GLuint a_AttributeLocation)
+		void GLShaderProgram::AttachTexture(Resources::CrResourcePtr<GLTexture2D> a_Texture, const GLuint a_AttributeLocation)
 		{
 			CrAssert(m_IsLinked, "Shader program not linked!");
 
@@ -105,7 +105,7 @@ namespace Graphics
 			m2DTextures[slot] = a_Texture;
 		}
 
-		void GLShaderProgram::AttachCubemap(GLCubemap* a_Texture, const std::string& a_Attribute)
+		void GLShaderProgram::AttachCubemap(Resources::CrResourcePtr<GLCubemap> a_Texture, const std::string& a_Attribute)
 		{
 			CrAssert(m_IsLinked, "Shader program not linked!");
 

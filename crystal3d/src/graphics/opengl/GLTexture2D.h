@@ -1,7 +1,7 @@
 #pragma once
 #include "core\Core.h"
 #include "graphics\soil\SOIL.h"
-#include "resources\ResourceManager.h"
+#include "resources\interface\Resource.h"
 #include "graphics\TextureTypes.h"
 
 #include "GL.h"
@@ -12,6 +12,7 @@ namespace Graphics
 	namespace OpenGL
 	{
 		class GLTexture2D 
+			: public Resources::CrResource
 		{
 		public:
 			GLTexture2D(const std::string & a_File);
@@ -26,6 +27,7 @@ namespace Graphics
 
 			GLuint GetHandle() const;
 			ETextureType GetType() const;
+
 		private:
 			GLuint m_Handle;
 			ETextureType m_Type;

@@ -9,7 +9,6 @@
 
 namespace Core
 {
-
 	const uint32_t FPS_NO_CAP = UINT32_MAX;
 	const uint32_t MAX_FPS = 120U;
 
@@ -77,11 +76,11 @@ namespace Core
 
 		while (m_IsRunning)
 		{
-			float_t delta = m_GameTimer->GetDelta<float_t>();
+			const float_t delta = m_GameTimer->GetDelta<float_t>();
 
 			if (delta >= 1.0 / MAX_FPS)
 			{
-				//move windows specific stuff
+				//TODO: MOVE WIN32 STUFF
 				MSG msg{};
 				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 				{
@@ -100,11 +99,7 @@ namespace Core
 
 	void CrEngine::SetScene(Scene::CrScene* a_GameScene)
 	{
-		if (a_GameScene == nullptr)
-		{
-			CrAssert(0, "Scene was nullptr!");
-			return;
-		}
+		CrAssert(a_GameScene != nullptr, "Scene was nullptr!");
 
 		m_ActiveScene = a_GameScene;
 		m_ActiveScene->Initialize();
@@ -154,7 +149,7 @@ namespace Core
 		}
 	}
 
-	void CrEngine::Update(float& delta) const
+	void CrEngine::Update(const float& delta) const
 	{
 		if (m_ActiveScene != nullptr)
 		{

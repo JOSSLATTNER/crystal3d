@@ -5,9 +5,9 @@ namespace Scene
 {
 	enum class ELightType
 	{
-		POINT_LIGHT,
-		DIRECTIONAL_LIGHT,
-		SPOT_LIGHT
+		Point,
+		Directional,
+		Spot
 	};
 
 	class CrLightNode
@@ -18,7 +18,11 @@ namespace Scene
 
 		//Inherited via CrSceneNode
 		~CrLightNode() override;
-		ENodeType GetType() override;
+		void Update(const float& a_DeltaTime) override;
+
+		ELightType GetType();
+
+		//TODO: LIGHT VALUES
 
 	private:
 		ELightType m_Type;

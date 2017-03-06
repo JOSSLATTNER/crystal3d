@@ -1,8 +1,8 @@
 #pragma once
 #include "SceneNode.h"
 #include "graphics\interface\IRenderable.h"
-#include "resources\Terrain.h"
 #include "graphics\Primitives.h"
+#include "graphics\Terrain.h"
 
 namespace Scene
 {
@@ -13,23 +13,20 @@ namespace Scene
 			CrTerrainNode();
 			CrTerrainNode(Scene::CrTransform& a_Transform);
 
-			// Inherited via IRenderable
+			//Inherited via IRenderable
 			~CrTerrainNode() override;
-			Resources::CrMaterial * GetMaterial() override;
-			Resources::CrMesh * GetMesh() override;
+			Graphics::CrMaterial * GetMaterial() override;
+			Graphics::CrMesh * GetMesh() override;
 			Graphics::ERenderMode GetRenderMode() override;
 			Math::AABB* GetBoundingBox() override;
 			Scene::CrTransform* GetTransform() override;
 
-			//Inherited via CrSceneNode
-			ENodeType GetType() override;
-
-			void SetTerrain(Resources::CrTerrain* a_Terrain);
+			void SetTerrain(Graphics::CrTerrain* a_Terrain);
 
 	private:
-		Resources::CrMesh* m_Mesh;
-		Resources::CrMaterial* m_Material;
-		Resources::CrTerrain* m_Terrain;
+		Graphics::CrMesh* m_Mesh;
+		Graphics::CrMaterial* m_Material;
+		Graphics::CrTerrain* m_Terrain;
 
 	};
 }

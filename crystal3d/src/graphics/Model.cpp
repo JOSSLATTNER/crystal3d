@@ -5,19 +5,16 @@
 
 #include "core\Engine.h"
 
-namespace Resources
+namespace Graphics
 {
 	CrModel::CrModel(const std::string & a_File)
 	{
-		auto pResources = SEngine->GetResourceManager();
-		std::string fullPath = pResources->GetFullPath(a_File);
-
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 
 		std::string err;
-		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, fullPath.c_str());
+		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, a_File.c_str());
 
 		if (!err.empty() || !ret)
 		{
@@ -67,7 +64,7 @@ namespace Resources
 
 		for (auto& mat : materials)
 		{
-			CrMaterial* material = new CrMaterial("Shader\\Mesh.vert", "Shader\\Mesh.frag");
+			CrMaterial* material = new CrMaterial();
 
 			if (!mat.diffuse_texname.empty())
 				material->textures["tDiffuse"] = "Textures\\" + mat.diffuse_texname;
@@ -95,6 +92,14 @@ namespace Resources
 
 	CrModel::~CrModel()
 	{
+		for (auto& m : m_MaterialEntries)
+		{
+			delete m;
+		}
+		for (auto& m : m_MeshEntries)
+		{
+			delete m;
+		}
 	}
 
 }

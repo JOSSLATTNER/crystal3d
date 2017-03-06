@@ -127,6 +127,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
     <ClInclude Include="src\core\GameTimer.hpp" />
@@ -157,7 +158,6 @@
     <ClInclude Include="src\graphics\RendererContext.h" />
     <ClInclude Include="src\graphics\RenderMode.h" />
     <ClInclude Include="src\graphics\ShaderType.h" />
-    <ClInclude Include="src\graphics\soil\SOIL.h" />
     <ClInclude Include="src\graphics\TextureTypes.h" />
     <ClInclude Include="src\input\interface\IInputManager.h" />
     <ClInclude Include="src\input\xinput\XIInputManager.h" />
@@ -322,22 +322,20 @@
     <ClInclude Include="src\packages\soil\src\SOIL.h" />
     <ClInclude Include="src\packages\sol\SOL.HPP" />
     <ClInclude Include="src\packages\tinyobj\tiny_obj_loader.h" />
-    <ClInclude Include="src\resources\Animation.h" />
-    <ClInclude Include="src\resources\Material.h" />
-    <ClInclude Include="src\resources\Mesh.h" />
-    <ClInclude Include="src\resources\Model.h" />
+    <ClInclude Include="src\graphics\Material.h" />
+    <ClInclude Include="src\graphics\Mesh.h" />
+    <ClInclude Include="src\graphics\Model.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
-    <ClInclude Include="src\resources\Script.h" />
-    <ClInclude Include="src\resources\Skybox.h" />
-    <ClInclude Include="src\resources\Terrain.h" />
+    <ClInclude Include="src\scripting\Script.h" />
+    <ClInclude Include="src\graphics\Terrain.h" />
     <ClInclude Include="src\scene\CameraNode.h" />
     <ClInclude Include="src\scene\DirectionalLightNode.h" />
     <ClInclude Include="src\scene\interface\IComponent.h" />
+    <ClInclude Include="src\scene\LightNode.h" />
     <ClInclude Include="src\scene\MeshNode.h" />
     <ClInclude Include="src\scene\PointLightNode.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneNode.h" />
-    <ClInclude Include="src\scene\SceneNodeType.h" />
     <ClInclude Include="src\scene\ScriptComponent.h" />
     <ClInclude Include="src\scene\TerrainNode.h" />
     <ClInclude Include="src\window\interface\IWindow.h" />
@@ -345,6 +343,7 @@
     <ClInclude Include="src\window\win32\Win32Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\scripting\Framework.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />
     <ClCompile Include="src\graphics\opengl\GLCubemap.cpp" />
@@ -364,12 +363,12 @@
     <ClCompile Include="src\input\xinput\XIInputManager.cpp" />
     <ClCompile Include="src\math\Transform.cpp" />
     <ClCompile Include="src\packages\glm\detail\glm.cpp" />
-    <ClCompile Include="src\resources\Animation.cpp" />
-    <ClCompile Include="src\resources\Model.cpp" />
+    <ClCompile Include="src\graphics\Model.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
-    <ClCompile Include="src\resources\Script.cpp" />
+    <ClCompile Include="src\scripting\Script.cpp" />
     <ClCompile Include="src\scene\CameraNode.cpp" />
     <ClCompile Include="src\scene\DirectionalLightNode.cpp" />
+    <ClCompile Include="src\scene\LightNode.cpp" />
     <ClCompile Include="src\scene\MeshNode.cpp" />
     <ClCompile Include="src\scene\PointLightNode.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />

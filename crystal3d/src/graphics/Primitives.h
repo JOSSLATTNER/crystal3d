@@ -1,12 +1,12 @@
 #pragma once
 #include "core\Core.h"
-#include "resources\Mesh.h"
+#include "graphics\Mesh.h"
 
 namespace Primitives
 {
-		inline Resources::CrMesh* Make_Plane(int32_t width, int32_t height)
+		inline std::shared_ptr<Graphics::CrMesh> Make_Plane(int32_t width, int32_t height)
 		{
-			auto mesh = new Resources::CrMesh();
+			auto mesh = std::make_shared<Graphics::CrMesh>();
 
 			uint32_t num_Vertices = width * height * 3;
 			uint32_t num_Faces = (width*height) + (width - 1)*(height - 2);

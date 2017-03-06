@@ -85,7 +85,8 @@ namespace Graphics
 
 			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_UTILITY))
 			{
-				GLRenderer::m_UniformUtilityBuffer->Bind(spHandle);
+				GLRenderer* myRenderer = static_cast<GLRenderer*>(SEngine->GetRenderer());
+				myRenderer->GetUtilBuffer()->Bind(spHandle);
 			}
 
 			if (BIT_HAS_FLAG(a_BufferFlags, BUFFER_FLAG_GEOMETRY))
@@ -131,13 +132,11 @@ namespace Graphics
 
 		void GLDeferredRenderer::UpdateLightBuffer(Scene::CrScene* a_Scene) const
 		{
-			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>(Scene::CAMERA_NODE);
-			auto dirLightNode = a_Scene->GetNode<Scene::CrLightNode>(Scene::DIRECTIONAL_LIGHT_NODE);
-			auto pointLights = a_Scene->GetNodes<Scene::CrLightNode>(Scene::POINT_LIGHT_NODE);
+			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>();
 
 			LightInfo lightInfo;
-			lightInfo.hasDirectionalLight = uint32_t(dirLightNode != nullptr);
-			lightInfo.numPointLights = uint32_t(pointLights.size());
+			lightInfo.hasDirectionalLight = uint32_t(true);
+			lightInfo.numPointLights = uint32_t(1);
 			lightInfo.cameraPosition = camNode->m_Transform.Translation;
 
 			m_LightInfoBuffer->Subdata(&lightInfo, 0);

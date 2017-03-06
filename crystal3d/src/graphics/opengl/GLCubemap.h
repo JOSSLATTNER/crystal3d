@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "core\Core.h"
+#include "resources\interface\Resource.h"
 #include "graphics\soil\SOIL.h"
 
 #include "GL.h"
@@ -9,7 +10,8 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		class GLCubemap
+		class GLCubemap 
+			: public Resources::CrResource
 		{
 		public:
 			GLCubemap(const std::string& a_Filename);

@@ -19,7 +19,7 @@ namespace Scene
 	{
 	}
 
-	void CrSceneNode::_Update(float & a_DeltaTime)
+	void CrSceneNode::_Update(const float & a_DeltaTime)
 	{
 		for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
 		{
@@ -27,15 +27,10 @@ namespace Scene
 		}
 	}
 
-	void CrSceneNode::Update(float& a_DeltaTime)
+	void CrSceneNode::Update(const float& a_DeltaTime)
 	{	
-		//...
 	}
 
-	ENodeType CrSceneNode::GetType()
-	{
-		return ENodeType::GENERIC_NODE;
-	}
 
 	void CrSceneNode::AddComponent(Components::IComponent * a_Component)
 	{

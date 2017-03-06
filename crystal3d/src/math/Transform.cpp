@@ -55,19 +55,19 @@ namespace Scene
 
 	glm::vec3 CrTransform::GetForward() const
 	{
-		glm::mat4 world = glm::transpose(WorldMatrix());
+		glm::mat4 world = glm::transpose(this->WorldMatrix());
 		return glm::normalize(glm::vec3(world[2][0], world[2][1], world[2][2]));
 	}
 
 	glm::vec3 CrTransform::GetRight() const
 	{
-		glm::mat4 world = glm::transpose(WorldMatrix());
+		glm::mat4 world = glm::transpose(this->WorldMatrix());
 		return glm::normalize(glm::vec3(world[0][0], world[0][1], world[0][2]));
 	}
 
 	glm::vec3 CrTransform::GetUp() const
 	{
-		glm::mat4 world = glm::transpose(WorldMatrix());
+		glm::mat4 world = glm::transpose(this->WorldMatrix());
 		return glm::normalize(glm::vec3(world[1][0], world[1][1], world[1][2]));
 	}
 

@@ -16,12 +16,12 @@ namespace Scene
 	{
 	}
 
-	Resources::CrMaterial* CrMeshNode::GetMaterial()
+	Graphics::CrMaterial* CrMeshNode::GetMaterial()
 	{
 		return &m_Material;
 	}
 
-	Resources::CrMesh * CrMeshNode::GetMesh()
+	Graphics::CrMesh * CrMeshNode::GetMesh()
 	{
 		return &m_Mesh;
 	}
@@ -31,7 +31,7 @@ namespace Scene
 		return m_RenderMode;
 	}
 
-	void CrMeshNode::SetMesh(Resources::CrMesh& a_Mesh)
+	void CrMeshNode::SetMesh(Graphics::CrMesh& a_Mesh)
 	{
 		m_Mesh = a_Mesh;
 
@@ -39,7 +39,7 @@ namespace Scene
 		m_BoundingBoxBase = Math::CreateBoundingBox(vertices.data(), uint32_t(vertices.size()));
 	}
 
-	void CrMeshNode::SetMaterial(Resources::CrMaterial& a_Material)
+	void CrMeshNode::SetMaterial(Graphics::CrMaterial& a_Material)
 	{
 		m_Material = a_Material;
 	}
@@ -49,16 +49,11 @@ namespace Scene
 		m_RenderMode = a_RenderMode;
 	}
 
-	void CrMeshNode::Update(float& delta)
+	void CrMeshNode::Update(const float& a_DeltaTime)
 	{
 		glm::mat4 modelMatrix = m_Transform.LocalMatrix();
-		m_BoundingBoxTransformed.m_Max = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Max, 1.0f)*modelMatrix);
-		m_BoundingBoxTransformed.m_Min = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Min, 1.0f)*modelMatrix);
-	}
-
-	ENodeType CrMeshNode::GetType()
-	{
-		return ENodeType::MESH_NODE;
+		m_BoundingBoxTransformed.m_Max = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Max, 1.0f) * modelMatrix);
+		m_BoundingBoxTransformed.m_Min = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Min, 1.0f) * modelMatrix);
 	}
 
 	Math::AABB* CrMeshNode::GetBoundingBox()

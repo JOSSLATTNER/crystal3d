@@ -2,6 +2,8 @@
 #include "window\interface\IWindow.h"
 #include "core\Platform.h"
 
+#define CR_WIN32_CLASS_NAME "Crystal3D"
+
 namespace Window
 {
 	namespace Windows32

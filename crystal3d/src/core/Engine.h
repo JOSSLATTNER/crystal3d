@@ -44,7 +44,7 @@ namespace Core
 		Graphics::IRenderer* m_Renderer;
 
 	private:
-		void Update(float& delta) const;
+		void Update(const float& delta) const;
 		void Render();
 	
 	private:

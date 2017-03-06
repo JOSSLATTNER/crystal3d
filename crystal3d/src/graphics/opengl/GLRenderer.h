@@ -8,18 +8,24 @@
 #include "GLUniformBuffer.hpp"
 #include "GLFramebuffer.hpp"
 
-//@G_BUFFER_FORMATS
 #define G_BUFFER_FORMATS GL_RGBA32F, GL_RGBA32F, GL_RGBA32F, GL_RGBA32F
-
-namespace Core
-{
-	FORWARD_DECL(CrGameTimer);
-}
 
 namespace Graphics
 {
 	namespace OpenGL
 	{
+		struct MVP
+		{
+			glm::mat4 modelMatrix;
+			glm::mat4 viewMatrix;
+			glm::mat4 projectionMatrix;
+		};
+
+		struct ShaderUtil
+		{
+			float globalTime;
+		};
+
 		class GLRenderer 
 			: public IRenderer
 		{
@@ -30,35 +36,31 @@ namespace Graphics
 			~GLRenderer() override;
 			bool Initialize(CrRendererContext& a_RendererContext) override;
 			void Render(Scene::CrScene* a_Scene) override;
-			void AddRenderable(Graphics::IRenderable* a_Node) override;
 
-			GLFramebuffer* m_GeometryBuffer;
-
-			struct MVP
-			{
-				glm::mat4 modelMatrix;
-				glm::mat4 viewMatrix;
-				glm::mat4 projectionMatrix;
-			};
-
-			static GLUniformBuffer<MVP>* m_UniformMVPBuffer;
-
-			struct ShaderUtil
-			{
-				float globalTime;
-			};
-
-			static GLUniformBuffer<ShaderUtil>* m_UniformUtilityBuffer;
+		public:
+			GLUniformBuffer<MVP>* GetMVPBuffer() const;
+			GLUniformBuffer<ShaderUtil>* GetUtilBuffer() const;
 			
 		private:
-			Window::IWindow* m_Window;
-			Core::CrGameTimer* m_rGameTimer;
+			void CreateEntity(IRenderable* a_Renderable);
 
+			std::unordered_map<ERenderMode, GLenum> m_RenderModeMappings = 
+			{
+				{ ERenderMode::Lines, GL_LINES },
+				{ ERenderMode::Quads, GL_QUADS },
+				{ ERenderMode::Triangles, GL_TRIANGLES },
+				{ ERenderMode::Triangle_Fan, GL_TRIANGLE_FAN },
+				{ ERenderMode::Triangle_Strip, GL_TRIANGLE_STRIP },
+			};
+
+			GLUniformBuffer<MVP>* m_UniformMVPBuffer;
+			GLUniformBuffer<ShaderUtil>* m_UniformUtilityBuffer;
+			GLFramebuffer* m_GeometryBuffer;
 			GLContext* m_CurrentContext;
 			GLDeferredRenderer* m_DeferredRenderer;
 
-			//TODO: READ FROM TREE (FRUSTUM CULLING)
-			std::vector<GLRenderEntity*> m_RenderEntities;
+			Window::IWindow* m_Window;
+			std::unordered_map<Graphics::IRenderable*, GLRenderEntity*> m_RenderEntities;
 
 		};
 	}

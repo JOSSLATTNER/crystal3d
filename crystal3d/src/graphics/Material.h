@@ -1,15 +1,10 @@
 #pragma once
 #include "core\Core.h"
 
-namespace Resources
+namespace Graphics
 {
 	struct CrMaterial
 	{
-		CrMaterial() {}
-		CrMaterial(const std::string& a_VertexShaderFile, const std::string& a_FragmentShaderFile) :
-			vertexShader(a_VertexShaderFile), fragmentShader(a_FragmentShaderFile) {}
-
-		//Textures
 		std::unordered_map<std::string, std::string> textures;
 		std::unordered_map<std::string, std::string> cubemaps;
 

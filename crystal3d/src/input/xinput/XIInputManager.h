@@ -32,7 +32,6 @@ namespace Input
 			double_t NormalizeAxis(int32_t a_Value);
 
 			std::unordered_map<uint32_t, XINPUT_STATE> m_InputStates;
-
 			const std::unordered_map<ControllerInput::EButtons, WORD> m_Mappings
 			{
 				{ ControllerInput::A, XINPUT_GAMEPAD_A },

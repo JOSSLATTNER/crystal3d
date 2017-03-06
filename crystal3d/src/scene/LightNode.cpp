@@ -5,16 +5,19 @@ namespace Scene
 	CrLightNode::CrLightNode(ELightType a_Type)
 		: m_Type(a_Type)
 	{
+		CrAssert(a_Type != ELightType::Spot, "Spotlight not yet implemented.");
+
 	}
 	CrLightNode::~CrLightNode()
 	{
 	}
 
-	ENodeType CrLightNode::GetType()
+	void CrLightNode::Update(const float & a_DeltaTime)
 	{
-		switch (m_Type)
-		{
+	}
 
-		}
+	ELightType CrLightNode::GetType()
+	{
+		return m_Type;
 	}
 }

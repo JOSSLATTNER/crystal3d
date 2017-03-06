@@ -1,6 +1,6 @@
 #pragma once
 #include "core\Core.h"
-#include "resources\Mesh.h"
+#include "graphics\Mesh.h"
 
 #include "GL.h"
 
@@ -11,7 +11,7 @@ namespace Graphics
 		class GLVertexArray
 		{
 		public:
-			GLVertexArray(Resources::CrMesh* a_Mesh);
+			GLVertexArray(Graphics::CrMesh* a_Mesh);
 			~GLVertexArray();
 
 			void Bind() const;

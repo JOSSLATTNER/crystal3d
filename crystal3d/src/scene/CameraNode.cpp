@@ -28,8 +28,6 @@ namespace Scene
 				m_ProjectionMatrix = glm::ortho(0., m_Frustum.width, m_Frustum.height, 0., m_Frustum.nearPlane, m_Frustum.farPlane);
 				break;
 			}
-			default:
-				return;
 		}
 
 		m_ViewMatrix = glm::inverse(m_Transform.WorldMatrix());

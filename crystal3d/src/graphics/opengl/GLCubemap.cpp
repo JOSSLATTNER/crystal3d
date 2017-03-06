@@ -7,12 +7,9 @@ namespace Graphics
 	{
 		GLCubemap::GLCubemap(const std::string & a_Filename)
 		{
-			auto pResources = SEngine->GetResourceManager();
-			std::string fullPath = pResources->GetFullPath(a_Filename);
-
 			m_Handle = SOIL_load_OGL_single_cubemap
 			(
-				fullPath.c_str(),
+				a_Filename.c_str(),
 				"WNESUD", /*WNESUD*/
 				SOIL_LOAD_AUTO,
 				SOIL_CREATE_NEW_ID,

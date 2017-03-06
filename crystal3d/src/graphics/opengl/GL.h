@@ -2,8 +2,6 @@
 #include "core\Core.h"
 #include <packages/glew/include/glew.h>
 
-#define INVALID_GL_HANDLE(h) h<=0
-
 //@DEBUG
 #define CR_GRAPHICS_DEBUG
 //#define CR_GRAPHICS_DEBUG_LEVEL_HIGH

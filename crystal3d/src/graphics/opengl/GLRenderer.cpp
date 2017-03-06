@@ -5,10 +5,6 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		//TODO: REMOVE STATIC..
-		GLUniformBuffer<GLRenderer::ShaderUtil>* GLRenderer::m_UniformUtilityBuffer = nullptr;
-		GLUniformBuffer<GLRenderer::MVP>* GLRenderer::m_UniformMVPBuffer = nullptr;
-
 		GLRenderer::GLRenderer()
 		{
 			m_CurrentContext = nullptr;
@@ -16,7 +12,7 @@ namespace Graphics
 			m_UniformUtilityBuffer = nullptr;
 			m_GeometryBuffer = nullptr;
 			m_DeferredRenderer = nullptr;
-			m_rGameTimer = nullptr;
+			m_ResourceManager = nullptr;
 		}
 
 		GLRenderer::~GLRenderer()
@@ -26,10 +22,11 @@ namespace Graphics
 			delete m_GeometryBuffer;
 			delete m_DeferredRenderer;
 			delete m_CurrentContext;
+			delete m_ResourceManager;
 
 			for (auto& re : m_RenderEntities)
 			{
-				delete re;
+				delete re.second;
 			}
 		}
 
@@ -87,8 +84,6 @@ namespace Graphics
 
 			m_DeferredRenderer = new GLDeferredRenderer();
 			m_DeferredRenderer->Initialize(deferredContext);
-
-			m_rGameTimer = SEngine->GetGameTimer();
 			return true;
 		}
 
@@ -97,15 +92,23 @@ namespace Graphics
 		{
 			/*
 			Deferred Pipeline:
-			1) Geometry Pass: Renders geometry into framebuffer object (FBO)
+			1) Geometry Pass: Renders geometry into FBO
 			2) Lighting Pass: Applies Lighting to geometry
 			3) Additional Passes: Shadows, Reflections, PostFX
 			*/
 
+			auto renderList = a_Scene->GetRenderList();
+			for (auto& renderable : renderList)
+			{
+				auto it = m_RenderEntities.find(renderable);
 
+				if (it != m_RenderEntities.end())
+					it->second->Render();
+				else
+					this->CreateEntity(renderable);
+			}
 
-
-			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>(Scene::CAMERA_NODE);
+			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>();
 
 			MVP mvp{};
 			mvp.modelMatrix = glm::mat4(0);
@@ -114,14 +117,14 @@ namespace Graphics
 			m_UniformMVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};
-			util.globalTime = m_rGameTimer->GetElapsed<float_t>();
+			util.globalTime = SEngine->GetGameTimer()->GetElapsed<float_t>();
 			m_UniformUtilityBuffer->Subdata(&util,0);
 
 			m_GeometryBuffer->Bind();
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				for (auto& n : m_RenderEntities)
 				{
-					n->Render();
+					n.second->Render();
 				}
 			m_GeometryBuffer->Unbind();
 
@@ -129,47 +132,30 @@ namespace Graphics
 			m_CurrentContext->SwapBuffer();
 		}
 
-		void GLRenderer::AddRenderable(Graphics::IRenderable* a_Node)
+		GLUniformBuffer<MVP>* GLRenderer::GetMVPBuffer() const
 		{
-			auto mesh = a_Node->GetMesh();
-			auto material = a_Node->GetMaterial();
-			auto mode = a_Node->GetRenderMode();
-			auto boundingBox = a_Node->GetBoundingBox();
-			auto transform = a_Node->GetTransform();
-
-			auto vao = new GLVertexArray(mesh);
-			auto program = new GLShaderProgram(material);
-	
-			GLenum glMode;
-			switch (mode)
-			{
-			case Graphics::ERenderMode::Triangles:
-				glMode = GL_TRIANGLES;
-				break;
-			case Graphics::ERenderMode::Triangle_Strip:
-				glMode = GL_TRIANGLE_STRIP;
-				break;
-			case Graphics::ERenderMode::Quads:
-				glMode = GL_QUADS;
-				break;
-			case Graphics::ERenderMode::Triangle_Fan:
-				glMode = GL_TRIANGLE_FAN;
-				break;
-			case Graphics::ERenderMode::Lines:
-				glMode = GL_LINES;
-				break;
-			default:
-				CrAssert(0, "Invalid Render Mode.");
-				return;
-			}
-
-			auto entity = new GLRenderEntity(vao, program, glMode);
-			entity->SetTransform(transform);
-			entity->SetBoundingBox(boundingBox);
-
-			m_RenderEntities.push_back(entity);
+			return m_UniformMVPBuffer;
 		}
 
+		GLUniformBuffer<ShaderUtil>* GLRenderer::GetUtilBuffer() const
+		{
+			return m_UniformUtilityBuffer;
+		}
+
+		void GLRenderer::CreateEntity(IRenderable * a_Renderable)
+		{
+			auto mesh = a_Renderable->GetMesh();
+			auto material = a_Renderable->GetMaterial();
+			auto mode = a_Renderable->GetRenderMode();
+			auto boundingBox = a_Renderable->GetBoundingBox();
+			auto transform = a_Renderable->GetTransform();
+
+			GLVertexArray* vao = new GLVertexArray(mesh);
+			GLShaderProgram* program = new GLShaderProgram(material);
+			GLenum glmode = m_RenderModeMappings[mode];
+	
+			m_RenderEntities[a_Renderable] = new GLRenderEntity(vao, program, glmode, transform, boundingBox);
+		}
 
 	}
 }

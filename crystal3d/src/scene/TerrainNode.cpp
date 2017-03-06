@@ -17,12 +17,12 @@ namespace Scene
 		delete m_Material;
 	}
 
-	Resources::CrMaterial * CrTerrainNode::GetMaterial()
+	Graphics::CrMaterial * CrTerrainNode::GetMaterial()
 	{
 		return m_Material;
 	}
 
-	Resources::CrMesh * CrTerrainNode::GetMesh()
+	Graphics::CrMesh * CrTerrainNode::GetMesh()
 	{
 		return m_Mesh;
 	}
@@ -32,15 +32,10 @@ namespace Scene
 		return Graphics::ERenderMode::Triangle_Strip;
 	}
 
-	ENodeType CrTerrainNode::GetType()
-	{
-		return ENodeType::TERRAIN_NODE;
-	}
-
-	void CrTerrainNode::SetTerrain(Resources::CrTerrain * a_Terrain)
+	void CrTerrainNode::SetTerrain(Graphics::CrTerrain * a_Terrain)
 	{
 		m_Terrain = a_Terrain;
-		m_Material = new Resources::CrMaterial();
+		m_Material = new Graphics::CrMaterial();
 
 		for (uint32_t i = 0; i < m_Terrain->diffuseTextures.size(); i++)
 		{
@@ -60,7 +55,7 @@ namespace Scene
 			m_Material->textures[CrStringFormat("tNormalMaps[%d]", i)] = m_Terrain->normalMaps[i];
 		}
 
-		m_Mesh = Primitives::Make_Plane(m_Terrain->size.x, m_Terrain->size.y);
+		m_Mesh = Primitives::Make_Plane(m_Terrain->size.x, m_Terrain->size.y).get();
 	}
 
 	Math::AABB* CrTerrainNode::GetBoundingBox()

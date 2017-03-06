@@ -78,7 +78,7 @@ namespace Graphics
 				GLint blockIndex = glGetUniformBlockIndex(a_ShaderProgram, m_BlockName.c_str());
 				if (blockIndex != -1)
 				{
-					CrLog("Block %s not found! Uniform may have been optimized out by glsl compiler.", m_BlockName.c_str()); 
+					CrLog("Block %s not found!", m_BlockName.c_str()); 
 					return;
 				}
 

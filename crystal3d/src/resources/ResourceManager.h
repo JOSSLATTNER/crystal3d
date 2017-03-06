@@ -1,14 +1,9 @@
 #pragma once
 #include "core\Core.h"
-
-#include "Script.h"
-#include "Model.h"
-#include "Script.h"
+#include "interface\Resource.h"
 
 namespace Resources
 {
-	typedef uint64_t CrResourceHandle;
-
 	template<typename T>
 	using CrResourcePtr = std::shared_ptr<T>;
 
@@ -18,17 +13,46 @@ namespace Resources
 		CrResourceManager();
 		~CrResourceManager();
 
-	public:
-		CrResourcePtr<Scripting::CrScript> LoadScript(const std::string& a_Filename);
-		CrResourcePtr<CrModel> LoadModel(const std::string& a_Filename);
-	
-	private:
-		CrResourceHandle GenerateHandle(const std::string& a_String) const;
-		const std::string GetFullPath(const std::string& a_FileName) const;
+		template<typename T>
+		CrResourcePtr<T> LoadResource(const CrResourceHandle a_Handle)
+		{
+			auto it = m_Resources.find(hash);
+
+			if (it != m_Resources.end())
+				return std::static_pointer_cast<T>(it->second);
+
+			return nullptr;
+		}
+
+		template<typename T, typename...TArgs>
+		CrResourcePtr<T> LoadResource(const std::string& a_Filename, TArgs&&...a_Args)
+		{
+			auto hash = this->GenerateHandle(a_Filename);
+			auto fnd = this->LoadResource<T>(hash);
+
+			if (fnd != nullptr)
+				return fnd;
+
+			auto fullPath = this->ResolvePath(a_Filename);
+			auto res = std::make_shared<T>(fullPath, a_Args...);
+			auto resBase = std::static_pointer_cast<CrResource>(res);
+
+			//CrResource::SetReosoureHandle()
+			resBase->SetResourceHandle(hash);
+
+			m_Models.insert({ hash, resBase });
+			return res;
+		}
+
+		void FreeResource(const CrResourceHandle a_Handle);
+		void FreeAll();
 
 	private:
-		std::unordered_map<CrResourceHandle, CrResourcePtr<CrModel>> m_Models;
-		std::unordered_map<CrResourceHandle, CrResourcePtr<Scripting::CrScript>> m_Scripts;
+		const CrResourceHandle GenerateHandle(const std::string& a_String) const;
+		const std::string ResolvePath(const std::string& a_FileName) const;
+
+	private:
+		std::unordered_map<CrResourceHandle, CrResourcePtr<CrResource>> m_Resources;
 
 	};
 }

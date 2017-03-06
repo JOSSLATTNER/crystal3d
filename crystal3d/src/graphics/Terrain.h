@@ -3,11 +3,13 @@
 #include "math\glm\GLM.h"
 #include "math\Transform.h"
 
-namespace Resources
+namespace Graphics
 {
 	struct CrTerrain
 	{
-		CrTerrain() : displacementScale(50.0f), diffuseTextures(2), normalMaps(2) {};
+		CrTerrain() 
+			: displacementScale(50.0f), diffuseTextures(2), normalMaps(2)
+		{};
 
 		float displacementScale;
 		glm::ivec2 size;

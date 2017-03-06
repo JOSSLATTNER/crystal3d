@@ -1,11 +1,11 @@
 #pragma once
 
 #include "core\Core.h"
-#include "resources\Mesh.h"
-#include "resources\Material.h"
+#include "graphics\Mesh.h"
+#include "graphics\Material.h"
 #include "resources\ResourceManager.h"
 
-namespace Resources
+namespace Graphics
 {
 	class CrModel
 	{

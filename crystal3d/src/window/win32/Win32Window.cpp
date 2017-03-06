@@ -22,7 +22,7 @@ namespace Window
 			DWORD style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
 			m_HInstance = GetModuleHandle(0);
-			m_ClassName = "FrozenEngine";
+			m_ClassName = CR_WIN32_CLASS_NAME;
 
 			WNDCLASS wndClass = {};
 			wndClass.style = CS_HREDRAW | CS_VREDRAW;

@@ -12,21 +12,16 @@ namespace Graphics
 			m_ShaderProgram = new GLShaderProgram();
 			auto pResources = SEngine->GetResourceManager();
 
-			GLShaderCreateInfo vsCI{};
-			vsCI.type = EShaderType::VertexShader;
-			auto DeferredVertShader = pResources->FetchResource<GLShader>(a_Context.vertexShaderFile, &vsCI);
-			DeferredVertShader->Compile();
+			//TODO: RESX
+			auto vertShader = new GLShader(a_Context.vertexShaderFile, EShaderType::VertexShader);
+			auto fragShader = new GLShader(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
 
-			GLShaderCreateInfo fsCI{};
-			fsCI.type = EShaderType::FragmentShader;
-			auto DeferredFragShader = pResources->FetchResource<GLShader>(a_Context.fragmentShaderFile, &fsCI);
-			DeferredFragShader->Compile();
-
-			m_ShaderProgram->AttachShader(DeferredVertShader);
-			m_ShaderProgram->AttachShader(DeferredFragShader);
+			m_ShaderProgram->AttachShader(vertShader);
+			m_ShaderProgram->AttachShader(fragShader);
 			m_ShaderProgram->Link();
 
-			m_Context = a_Context;
+			m_ViewportWidth = static_cast<GLfloat>(a_Context.viewportWidth);
+			m_ViewportHeight = static_cast<GLfloat>(a_Context.viewportHeight);
 		}
 
 		GLRenderPass::~GLRenderPass()
@@ -41,7 +36,7 @@ namespace Graphics
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			glLoadIdentity();
-			glOrtho(0, m_Context.viewportWidth, 0, m_Context.viewportHeight, 0.1f, 2);
+			glOrtho(0, m_ViewportWidth, 0, m_ViewportHeight, 0.1f, 2);
 
 			//Model setup
 			glMatrixMode(GL_MODELVIEW);
@@ -57,14 +52,19 @@ namespace Graphics
 			glTranslatef(0, 0, -1.0);
 
 			glBegin(GL_QUADS);
+
 			glTexCoord2f(0, 0);
 			glVertex3f(0.0f, 0.0f, 0.0f);
+
 			glTexCoord2f(1, 0);
-			glVertex3f((GLfloat)m_Context.viewportWidth, 0.0f, 0.0f);
+			glVertex3f(m_ViewportWidth, 0.0f, 0.0f);
+
 			glTexCoord2f(1, 1);
-			glVertex3f((GLfloat)m_Context.viewportWidth, (GLfloat)m_Context.viewportHeight, 0.0f);
+			glVertex3f(m_ViewportWidth, m_ViewportHeight, 0.0f);
+
 			glTexCoord2f(0, 1);
-			glVertex3f(0.0f, (GLfloat)m_Context.viewportHeight, 0.0f);
+			glVertex3f(0.0f, m_ViewportHeight, 0.0f);
+
 			glEnd();
 
 			m_ShaderProgram->Unbind();

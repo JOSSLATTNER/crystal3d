@@ -6,7 +6,7 @@ namespace Scene
 	CrScene::CrScene(const std::string& a_Script)
 	{
 		auto pResources = SEngine->GetResourceManager();
-		m_Behaviour = pResources->LoadScript(a_Script);
+		m_Behaviour = pResources->LoadResource<Scripting::CrScript>(a_Script);
 	}
 
 	CrScene::~CrScene()
@@ -27,7 +27,7 @@ namespace Scene
 		}
 	}
 
-	void CrScene::Update(float& a_Delta)
+	void CrScene::Update(const float& a_Delta)
 	{
 		if (m_Behaviour != nullptr)
 		{
@@ -39,21 +39,10 @@ namespace Scene
 			node.second->_Update(a_Delta);
 		}
 	}
+
+	std::vector<Graphics::IRenderable*>& CrScene::GetRenderList()
+	{
+		return m_RenderList;
+	}
 	
-	void CrScene::AddNode(CrSceneNode* a_Node)
-	{
-		m_Nodes[a_Node->GetType()] = a_Node;
-	}
-
-	CrSceneNode * CrScene::GetNode(ENodeType a_Type)
-	{
-		auto range = m_Nodes.equal_range(a_Type);
-		return range.first->second;
-	}
-
-	std::vector<CrSceneNode*> CrScene::GetNodes(ENodeType a_Type)
-	{
-		auto range = m_Nodes.equal_range(a_Type);
-		return {range.first, range.second};
-	}
 }

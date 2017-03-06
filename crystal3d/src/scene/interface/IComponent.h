@@ -1,6 +1,6 @@
 #pragma once
 #include "core\Core.h"
-#include "SceneNode.h"
+#include "scene\SceneNode.h"
 
 namespace Scene
 {
@@ -14,7 +14,7 @@ namespace Scene
 			virtual ~IComponent() {};
 			virtual void OnDetach() = 0;
 			virtual void OnAttach(CrSceneNode* a_Node) = 0;
-			virtual void Update(float& a_Delta) = 0;
+			virtual void Update(const float& a_Delta) = 0;
 		};
 	}
 }

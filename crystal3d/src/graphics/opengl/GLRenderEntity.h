@@ -2,7 +2,6 @@
 #include "core\Core.h"
 #include "math\Transform.h"
 #include "math\AABB.h"
-#include "resources\Mesh.h"
 
 #include "GL.h"
 #include "GLShaderProgram.h"
@@ -16,13 +15,14 @@ namespace Graphics
 		class GLRenderEntity
 		{
 		public:
-			GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode);
+			GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode, Scene::CrTransform* a_Transform, Math::AABB* a_BoundingBox);
 			~GLRenderEntity();
 
 			void SetTransform(Scene::CrTransform* a_Transform);
 			void SetProgram(GLShaderProgram* a_Program);
 			void SetVertexArray(GLVertexArray* a_VertexArray);
 			void SetBoundingBox(Math::AABB* a_BB);
+			void SetMode(GLenum a_Mode);
 
 			void Render();
 

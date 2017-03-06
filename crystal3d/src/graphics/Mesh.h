@@ -1,7 +1,7 @@
 #pragma once
 #include "core\Core.h"
 
-namespace Resources
+namespace Graphics
 {
 	struct CrMesh
 	{

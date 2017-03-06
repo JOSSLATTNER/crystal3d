@@ -13,23 +13,22 @@ namespace Scene
 		~CrMeshNode();
 
 		// Inherited via IRenderable
-		Resources::CrMaterial * GetMaterial() override;
-		Resources::CrMesh * GetMesh() override;
+		Graphics::CrMaterial * GetMaterial() override;
+		Graphics::CrMesh * GetMesh() override;
 		Graphics::ERenderMode GetRenderMode() override;
 		Math::AABB* GetBoundingBox() override;
 		Scene::CrTransform* GetTransform() override;
 
 		// Inherited via CrSceneNode
-		void Update(float& a_DeltaTime) override;
-		ENodeType GetType() override;
+		void Update(const float& a_DeltaTime) override;
 
-		void SetMesh(Resources::CrMesh& a_Mesh);
-		void SetMaterial(Resources::CrMaterial& a_Material);
+		void SetMesh(Graphics::CrMesh& a_Mesh);
+		void SetMaterial(Graphics::CrMaterial& a_Material);
 		void SetRenderMode(Graphics::ERenderMode a_RenderMode);
 
 	private:
-		Resources::CrMesh m_Mesh;
-		Resources::CrMaterial m_Material;
+		Graphics::CrMesh m_Mesh;
+		Graphics::CrMaterial m_Material;
 		Math::AABB m_BoundingBoxBase;
 		Math::AABB m_BoundingBoxTransformed;
 		Graphics::ERenderMode m_RenderMode;

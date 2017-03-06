@@ -29,10 +29,11 @@ namespace Scene
 
 		void CrScriptComponent::SetScript(Scripting::CrScript * a_Script)
 		{
+			CrAssert(a_Script != nullptr, "Script was nullptr!");
 			m_Script = a_Script;
 		}
 
-		void CrScriptComponent::Update(float & a_Delta)
+		void CrScriptComponent::Update(const float & a_Delta)
 		{
 			if (m_Script != nullptr)
 			{

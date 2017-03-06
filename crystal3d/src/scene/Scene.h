@@ -3,7 +3,8 @@
 #include "core\Core.h"
 #include "SceneNode.h"
 #include "graphics\interface\IRenderable.h"
-#include "resources\Script.h"
+#include "scripting\Script.h"
+#include "resources\ResourceManager.h"
 
 namespace Scene
 {
@@ -14,27 +15,39 @@ namespace Scene
 		~CrScene();
 	
 		void Initialize();
-		void Update(float& delta);
-		void AddNode(CrSceneNode* a_Node);
-
-		CrSceneNode* GetNode(ENodeType a_Type);
-		std::vector<CrSceneNode*> GetNodes(ENodeType a_Type);
+		void Update(const float& delta);
+		std::vector<Graphics::IRenderable*>& GetRenderList();
 
 		template<typename T>
-		T* GetNode(ENodeType a_Type)
+		void AddNode(CrSceneNode* a_Node)
 		{
-			return static_cast<T*>(GetNode(a_Type));
+			if (std::is_base_of<Graphics::IRenderable, T>)
+			{
+				auto renderObject = static_cast<Graphics::IRenderable*>(a_Node);
+				m_RenderList.push_back(renderObject);
+			}
+
+			m_Nodes[typeid(T).hash_code()] = a_Node;
 		}
 
 		template<typename T>
-		std::vector<T*> GetNodes(ENodeType a_Type)
+		T* GetNode()
 		{
-			auto nodes = GetNodes(a_Type);
-			return{ nodes.begin(), nodes.end() };
+			auto range = m_Nodes.equal_range(typeid(T).hash_code());
+			return range.first->second;
 		}
 
+		template<typename T>
+		std::vector<T*> GetNodes()
+		{
+			auto range = m_Nodes.equal_range(typeid(T).hash_code());
+			return{ range.first, range.second };
+		}
+		
 	private:
-		std::unordered_map<ENodeType, CrSceneNode*> m_Nodes;
+		std::vector<Graphics::IRenderable*> m_RenderList;
+
+		std::unordered_multimap<size_t, CrSceneNode*> m_Nodes;
 		Resources::CrResourcePtr<Scripting::CrScript> m_Behaviour;
 
 	};

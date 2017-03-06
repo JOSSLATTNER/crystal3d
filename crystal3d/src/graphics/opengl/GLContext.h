@@ -4,8 +4,6 @@
 #include "core\Platform.h"
 #include "window\interface\IWindow.h"
 
-#include "GLState.h"
-
 namespace Graphics
 {
 	namespace OpenGL

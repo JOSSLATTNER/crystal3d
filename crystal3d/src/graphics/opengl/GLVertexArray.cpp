@@ -4,7 +4,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLVertexArray::GLVertexArray(Resources::CrMesh* a_Mesh)
+		GLVertexArray::GLVertexArray(Graphics::CrMesh* a_Mesh)
 		{
 			glGenVertexArrays(1, &m_Handle);
 			glBindVertexArray(m_Handle);
@@ -26,6 +26,7 @@ namespace Graphics
 				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 				glEnableVertexAttribArray(1);
 			}
+
 			if (a_Mesh->normals.size() > 0)
 			{
 				glGenBuffers(1, &m_Vbo[2]);
