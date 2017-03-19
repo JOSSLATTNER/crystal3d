@@ -7,15 +7,15 @@
 #include "input\xinput\XIInputManager.h"
 #endif
 
+Core::CrEngine* Core::CrEngine::s_SharedInstance = nullptr;
+
 namespace Core
 {
-	const uint32_t FPS_NO_CAP = UINT32_MAX;
-	const uint32_t MAX_FPS = 120U;
-
 	CrEngine::CrEngine()
 		: m_MainWindow(nullptr), m_ActiveScene(nullptr), m_GameTimer(nullptr), m_ResourceManager(nullptr),
 		m_InputManager(nullptr), m_Renderer(nullptr)
 	{
+		CrEngine::s_SharedInstance = this;
 	}
 
 	CrEngine::~CrEngine()
@@ -30,7 +30,6 @@ namespace Core
 
 	bool CrEngine::Initialize()
 	{
-
 #ifdef Cr_WINDOWS
 		m_MainWindow = new Window::Windows32::Win32Window();
 		m_InputManager = new Input::XInput::XIInputManager();
@@ -40,9 +39,9 @@ namespace Core
 		m_ResourceManager = new Resources::CrResourceManager();
 
 		Window::CrWindowContext windowContext{};
-		windowContext.title = "Engine";
-		windowContext.width = 1920;
-		windowContext.height = 1080;
+		windowContext.title = ENGINE_WINDOW_TITLE;
+		windowContext.width = ENGINE_WINDOW_WIDTH;
+		windowContext.height = ENGINE_WINDOW_HEIGHT;
 		windowContext.fullscreen = false;
 
 		if (!m_MainWindow->Initialize(windowContext))
@@ -78,7 +77,7 @@ namespace Core
 		{
 			const float_t delta = m_GameTimer->GetDelta<float_t>();
 
-			if (delta >= 1.0 / MAX_FPS)
+			if (delta >= 1.0f / MAX_FPS)
 			{
 				//TODO: MOVE WIN32 STUFF
 				MSG msg{};

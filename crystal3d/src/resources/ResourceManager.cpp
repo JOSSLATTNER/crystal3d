@@ -4,7 +4,9 @@ namespace Resources
 {
 	CrResourceManager::CrResourceManager()
 	{
+		CrLogSuccess("ResourceManager initialized [OK]");
 	}
+
 	CrResourceManager::~CrResourceManager()
 	{
 		this->FreeAll();
@@ -19,11 +21,20 @@ namespace Resources
 
 	void CrResourceManager::FreeResource(const CrResourceHandle a_Handle)
 	{
-		m_Resources.erase(a_Handle);
+		auto it = m_Resources.find(a_Handle);
+		if (it != m_Resources.end())
+		{
+			delete it->second;
+			m_Resources.erase(a_Handle);
+		}
 	}
 
 	void CrResourceManager::FreeAll()
 	{
+		for (auto& resource : m_Resources)
+		{
+			delete resource.second;
+		}
 		m_Resources.clear();
 	}
 

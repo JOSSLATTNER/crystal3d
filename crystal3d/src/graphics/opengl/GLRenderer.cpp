@@ -12,7 +12,6 @@ namespace Graphics
 			m_UniformUtilityBuffer = nullptr;
 			m_GeometryBuffer = nullptr;
 			m_DeferredRenderer = nullptr;
-			m_ResourceManager = nullptr;
 		}
 
 		GLRenderer::~GLRenderer()
@@ -22,7 +21,6 @@ namespace Graphics
 			delete m_GeometryBuffer;
 			delete m_DeferredRenderer;
 			delete m_CurrentContext;
-			delete m_ResourceManager;
 
 			for (auto& re : m_RenderEntities)
 			{
@@ -49,7 +47,8 @@ namespace Graphics
 				return false;
 			}
 
-			CrLog("Version: %s", glGetString(GL_VERSION));
+			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
+				glGetString(GL_VERSION), glGetString(GL_VENDOR), glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 			//@GL Settings
 			glEnable(GL_DEPTH_TEST);
@@ -84,6 +83,8 @@ namespace Graphics
 
 			m_DeferredRenderer = new GLDeferredRenderer();
 			m_DeferredRenderer->Initialize(deferredContext);
+
+			CrLogSuccess("Renderer initialized [OK]");
 			return true;
 		}
 
@@ -152,9 +153,20 @@ namespace Graphics
 
 			GLVertexArray* vao = new GLVertexArray(mesh);
 			GLShaderProgram* program = new GLShaderProgram(material);
+			m_UniformMVPBuffer->Bind(program->GetHandle());
+
 			GLenum glmode = m_RenderModeMappings[mode];
 	
-			m_RenderEntities[a_Renderable] = new GLRenderEntity(vao, program, glmode, transform, boundingBox);
+			GLRenderEntity* entity = new GLRenderEntity(vao, program);
+			entity->SetMode(glmode);
+			entity->SetBoundingBox(boundingBox);
+			entity->SetTransform(transform);
+			entity->SetTransformBufferFunc([&](glm::mat4& ma)
+			{
+				m_UniformMVPBuffer->Subdata(&ma);
+			});
+
+			m_RenderEntities[a_Renderable] = entity;
 		}
 
 	}

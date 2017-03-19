@@ -657,6 +657,18 @@
     <ClInclude Include="src\scripting\Framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\resources\interface\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\allocator\LinearAllocator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\allocator\MemoryArena.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\profile\Benchmark.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core\Engine.cpp">
@@ -674,9 +686,6 @@
     <ClCompile Include="src\graphics\opengl\GLDeferredRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\opengl\GLPipelineScript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\opengl\GLRenderEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -690,12 +699,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\opengl\GLShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\opengl\GLSkyboxPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\graphics\opengl\GLSSAOPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\opengl\GLState.cpp">
@@ -740,12 +743,6 @@
     <ClCompile Include="src\window\win32\Win32Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scene\DirectionalLightNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene\PointLightNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\scene\LightNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -756,6 +753,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scripting\Framework.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resources\interface\Resource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

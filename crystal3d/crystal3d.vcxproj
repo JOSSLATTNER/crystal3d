@@ -127,6 +127,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\allocator\LinearAllocator.hpp" />
+    <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
+    <ClInclude Include="src\core\profile\Benchmark.hpp" />
+    <ClInclude Include="src\resources\interface\Resource.h" />
     <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
@@ -343,20 +347,18 @@
     <ClInclude Include="src\window\win32\Win32Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\resources\interface\Resource.cpp" />
     <ClCompile Include="src\scripting\Framework.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />
     <ClCompile Include="src\graphics\opengl\GLCubemap.cpp" />
     <ClCompile Include="src\graphics\opengl\GLDebugRenderer.cpp" />
     <ClCompile Include="src\graphics\opengl\GLDeferredRenderer.cpp" />
-    <ClCompile Include="src\graphics\opengl\GLPipelineScript.cpp" />
     <ClCompile Include="src\graphics\opengl\GLRenderEntity.cpp" />
     <ClCompile Include="src\graphics\opengl\GLRenderer.cpp" />
     <ClCompile Include="src\graphics\opengl\GLRenderPass.cpp" />
     <ClCompile Include="src\graphics\opengl\GLShader.cpp" />
     <ClCompile Include="src\graphics\opengl\GLShaderProgram.cpp" />
-    <ClCompile Include="src\graphics\opengl\GLSkyboxPass.cpp" />
-    <ClCompile Include="src\graphics\opengl\GLSSAOPass.cpp" />
     <ClCompile Include="src\graphics\opengl\GLState.cpp" />
     <ClCompile Include="src\graphics\opengl\GLTexture2D.cpp" />
     <ClCompile Include="src\graphics\opengl\GLVertexArray.cpp" />
@@ -367,10 +369,8 @@
     <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\scripting\Script.cpp" />
     <ClCompile Include="src\scene\CameraNode.cpp" />
-    <ClCompile Include="src\scene\DirectionalLightNode.cpp" />
     <ClCompile Include="src\scene\LightNode.cpp" />
     <ClCompile Include="src\scene\MeshNode.cpp" />
-    <ClCompile Include="src\scene\PointLightNode.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneNode.cpp" />
     <ClCompile Include="src\scene\ScriptComponent.cpp" />

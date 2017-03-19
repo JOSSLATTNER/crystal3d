@@ -1,12 +1,10 @@
 #pragma once
 #include "core\Core.h"
 #include "interface\Resource.h"
+#include "core\allocator\LinearAllocator.hpp"
 
 namespace Resources
 {
-	template<typename T>
-	using CrResourcePtr = std::shared_ptr<T>;
-
 	class CrResourceManager
 	{
 	public:
@@ -14,33 +12,33 @@ namespace Resources
 		~CrResourceManager();
 
 		template<typename T>
-		CrResourcePtr<T> LoadResource(const CrResourceHandle a_Handle)
+		T* LoadResource_(const CrResourceHandle a_Handle)
 		{
-			auto it = m_Resources.find(hash);
+			auto it = m_Resources.find(a_Handle);
 
 			if (it != m_Resources.end())
-				return std::static_pointer_cast<T>(it->second);
+				return static_cast<T*>(it->second);
 
 			return nullptr;
 		}
 
 		template<typename T, typename...TArgs>
-		CrResourcePtr<T> LoadResource(const std::string& a_Filename, TArgs&&...a_Args)
+		T* LoadResource(const std::string& a_Filename, TArgs&&...a_Args)
 		{
 			auto hash = this->GenerateHandle(a_Filename);
-			auto fnd = this->LoadResource<T>(hash);
+			auto fnd = this->LoadResource_<T>(hash);
 
 			if (fnd != nullptr)
 				return fnd;
 
 			auto fullPath = this->ResolvePath(a_Filename);
-			auto res = std::make_shared<T>(fullPath, a_Args...);
-			auto resBase = std::static_pointer_cast<CrResource>(res);
+			auto res = new T(fullPath, std::forward<TArgs>(a_Args)...);
+			auto resBase = static_cast<CrResource*>(res);
 
 			//CrResource::SetReosoureHandle()
 			resBase->SetResourceHandle(hash);
 
-			m_Models.insert({ hash, resBase });
+			m_Resources.insert({ hash, resBase });
 			return res;
 		}
 
@@ -48,11 +46,10 @@ namespace Resources
 		void FreeAll();
 
 	private:
+		std::unordered_map<CrResourceHandle, CrResource*> m_Resources;
+
 		const CrResourceHandle GenerateHandle(const std::string& a_String) const;
 		const std::string ResolvePath(const std::string& a_FileName) const;
-
-	private:
-		std::unordered_map<CrResourceHandle, CrResourcePtr<CrResource>> m_Resources;
 
 	};
 }

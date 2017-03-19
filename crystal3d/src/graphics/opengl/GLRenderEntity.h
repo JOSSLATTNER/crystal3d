@@ -15,7 +15,7 @@ namespace Graphics
 		class GLRenderEntity
 		{
 		public:
-			GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode, Scene::CrTransform* a_Transform, Math::AABB* a_BoundingBox);
+			GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program);
 			~GLRenderEntity();
 
 			void SetTransform(Scene::CrTransform* a_Transform);
@@ -23,6 +23,7 @@ namespace Graphics
 			void SetVertexArray(GLVertexArray* a_VertexArray);
 			void SetBoundingBox(Math::AABB* a_BB);
 			void SetMode(GLenum a_Mode);
+			void SetTransformBufferFunc(std::function<void(glm::mat4& transform)> a_Func);
 
 			void Render();
 
@@ -30,6 +31,7 @@ namespace Graphics
 			void BufferTransform();
 
 		private:
+			std::function<void(glm::mat4& transform)> m_TransformBufferFunc;
 			Scene::CrTransform* m_Transform;
 
 			GLenum m_Mode;

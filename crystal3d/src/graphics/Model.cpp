@@ -23,7 +23,7 @@ namespace Graphics
 
 		for (size_t s = 0; s < shapes.size(); s++)
 		{
-			CrMesh* mesh = new CrMesh();
+			CrMesh mesh{};
 
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
@@ -41,21 +41,21 @@ namespace Graphics
 					float tx = attrib.texcoords[2 * idx.texcoord_index + 0];
 					float ty = attrib.texcoords[2 * idx.texcoord_index + 1];
 
-					mesh->vertices.push_back(vx);
-					mesh->vertices.push_back(vy);
-					mesh->vertices.push_back(vz);
-
-					mesh->normals.push_back(nx);
-					mesh->normals.push_back(ny);
-					mesh->normals.push_back(nz);
-
-					mesh->texCoords.push_back(tx);
-					mesh->texCoords.push_back(ty);
-					mesh->indices.push_back(uint32_t(mesh->indices.size()));
+					mesh.vertices.push_back(vx);
+					mesh.vertices.push_back(vy);
+					mesh.vertices.push_back(vz);
+							
+					mesh.normals.push_back(nx);
+					mesh.normals.push_back(ny);
+					mesh.normals.push_back(nz);
+							
+					mesh.texCoords.push_back(tx);
+					mesh.texCoords.push_back(ty);
+					mesh.indices.push_back(uint32_t(mesh.indices.size()));
 				}
 
 				index_offset += fv;
-				mesh->materialIndex = shapes[s].mesh.material_ids[f];
+				mesh.materialIndex = shapes[s].mesh.material_ids[f];
 			}
 
 			m_MeshEntries.push_back(mesh);
@@ -64,27 +64,14 @@ namespace Graphics
 
 		for (auto& mat : materials)
 		{
-			CrMaterial* material = new CrMaterial();
+			CrMaterial material{};
+			material.vertexShader = "Shader\\Mesh.vert";
+			material.fragmentShader = "Shader\\Mesh.frag";
 
-			if (!mat.diffuse_texname.empty())
-				material->textures["tDiffuse"] = "Textures\\" + mat.diffuse_texname;
-			else
-				material->textures["tDiffuse"] = "Textures\\uvcheck.png";
-
-			if (!mat.specular_texname.empty())
-				material->textures["tSpecular"] = "Textures\\" + mat.specular_texname;
-			else
-				material->textures["tSpecular"] = "Textures\\white.png";
-
-			if (!mat.normal_texname.empty())
-				material->textures["tNormal"] = "Textures\\" + mat.normal_texname;
-			else
-				material->textures["tNormal"] = "Textures\\white.png";
-
-			if (!mat.bump_texname.empty())
-				material->textures["tNormal"] = "Textures\\" + mat.bump_texname;
-			else
-				material->textures["tNormal"] = "Textures\\white.png";
+			material.textures["tDiffuse"] = mat.diffuse_texname.empty() ? "Textures\\uvcheck.png" : "Textures\\" + mat.diffuse_texname;
+			material.textures["tSpecular"] = mat.specular_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.specular_texname;
+			material.textures["tNormal"] = mat.normal_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.normal_texname;
+			material.textures["tNormal"] = mat.bump_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.bump_texname;
 
 			m_MaterialEntries.push_back(material);
 		}
@@ -92,14 +79,6 @@ namespace Graphics
 
 	CrModel::~CrModel()
 	{
-		for (auto& m : m_MaterialEntries)
-		{
-			delete m;
-		}
-		for (auto& m : m_MeshEntries)
-		{
-			delete m;
-		}
 	}
 
 }

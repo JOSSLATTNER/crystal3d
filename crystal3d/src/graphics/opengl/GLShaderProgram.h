@@ -22,10 +22,10 @@ namespace Graphics
 			void Bind() const;
 			void Unbind() const;
 
-			void AttachShader(Resources::CrResourcePtr<GLShader> a_Shader);
-			void AttachTexture(Resources::CrResourcePtr<GLTexture2D> a_Texture, const std::string& a_Attribute);
-			void AttachTexture(Resources::CrResourcePtr<GLTexture2D> a_Texture, const GLuint a_AttributeLocation);
-			void AttachCubemap(Resources::CrResourcePtr<GLCubemap> a_Texture, const std::string& a_Attribute);
+			void AttachShader(GLShader* a_Shader);
+			void AttachTexture(GLTexture2D* a_Texture, const std::string& a_Attribute);
+			void AttachTexture(GLTexture2D* a_Texture, const GLuint a_AttributeLocation);
+			void AttachCubemap(GLCubemap* a_Texture, const std::string& a_Attribute);
 			void Link();
 
 			bool IsLinked() const;
@@ -36,9 +36,9 @@ namespace Graphics
 			bool m_IsLinked;
 
 		protected:
-			std::unordered_map<GLuint, Resources::CrResourcePtr<GLTexture2D>> m2DTextures;
-			std::unordered_map<GLuint, Resources::CrResourcePtr<GLCubemap>> m_CubemapTextures;
-			std::unordered_map<EShaderType, Resources::CrResourcePtr<GLShader>> m_Shader;
+			std::unordered_map<GLuint, GLTexture2D*> m2DTextures;
+			std::unordered_map<GLuint, GLCubemap*> m_CubemapTextures;
+			std::unordered_map<EShaderType, GLShader*> m_Shader;
 			std::unordered_map<std::string, float> m_Uniforms;
 
 

@@ -28,22 +28,23 @@ __pragma(warning( pop ))
 static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
 
 #define WIN32_COLOR_BLACK 0
-#define WIN32_COLOR_BLUE 1
-#define WIN32_COLOR_GREEN 2
-#define WIN32_COLOR_RED 4
+#define WIN32_COLOR_BLUE 31
+#define WIN32_COLOR_GREEN 10
+#define WIN32_COLOR_RED 12
 #define WIN32_COLOR_GREY 8
 #define WIN32_COLOR_WHITE 15
+#define WIN32_COLOR_YELLOW 14
 
 #define WIN32_CONSOLE_SET_COLOR(code) \
 SetConsoleTextAttribute(WIN32_CONSOLE_HANDLE, code);
 
 template<typename...Args>
-void T_Log(const char* function, const std::string& format, Args...args)
+void T_Log(const char* function, WORD color, const std::string& format, Args...args)
 {
 	WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
 	std::cout << "[" << function << "]" << std::endl;
 	
-	WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_WHITE);
+	WIN32_CONSOLE_SET_COLOR(color);
 	std::cout << CrStringFormat(format, args...) << std::endl;
 }
 
@@ -54,7 +55,7 @@ bool T_Assert(const bool condition, const char* function, const std::string& for
 	{
 		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
 		std::cerr << "[" << function << "]" << std::endl;
-		
+
 		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_RED);
 		std::cerr << CrStringFormat(format, args...) << std::endl;
 		return true;
@@ -62,7 +63,12 @@ bool T_Assert(const bool condition, const char* function, const std::string& for
 	return false;
 }
 
-#define CrLog(format, ...) T_Log(__FUNCTION__, format, ##__VA_ARGS__)
+#define CrLog_C(format, color, ...) T_Log(__FUNCTION__, color, format, ##__VA_ARGS__)
+#define CrLog(format, ...) CrLog_C(format, WIN32_COLOR_WHITE, ##__VA_ARGS__)
+#define CrLogSuccess(format, ...) CrLog_C(format, WIN32_COLOR_GREEN, ##__VA_ARGS__)
+#define CrLogWarning(format, ...) CrLog_C(format, WIN32_COLOR_YELLOW, ##__VA_ARGS__)
+#define CrLogInfo(format, ...) CrLog_C(format, WIN32_COLOR_BLUE, ##__VA_ARGS__)
+
 #define CrAssert(condition, format, ...) \
 if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
 	DebugBreak();

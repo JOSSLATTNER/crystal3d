@@ -20,7 +20,7 @@ namespace Scripting
 		template <typename T>
 		void BindGlobal(const std::string& a_Name, T&& a_Value) 
 		{
-			m_State[a_Name] = std::move(value);
+			m_State[a_Name] = std::move(a_Value);
 		}
 
 		template <typename RET, typename...ARGS>

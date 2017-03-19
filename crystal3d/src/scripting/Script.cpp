@@ -23,7 +23,7 @@ namespace Scripting
 		}
 		catch (sol::error err)
 		{
-			CrAssert(0, "Lua [sol2.0] error occurred: %s", err.what());
+			CrAssert(0, err.what());
 		}
 	}
 }

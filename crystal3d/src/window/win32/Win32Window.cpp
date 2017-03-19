@@ -55,6 +55,7 @@ namespace Window
 				m_HInstance,
 				this);
 
+			CrLogSuccess("Window initialized [OK]");
 			return true;
 		}
 

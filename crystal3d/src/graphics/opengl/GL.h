@@ -79,7 +79,7 @@ namespace Graphics
 			GLenum severity,
 			GLsizei length,
 			const GLchar* message,
-			void* userParam)
+			const void* userParam)
 		{
 
 #ifdef CR_GRAPHICS_DEBUG_LEVEL_HIGH

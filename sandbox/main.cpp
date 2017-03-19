@@ -2,13 +2,11 @@
 
 void main()
 {
-	auto engine = Core::CrEngine::SharedInstance();
-	engine->Initialize();
+	Core::CrEngine engine;
+	engine.Initialize();
 
 	Scene::CrScene* gameScene = new Scene::CrScene("Scripts\\Scene.lua");
 
-	engine->SetScene(gameScene);
-	engine->Run();
-
-	engine->Release();
+	engine.SetScene(gameScene);
+	engine.Run();
 }

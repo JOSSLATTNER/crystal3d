@@ -27,8 +27,8 @@ namespace Graphics
 		public:
 			GLShaderProgram* m_ShaderProgram;
 
-			GLuint m_ViewportWidth;
-			GLuint m_ViewportHeight;
+			GLfloat m_ViewportWidth;
+			GLfloat m_ViewportHeight;
 
 		};
 	}

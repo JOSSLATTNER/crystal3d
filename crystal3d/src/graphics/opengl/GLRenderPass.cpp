@@ -12,9 +12,8 @@ namespace Graphics
 			m_ShaderProgram = new GLShaderProgram();
 			auto pResources = SEngine->GetResourceManager();
 
-			//TODO: RESX
-			auto vertShader = new GLShader(a_Context.vertexShaderFile, EShaderType::VertexShader);
-			auto fragShader = new GLShader(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
+			auto vertShader = pResources->LoadResource<GLShader>(a_Context.vertexShaderFile, EShaderType::VertexShader);
+			auto fragShader = pResources->LoadResource<GLShader>(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
 
 			m_ShaderProgram->AttachShader(vertShader);
 			m_ShaderProgram->AttachShader(fragShader);

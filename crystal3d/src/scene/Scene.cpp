@@ -5,8 +5,7 @@ namespace Scene
 {
 	CrScene::CrScene(const std::string& a_Script)
 	{
-		auto pResources = SEngine->GetResourceManager();
-		m_Behaviour = pResources->LoadResource<Scripting::CrScript>(a_Script);
+		m_Behaviour = SEngine->GetResourceManager()->LoadResource<Scripting::CrScript>(a_Script);
 	}
 
 	CrScene::~CrScene()

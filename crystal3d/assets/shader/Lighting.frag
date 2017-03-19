@@ -107,7 +107,7 @@ vec3 CalcDirLight(vec3 normal, vec3 viewDir)
 	return result;
 }
 
-void main( void )
+void main()
 {
 	vec4 position = texture2D( tPosition, fragCoord );
 	vec4 normal = normalize(texture2D( tNormals,fragCoord));

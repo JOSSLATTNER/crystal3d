@@ -43,7 +43,7 @@ namespace Graphics
 
 			if (textureLocation == -1)
 			{
-				CrLog("Texture cannot be bound. Uniform index not found!");
+				CrLogWarning("Texture cannot be bound. Uniform index not found!");
 				return 0;
 			}
 

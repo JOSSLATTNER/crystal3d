@@ -19,22 +19,21 @@ namespace Scene
 		std::vector<Graphics::IRenderable*>& GetRenderList();
 
 		template<typename T>
-		void AddNode(CrSceneNode* a_Node)
+		void AddNode(T* a_Node)
 		{
-			if (std::is_base_of<Graphics::IRenderable, T>)
-			{
-				auto renderObject = static_cast<Graphics::IRenderable*>(a_Node);
-				m_RenderList.push_back(renderObject);
-			}
+			Graphics::IRenderable* rn = dynamic_cast<Graphics::IRenderable*>(a_Node);
+			if (rn != nullptr)
+				m_RenderList.push_back(rn);
 
-			m_Nodes[typeid(T).hash_code()] = a_Node;
+			size_t typeHash = typeid(T).hash_code();
+			m_Nodes.insert({ typeHash, static_cast<Scene::CrSceneNode*>(a_Node) });
 		}
 
 		template<typename T>
 		T* GetNode()
 		{
 			auto range = m_Nodes.equal_range(typeid(T).hash_code());
-			return range.first->second;
+			return static_cast<T*>(range.first->second);
 		}
 
 		template<typename T>
@@ -48,7 +47,7 @@ namespace Scene
 		std::vector<Graphics::IRenderable*> m_RenderList;
 
 		std::unordered_multimap<size_t, CrSceneNode*> m_Nodes;
-		Resources::CrResourcePtr<Scripting::CrScript> m_Behaviour;
+		Scripting::CrScript* m_Behaviour;
 
 	};
 }

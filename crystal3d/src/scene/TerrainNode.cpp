@@ -38,9 +38,8 @@ namespace Scene
 		m_Material = new Graphics::CrMaterial();
 
 		for (uint32_t i = 0; i < m_Terrain->diffuseTextures.size(); i++)
-		{
 			m_Material->textures[CrStringFormat("tDiffuseTextures[%d]", i)] = m_Terrain->diffuseTextures[i];
-		}
+
 		m_Material->fragmentShader = "Shader\\Terrain.frag";
 		m_Material->vertexShader = "Shader\\Terrain.vert";
 		m_Material->geometryShader = "Shader\\Terrain.geom";

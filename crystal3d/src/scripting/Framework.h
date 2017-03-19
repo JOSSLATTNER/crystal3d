@@ -12,11 +12,5 @@ namespace Scripting
 
 		static void RegisterTypes(sol::state& a_State);
 
-		template <typename T, typename...TArgs>
-		static T* HeapAlloc(TArgs&&...args)
-		{
-			return new T(std::forward<TArgs>(args)...);
-		}
-
 	};
 }

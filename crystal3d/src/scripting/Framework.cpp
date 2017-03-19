@@ -5,6 +5,7 @@
 #include "scene\MeshNode.h"
 #include "scene\ScriptComponent.h"
 #include "scene\CameraNode.h"
+#include "scene\LightNode.h"
 
 #include "input\interface\IInputManager.h"
 
@@ -17,6 +18,7 @@ using namespace Scene;
 using namespace Input;
 using namespace Resources;
 using namespace Components;
+using namespace Window;
 
 namespace Scripting
 {
@@ -29,30 +31,49 @@ namespace Scripting
 		a_State.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
 			sol::lib::table, sol::lib::string, sol::lib::bit32);
 
-		a_State["CurrentScene"] = SEngine->GetCurrentScene();
+		a_State["Input"] = SEngine->GetInputManager();
+		a_State["Resources"] = SEngine->GetResourceManager();
+		a_State["GameWindow"] = SEngine->GetMainWindow();
 
-		a_State["CreateSceneNode"] = &CrFramework::HeapAlloc<CrSceneNode, CrTransform>;
-		a_State["CreateTerrainNode"] = &CrFramework::HeapAlloc<CrTerrainNode, CrTransform>;
-		a_State["CreateMeshNode"] = &CrFramework::HeapAlloc<CrMeshNode, CrTransform>;
-		a_State["CreateCameraNode"] = &CrFramework::HeapAlloc<CrCameraNode, CrTransform>;
+		a_State.new_usertype<CrScene>("Scene",
+		"AddNode", [](CrScene* thiz, CrSceneNode* node)
+		{ thiz->AddNode<CrSceneNode>(node); },
+		"AddNode", [](CrScene* thiz, CrMeshNode* node)
+		{ thiz->AddNode<CrMeshNode>(node); },
+		"AddNode", [](CrScene* thiz, CrTerrainNode* node)
+		{ thiz->AddNode<CrTerrainNode>(node); },
+		"AddNode", [](CrScene* thiz, CrCameraNode* node)
+		{ thiz->AddNode<CrCameraNode>(node); });
 
 		a_State.new_usertype<CrSceneNode>("SceneNode",
+			"Create", [](CrTransform t) { return new CrSceneNode(t); },
 			"Transform", &CrSceneNode::m_Transform,
 			"AddComponent", &CrSceneNode::AddComponent,
 			"RemoveComponent", &CrSceneNode::RemoveComponent);
+
 		a_State.new_usertype<CrTerrainNode>("TerrainNode",
-			SOL_BASE(CrSceneNode, IRenderable),
+			"Create", [](CrTransform t) { return new CrTerrainNode(t); },
+			SOL_BASE(CrSceneNode, IRenderable), 
 			"SetTerrain", &CrTerrainNode::SetTerrain);
 
 		a_State.new_usertype<CrMeshNode>("MeshNode",
+			"Create", [](CrTransform t) { return new CrMeshNode(t); },
 			SOL_BASE(CrSceneNode, IRenderable),
 			"SetMesh", &CrMeshNode::SetMesh,
 			"SetMaterial", &CrMeshNode::SetMaterial,
 			"SetRenderMode", &CrMeshNode::SetRenderMode);
 
-		a_State["CreateScriptComponent"] = &CrFramework::HeapAlloc<CrScriptComponent>;
+		a_State.new_usertype<CrCameraNode>("CameraNode",
+			"Create", [](CrTransform t) { return new CrCameraNode(t); },
+			"Transform", &CrCameraNode::m_Transform,
+			"Projection", &CrCameraNode::m_Projection,
+			"Frustum", &CrCameraNode::m_Frustum,
+			"GetLook", &CrCameraNode::GetLook,
+			"GetUp", &CrCameraNode::GetUp,
+			"GetRight", &CrCameraNode::GetRight);
 
 		a_State.new_usertype<CrScriptComponent>("ScriptComponent",
+			"Create", []() { return new CrScriptComponent(); },
 			"SetScript", &CrScriptComponent::SetScript,
 			SOL_BASE(IComponent));
 
@@ -90,7 +111,7 @@ namespace Scripting
 			"X", &glm::ivec2::x,
 			"Y", &glm::ivec2::y);
 
-		a_State.new_usertype<CrMaterial, std::string, std::string>("Material",
+		a_State.new_usertype<CrMaterial>("Material",
 			"Textures", &CrMaterial::textures);
 
 		a_State.new_usertype<CrMesh>("Mesh",
@@ -116,19 +137,18 @@ namespace Scripting
 
 		a_State.new_usertype<CrScript>("Script");
 
+		a_State.new_usertype<IWindow>("Window",
+			"GetSize", &IWindow::GetSize,
+			"SetTitle", &IWindow::SetTitle);
+
 		a_State.new_usertype<IInputManager>("InputManager",
 			"IsKeyPressed", &IInputManager::IsKeyPressed,
-			"GetAxis", &IInputManager::GetAxis);
+			"GetAxis", &IInputManager::GetAxis,
+			"ListDevices", &IInputManager::ListDevices);
 
-		a_State.new_usertype<CrResourceManager>("__Resources__",
-			"LoadScript", &CrResourceManager::LoadScript,
-			"LoadModel", &CrResourceManager::LoadModel);
-
-		a_State["Input"] = SEngine->GetInputManager();
-		a_State["Resources"] = SEngine->GetResourceManager();
-
-		sol::table primitives = a_State.create_named_table("Primitives");
-		primitives.set_function("Make_Plane", &Primitives::Make_Plane);
+		a_State.new_usertype<CrResourceManager>("__Resources",
+			"LoadScript", &CrResourceManager::LoadResource<CrScript>,
+			"LoadModel", &CrResourceManager::LoadResource<CrModel>);
 
 		a_State.new_usertype<CrFrustum>("Frustum",
 			"FOV", &CrFrustum::fov,
@@ -137,13 +157,8 @@ namespace Scripting
 			"Width", &CrFrustum::width,
 			"Height", &CrFrustum::height);
 
-		a_State.new_usertype<CrCameraNode>("Camera",
-			"Transform", &CrCameraNode::m_Transform,
-			"Projection", &CrCameraNode::m_Projection,
-			"Frustum", &CrCameraNode::m_Frustum,
-			"GetLook", &CrCameraNode::GetLook,
-			"GetUp", &CrCameraNode::GetUp,
-			"GetRight", &CrCameraNode::GetRight);
+		sol::table primitives = a_State.create_named_table("Primitives");
+		primitives.set_function("Make_Plane", &Primitives::Make_Plane);
 	}
 
 	CrFramework::~CrFramework()

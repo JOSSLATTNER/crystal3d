@@ -10,15 +10,10 @@ namespace Graphics
 		GLDebugRenderer::GLDebugRenderer()
 		{
 			auto pResources = SEngine->GetResourceManager();
-
-			GLShaderCreateInfo vsCI{};
-			vsCI.type = EShaderType::VertexShader;
-			auto vertShader = pResources->FetchResource<GLShader>("Shader\\debugDraw.vert", &vsCI);
+			auto vertShader = pResources->LoadResource<GLShader>("Shader\\debugDraw.vert", EShaderType::VertexShader);
 			vertShader->Compile();
 
-			GLShaderCreateInfo fsCI{};
-			fsCI.type = EShaderType::FragmentShader;
-			auto fragShader = pResources->FetchResource<GLShader>("Shader\\debugDraw.frag", &fsCI);
+			auto fragShader = pResources->LoadResource<GLShader>("Shader\\debugDraw.frag", EShaderType::FragmentShader);
 			fragShader->Compile();
 
 			m_ShaderProgram = new GLShaderProgram();
@@ -27,7 +22,8 @@ namespace Graphics
 
 			m_ShaderProgram->Link();
 
-			GLRenderer::m_UniformMVPBuffer->Bind(m_ShaderProgram->GetHandle());
+			GLRenderer* myRenderer = static_cast<GLRenderer*>(SEngine->GetRenderer());
+			myRenderer->GetMVPBuffer()->Bind(m_ShaderProgram->GetHandle());
 		}
 
 		GLDebugRenderer::~GLDebugRenderer()

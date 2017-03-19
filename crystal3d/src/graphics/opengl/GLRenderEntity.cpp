@@ -6,14 +6,10 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLRenderEntity::GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program, GLenum a_Mode, Scene::CrTransform* a_Transform, Math::AABB* a_BoundingBox)
-			: m_Mode(a_Mode)
+		GLRenderEntity::GLRenderEntity(GLVertexArray* a_VAO, GLShaderProgram* a_Program)
 		{
 			this->SetVertexArray(a_VAO);
 			this->SetProgram(a_Program);
-			this->SetMode(a_Mode);
-			this->SetTransform(a_Transform);
-			this->SetBoundingBox(a_BoundingBox);
 		}
 
 		GLRenderEntity::~GLRenderEntity()
@@ -33,7 +29,6 @@ namespace Graphics
 				delete m_ShaderProgram;
 
 			m_ShaderProgram = a_Program;
-			GLRenderer::m_UniformMVPBuffer->Bind(m_ShaderProgram->GetHandle());
 		}
 
 		void GLRenderEntity::SetVertexArray(GLVertexArray* a_VertexArray)
@@ -52,6 +47,11 @@ namespace Graphics
 		void GLRenderEntity::SetMode(GLenum a_Mode)
 		{
 			m_Mode = a_Mode;
+		}
+
+		void GLRenderEntity::SetTransformBufferFunc(std::function<void(glm::mat4& transform)> a_Func)
+		{
+			m_TransformBufferFunc = a_Func;
 		}
 
 		void GLRenderEntity::Render()
@@ -75,7 +75,7 @@ namespace Graphics
 			if (m_Transform != nullptr)
 			{
 				glm::mat4 worldMatrix = m_Transform->WorldMatrix();
-				GLRenderer::m_UniformMVPBuffer->Subdata(&worldMatrix, 0);
+				m_TransformBufferFunc(worldMatrix);
 			}
 		}
 

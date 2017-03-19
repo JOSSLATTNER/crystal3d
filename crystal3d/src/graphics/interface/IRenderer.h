@@ -1,4 +1,5 @@
 #pragma once
+#include "scene\Scene.h"
 #include "graphics\RendererContext.h"
 #include "graphics\interface\IRenderable.h"
 

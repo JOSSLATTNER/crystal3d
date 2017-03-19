@@ -29,7 +29,7 @@ layout(std140) uniform MVPBuffer
 	mat4 projectionMatrix;
 };
 
-//TODO: MAKE VARIABLE
+
 #define kernelSize 64.0f
 #define iterations 5
 

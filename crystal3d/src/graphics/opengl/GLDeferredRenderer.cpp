@@ -45,8 +45,8 @@ namespace Graphics
 
 			//Lighting pass
 			GLRenderPassContext lpCx{};
-			lpCx.vertexShaderFile = "Base_Deferred.vert";
-			lpCx.fragmentShaderFile = "Lighting.frag";
+			lpCx.vertexShaderFile = "shader\\Deferred.vert";
+			lpCx.fragmentShaderFile = "shader\\Lighting.frag";
 			lpCx.viewportHeight = m_ViewportHeight;
 			lpCx.viewportWidth = m_ViewportWidth;
 
@@ -55,10 +55,10 @@ namespace Graphics
 
 			//Skybox pass
 			GLRenderPassContext sbpCx{};
-			lpCx.vertexShaderFile = "Base_Deferred.vert";
-			lpCx.fragmentShaderFile = "Skybox.frag";
-			lpCx.viewportHeight = m_ViewportHeight;
-			lpCx.viewportWidth = m_ViewportWidth;
+			sbpCx.vertexShaderFile = "shader\\Deferred.vert";
+			sbpCx.fragmentShaderFile = "shader\\Skybox.frag";
+			sbpCx.viewportHeight = m_ViewportHeight;
+			sbpCx.viewportWidth = m_ViewportWidth;
 
 			GLRenderPass* skyboxPass = new GLRenderPass(sbpCx);
 			this->RegisterRenderPass(skyboxPass, BUFFER_FLAG_PREVIOUS_PASS | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_DEPTH);

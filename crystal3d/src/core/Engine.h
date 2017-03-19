@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Platform.h"
 #include "GameTimer.hpp"
+#include "profile\Benchmark.hpp"
 
 #include "window\interface\IWindow.h"
 #include "graphics\interface\IRenderer.h"
@@ -10,16 +11,22 @@
 #include "scene\Scene.h"
 #include "resources\ResourceManager.h"
 
-#define SEngine Core::CrEngine::SharedInstance()
+#define SEngine Core::CrEngine::s_SharedInstance
+
+#define MAX_FPS 120
+#define ENGINE_WINDOW_WIDTH 1920
+#define ENGINE_WINDOW_HEIGHT 1080
+#define ENGINE_WINDOW_TITLE "Crystal3D"
 
 namespace Core
 {
-	class CrEngine final 
-		: public Core::CrSingleton<CrEngine>
+	class CrEngine
 	{
 	public:
 		CrEngine();
 		~CrEngine();
+
+		static CrEngine* s_SharedInstance;
 
 	public:
 		bool Initialize();

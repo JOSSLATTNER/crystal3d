@@ -15,6 +15,7 @@ namespace Input
 
 		void XIInputManager::Initialize()
 		{
+			CrLogSuccess("InputManager initialized [OK]");
 		}
 
 		bool XIInputManager::IsKeyPressed(EKeyCode a_KeyCode)

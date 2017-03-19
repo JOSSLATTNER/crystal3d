@@ -13,8 +13,7 @@ namespace Graphics
 		class GLUniformBuffer
 		{
 		public:
-
-			GLUniformBuffer(std::string a_BlockName, GLenum a_Usage, uint32_t a_BindingPoint) :
+			GLUniformBuffer(const std::string& a_BlockName, GLenum a_Usage, uint32_t a_BindingPoint) :
 				m_Handle(0), m_BlockName(a_BlockName), m_Usage(a_Usage), m_BindingPoint(a_BindingPoint)
 			{
 				T initData{};
@@ -42,43 +41,12 @@ namespace Graphics
 				glBufferSubData(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Data);
 			}
 
-			//void Map(std::function<void(T*)> a_Callback, GLbitfield a_Options = GL_WRITE_ONLY | GL_MAP_UNSYNCHRONIZED_BIT)
-			//{
-			//	glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
-
-			//	GLvoid* pMapData = glMapBuffer(GL_UNIFORM_BUFFER, a_Options);
-			//	T* pData = static_cast<T*>(pMapData);
-
-			//	a_Callback(pData);
-
-			//	if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
-			//	{
-			//		CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
-			//	}
-			//}
-
-			//template <typename MT>
-			//void MapRange(std::function<void(MT*)> a_Callback, uint32_t a_Offset, GLbitfield a_Options = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT)
-			//{
-			//	glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
-
-			//	GLvoid* pMapData = glMapBufferRange(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Options);
-			//	MT* pData = static_cast<MT*>(pMapData);
-
-			//	a_Callback(pData);
-
-			//	if (!glUnmapBuffer(GL_UNIFORM_BUFFER))
-			//	{
-			//		CrAssert(0, "glUnmapBuffer() failed: Unable to flush data.");
-			//	}
-			//}
-	
 			void Bind(GLuint a_ShaderProgram) const
 			{
 				GLint blockIndex = glGetUniformBlockIndex(a_ShaderProgram, m_BlockName.c_str());
-				if (blockIndex != -1)
+				if (blockIndex == -1)
 				{
-					CrLog("Block %s not found!", m_BlockName.c_str()); 
+					CrLogWarning("Block [%s] not found!", m_BlockName.c_str()); 
 					return;
 				}
 
