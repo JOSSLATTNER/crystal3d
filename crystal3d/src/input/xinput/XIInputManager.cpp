@@ -32,13 +32,13 @@ namespace Input
 				switch (a_Axis)
 				{
 				case Input::ControllerInput::LEFT_X:
-					return NormalizeAxis(state.Gamepad.sThumbLX);
+					return this->NormalizeAxis(state.Gamepad.sThumbLX);
 				case Input::ControllerInput::LEFT_Y:
-					return NormalizeAxis(state.Gamepad.sThumbLY);
+					return this->NormalizeAxis(state.Gamepad.sThumbLY);
 				case Input::ControllerInput::RIGHT_X:
-					return NormalizeAxis(state.Gamepad.sThumbRX);
+					return this->NormalizeAxis(state.Gamepad.sThumbRX);
 				case Input::ControllerInput::RIGHT_Y:
-					return NormalizeAxis(state.Gamepad.sThumbRY);
+					return this->NormalizeAxis(state.Gamepad.sThumbRY);
 				}
 			}
 			return 0.0f;

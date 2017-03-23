@@ -1,25 +1,24 @@
 #pragma once
 
 #if defined _WIN32 || defined _WIN64
-#define Cr_WINDOWS
-
-#ifndef Cr_DONT_LOAD_API
+#define CR_PLATFORM_WINDOWS
 #include <Windows.h>
-#endif
+
 #elif defined __unix__ || defined unix
-#define Cr_UNIX
+#define CR_PLATFORM_UNIX
 #elif defined __linux__
-#define Cr_LINUX
+#define CR_PLATFORM_LINUX
 #elif defined __APPLE__ || defined __MACH__
-#define Cr_APPLE_OSX
+#define CR_PLATFORM_OSX
 #else
 #error "Platform unsupported!"
 #endif
 
 #if defined _MSC_VER
-#define Cr_COMPILER_MSC
+#define CR_COMPILER_MSC
+#define CR_DEBUG _DEBUG
 #elif defined __GNUC__ || defined __GNUG__
-#define Cr_COMPILER_GCC
+#define CR_COMPILER_GCC
 #elif defined __clang__
-#define Cr_COMPILER_CLANG
+#define CR_COMPILER_CLANG
 #endif

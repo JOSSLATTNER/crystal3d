@@ -45,7 +45,6 @@ namespace Graphics
 			glShaderSource(m_Handle, 1, &srcBuffer, 0);
 
 			this->CheckError();
-			CrLog("Shader was loaded: %s", a_Filename.c_str());
 		}
 
 		GLShader::~GLShader()

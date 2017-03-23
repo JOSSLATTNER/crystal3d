@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crystal3d", "crystal3d\crystal3d.vcxproj", "{768F92A1-4897-48A4-A8E4-5524B2BEB4B0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox\sandbox.vcxproj", "{9C2C4D94-CAA4-4CEB-9573-2AA3CDF4C282}"
+	ProjectSection(ProjectDependencies) = postProject
+		{768F92A1-4897-48A4-A8E4-5524B2BEB4B0} = {768F92A1-4897-48A4-A8E4-5524B2BEB4B0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

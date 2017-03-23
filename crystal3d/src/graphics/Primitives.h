@@ -4,9 +4,9 @@
 
 namespace Primitives
 {
-		inline std::shared_ptr<Graphics::CrMesh> Make_Plane(int32_t width, int32_t height)
+		inline Graphics::CrMesh* Make_Plane(int32_t width, int32_t height)
 		{
-			auto mesh = std::make_shared<Graphics::CrMesh>();
+			auto mesh = new Graphics::CrMesh();
 
 			uint32_t num_Vertices = width * height * 3;
 			uint32_t num_Faces = (width*height) + (width - 1)*(height - 2);

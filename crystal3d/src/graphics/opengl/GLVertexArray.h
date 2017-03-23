@@ -16,13 +16,14 @@ namespace Graphics
 
 			void Bind() const;
 			void Unbind() const;
+			GLuint GetHandle() const;
 
 		public:
-			GLuint m_Handle;
 			uint32_t m_ElementCount;
 
-		protected:
+		private:
 			GLuint m_Vbo[4];
+			GLuint m_Handle;
 
 		};
 	}

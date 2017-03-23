@@ -16,7 +16,7 @@ namespace Window
 
 			//Inherited via IWindow
 			~Win32Window() override;
-			bool Initialize(CrWindowContext& a_WindowContext) override;
+			void Initialize(CrWindowContext& a_WindowContext) override;
 			CrWindowHandle GetHandle() override;
 
 			void Show() override;

@@ -24,8 +24,9 @@ __pragma(warning( pop ))
 #define FORWARD_DECL(t) class t
 #define BIT_HAS_FLAG(b,f) (b & f) == f 
 
-#ifdef Cr_WINDOWS
+#ifdef CR_PLATFORM_WINDOWS
 static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
+static char* CURRENT_FUNC = "_";
 
 #define WIN32_COLOR_BLACK 0
 #define WIN32_COLOR_BLUE 31
@@ -39,28 +40,42 @@ static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
 SetConsoleTextAttribute(WIN32_CONSOLE_HANDLE, code);
 
 template<typename...Args>
-void T_Log(const char* function, WORD color, const std::string& format, Args...args)
+void T_Log(char* function, WORD color, const std::string& format, Args...args)
 {
-	WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
-	std::cout << "[" << function << "]" << std::endl;
+	if (strcmp(function, CURRENT_FUNC) != 0)
+	{
+		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
+		std::cout << "[" << function << "]" << std::endl;
+	}
 	
 	WIN32_CONSOLE_SET_COLOR(color);
 	std::cout << CrStringFormat(format, args...) << std::endl;
+
+	CURRENT_FUNC = function;
 }
 
 template<typename...Args>
-bool T_Assert(const bool condition, const char* function, const std::string& format, Args...args)
+bool T_Assert(const bool condition, char* function, const std::string& format, Args...args)
 {
 	if (!condition)
 	{
-		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
-		std::cerr << "[" << function << "]" << std::endl;
+		if (strcmp(function, CURRENT_FUNC) != 0)
+		{
+			WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
+			std::cerr << "[" << function << "]" << std::endl;
+		}
 
 		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_RED);
 		std::cerr << CrStringFormat(format, args...) << std::endl;
 		return true;
 	}
 	return false;
+}
+
+template<typename...Args>
+void T_DebugOutput(const std::string& format, Args...args)
+{
+	OutputDebugString(CrStringFormat(format, args...).c_str());
 }
 
 #define CrLog_C(format, color, ...) T_Log(__FUNCTION__, color, format, ##__VA_ARGS__)
@@ -73,6 +88,7 @@ bool T_Assert(const bool condition, const char* function, const std::string& for
 if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
 	DebugBreak();
 
+#define CrDebugOutput(format, ...) T_DebugOutput(format, ##__VA_ARGS__)
 #endif
 
 template<typename ... Args>
@@ -83,3 +99,18 @@ std::string CrStringFormat(const std::string& format, Args ... args)
 	snprintf(buf.get(), size, format.c_str(), args ...);
 	return std::string(buf.get(), buf.get() + size - 1);
 }
+
+class CrException
+	: public std::exception
+{
+public:
+	CrException(const std::string& message)
+		: message_(message) {}
+
+	const char* what() const noexcept override
+	{
+		return message_.c_str(); 
+	}
+private:
+	const std::string message_;
+};

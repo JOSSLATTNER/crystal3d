@@ -12,7 +12,7 @@ namespace Window
 	public:
 		virtual ~IWindow() {}
 
-		virtual bool Initialize(CrWindowContext& a_WindowContext) = 0;
+		virtual void Initialize(CrWindowContext& a_WindowContext) = 0;
 		virtual void Show() = 0;
 		virtual CrWindowHandle GetHandle() = 0;
 		virtual void SetTitle(const std::string& a_Title) = 0;

@@ -3,8 +3,7 @@
 #include <packages/glew/include/glew.h>
 
 //@DEBUG
-#define CR_GRAPHICS_DEBUG
-//#define CR_GRAPHICS_DEBUG_LEVEL_HIGH
+#define CR_GRAPHICS_DEBUG CR_DEBUG
 
 namespace Graphics
 {
@@ -71,7 +70,7 @@ namespace Graphics
 			}
 		}
 
-		static void __stdcall ErrorCallback
+		static void __stdcall GLDebugCallback
 		(
 			GLenum source,
 			GLenum type,
@@ -81,16 +80,27 @@ namespace Graphics
 			const GLchar* message,
 			const void* userParam)
 		{
+#ifdef CR_GRAPHICS_DEBUG
+			CrDebugOutput
+			(
+				"***\nOpenGL Debug Output\nSource: %s\nType: %s\n Severity: %s\n Debug Call: %s\n***",
+				GetStringForSource(source).c_str(),
+				GetStringForType(type).c_str(),
+				GetStringForSeverity(severity).c_str(),
+				message
+			);
 
-#ifdef CR_GRAPHICS_DEBUG_LEVEL_HIGH
-			std::cout << std::endl << "**********OpenGL Debug Output**************" << std::endl;
-			std::cout << "source: " << GetStringForSource(source).c_str() << std::endl;
-			std::cout << "type: " << GetStringForType(type).c_str() << std::endl;
-			std::cout << "severity: " << GetStringForSeverity(severity).c_str() << std::endl;
-			std::cout << "debug call: " << message << std::endl;
-			std::cout << "*******************************************" << std::endl;
-#endif
 			CrAssert(severity != GL_DEBUG_SEVERITY_HIGH, "GL_DEBUG_SEVERITY_HIGH");
+#endif
+		}
+
+		static void CheckGLError()
+		{
+#ifdef CR_GRAPHICS_DEBUG
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+				CrDebugOutput("OpenGL Error: %s", glewGetErrorString(err));
+#endif
 		}
 
 	}

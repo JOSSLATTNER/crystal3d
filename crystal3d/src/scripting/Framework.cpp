@@ -35,15 +35,17 @@ namespace Scripting
 		a_State["Resources"] = SEngine->GetResourceManager();
 		a_State["GameWindow"] = SEngine->GetMainWindow();
 
+		auto addNodeGeneric = [](CrScene* thiz, CrSceneNode* node)
+		{ thiz->AddNode<CrSceneNode>(node); };
+
 		a_State.new_usertype<CrScene>("Scene",
-		"AddNode", [](CrScene* thiz, CrSceneNode* node)
-		{ thiz->AddNode<CrSceneNode>(node); },
-		"AddNode", [](CrScene* thiz, CrMeshNode* node)
-		{ thiz->AddNode<CrMeshNode>(node); },
-		"AddNode", [](CrScene* thiz, CrTerrainNode* node)
-		{ thiz->AddNode<CrTerrainNode>(node); },
-		"AddNode", [](CrScene* thiz, CrCameraNode* node)
-		{ thiz->AddNode<CrCameraNode>(node); });
+		"AddNode", addNodeGeneric,
+		"AddNode", sol::overload(addNodeGeneric, [](CrScene* thiz, CrMeshNode* node)
+		{ thiz->AddNode<CrMeshNode>(node); }),
+		"AddNode", sol::overload(addNodeGeneric, [](CrScene* thiz, CrTerrainNode* node)
+		{ thiz->AddNode<CrTerrainNode>(node); }),
+		"AddNode", sol::overload(addNodeGeneric, [](CrScene* thiz, CrCameraNode* node)
+		{ thiz->AddNode<CrCameraNode>(node); }));
 
 		a_State.new_usertype<CrSceneNode>("SceneNode",
 			"Create", [](CrTransform t) { return new CrSceneNode(t); },

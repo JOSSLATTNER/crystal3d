@@ -33,12 +33,10 @@ namespace Resources
 
 			auto fullPath = this->ResolvePath(a_Filename);
 			auto res = new T(fullPath, std::forward<TArgs>(a_Args)...);
-			auto resBase = static_cast<CrResource*>(res);
 
-			//CrResource::SetReosoureHandle()
-			resBase->SetResourceHandle(hash);
+			m_Resources.insert({ hash, static_cast<CrResource*>(res) });
 
-			m_Resources.insert({ hash, resBase });
+			CrLog(a_Filename.c_str());
 			return res;
 		}
 

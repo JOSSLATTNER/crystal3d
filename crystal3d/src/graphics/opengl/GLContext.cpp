@@ -2,7 +2,8 @@
 
 namespace Graphics
 {
-	namespace OpenGL {
+	namespace OpenGL
+	{
 
 		GLContext::GLContext() 
 			: m_HDC(0), m_Context(0)
@@ -15,8 +16,9 @@ namespace Graphics
 			wglDeleteContext(m_Context);
 		}
 
-		bool GLContext::CreateContext(Window::CrWindowHandle a_WindowHandle)
+		void GLContext::Create(Window::CrWindowHandle a_WindowHandle)
 		{
+			//TODO: ABSTRACT WIN32
 			PIXELFORMATDESCRIPTOR pfd{};
 			pfd.nSize = sizeof(pfd);
 			pfd.nVersion = 1;
@@ -30,19 +32,12 @@ namespace Graphics
 			int32_t pxFormat = ChoosePixelFormat(m_HDC, &pfd);
 
 			if (!SetPixelFormat(m_HDC, pxFormat, &pfd))
-			{
-				CrAssert(0, "SetPixelFormat failed");
-				return false;
-			}
+				throw CrException("SetPixelFormat() failed.");
 
 			m_Context = wglCreateContext(m_HDC);
-			if (!wglMakeCurrent(m_HDC, m_Context))
-			{
-				CrAssert(0, "wglMakeCurrent failed!");
-				return false;
-			}
 
-			return true;
+			if (!wglMakeCurrent(m_HDC, m_Context))
+				throw  CrException("wglMakeCurrent() failed.");
 		}
 
 		bool GLContext::SwapBuffer() const

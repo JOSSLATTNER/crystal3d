@@ -45,12 +45,9 @@ namespace Graphics
 			{
 				GLint blockIndex = glGetUniformBlockIndex(a_ShaderProgram, m_BlockName.c_str());
 				if (blockIndex == -1)
-				{
-					CrLogWarning("Block [%s] not found!", m_BlockName.c_str()); 
-					return;
-				}
-
-				glUniformBlockBinding(a_ShaderProgram, blockIndex, m_BindingPoint);
+					CrLogWarning("Block [%s] not found!", m_BlockName.c_str());
+				else
+					glUniformBlockBinding(a_ShaderProgram, blockIndex, m_BindingPoint);
 			}
 
 			GLuint GetHandle() const

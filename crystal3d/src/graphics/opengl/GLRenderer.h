@@ -34,7 +34,7 @@ namespace Graphics
 
 			//Inherited via IRenderer
 			~GLRenderer() override;
-			bool Initialize(CrRendererContext& a_RendererContext) override;
+			void Initialize(CrRendererContext& a_RendererContext) override;
 			void Render(Scene::CrScene* a_Scene) override;
 
 		public:
@@ -53,10 +53,11 @@ namespace Graphics
 				{ ERenderMode::Triangle_Strip, GL_TRIANGLE_STRIP },
 			};
 
+			GLContext m_CurrentContext;
+
 			GLUniformBuffer<MVP>* m_UniformMVPBuffer;
 			GLUniformBuffer<ShaderUtil>* m_UniformUtilityBuffer;
 			GLFramebuffer* m_GeometryBuffer;
-			GLContext* m_CurrentContext;
 			GLDeferredRenderer* m_DeferredRenderer;
 
 			Window::IWindow* m_Window;

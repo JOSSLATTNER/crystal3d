@@ -54,7 +54,7 @@ namespace Scene
 			m_Material->textures[CrStringFormat("tNormalMaps[%d]", i)] = m_Terrain->normalMaps[i];
 		}
 
-		m_Mesh = Primitives::Make_Plane(m_Terrain->size.x, m_Terrain->size.y).get();
+		m_Mesh = Primitives::Make_Plane(m_Terrain->size.x, m_Terrain->size.y);
 	}
 
 	Math::AABB* CrTerrainNode::GetBoundingBox()

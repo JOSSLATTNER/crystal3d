@@ -13,13 +13,16 @@
 
 #define SEngine Core::CrEngine::s_SharedInstance
 
-#define MAX_FPS 120
-#define ENGINE_WINDOW_WIDTH 1920
-#define ENGINE_WINDOW_HEIGHT 1080
-#define ENGINE_WINDOW_TITLE "Crystal3D"
-
 namespace Core
 {
+	struct CrEngineContext
+	{
+		uint32_t maxFps = 100U;
+		std::string windowTitle = "Crystal3D";
+		glm::ivec2 windowDimensions = {1920, 1080};
+		bool windowFullscreen = false;
+	};
+
 	class CrEngine
 	{
 	public:
@@ -29,7 +32,7 @@ namespace Core
 		static CrEngine* s_SharedInstance;
 
 	public:
-		bool Initialize();
+		void Initialize(CrEngineContext& a_Context);
 		void Run();
 		void SetScene(Scene::CrScene* a_GameScene);
 		void Quit();
@@ -55,6 +58,7 @@ namespace Core
 		void Render();
 	
 	private:
+		CrEngineContext m_Context;
 		bool m_IsRunning;
 
 	};

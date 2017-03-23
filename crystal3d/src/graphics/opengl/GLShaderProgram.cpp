@@ -29,12 +29,14 @@ namespace Graphics
 
 			for (auto &g : a_Material->textures)
 			{
-				this->AttachTexture(new GLTexture2D(g.second), g.first);
+				auto texture = pResources->LoadResource<GLTexture2D>(g.second);
+				this->AttachTexture(texture, g.first);
 			}
 
 			for (auto &g : a_Material->cubemaps)
 			{
-				this->AttachCubemap(new GLCubemap(g.second), g.first);
+				auto cubemap = pResources->LoadResource<GLCubemap>(g.second);
+				this->AttachCubemap(cubemap, g.first);
 			}
 
 			m_Uniforms = a_Material->properties;

@@ -7,8 +7,6 @@ namespace Scripting
 	{
 		m_Script = m_State.load_file(a_File);
 		CrFramework::RegisterTypes(m_State);
-
-		CrLog("Script was loaded: %s", a_File.c_str());
 	}
 
 	CrScript::~CrScript()

@@ -2,11 +2,21 @@
 
 void main()
 {
-	Core::CrEngine engine;
-	engine.Initialize();
+	try
+	{
+		Core::CrEngine engine;
+		Core::CrEngineContext ctx;
 
-	Scene::CrScene* gameScene = new Scene::CrScene("Scripts\\Scene.lua");
+		engine.Initialize(ctx);
 
-	engine.SetScene(gameScene);
-	engine.Run();
+		Scene::CrScene* gameScene = new Scene::CrScene("Scripts\\Scene.lua");
+
+		engine.SetScene(gameScene);
+		engine.Run();
+	}
+	catch (const CrException& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
 }

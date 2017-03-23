@@ -17,7 +17,7 @@ namespace Window
 			UnregisterClass(m_ClassName.c_str(), m_HInstance);
 		}
 
-		bool Win32Window::Initialize(CrWindowContext& a_WindowContext)
+		void Win32Window::Initialize(CrWindowContext& a_WindowContext)
 		{
 			DWORD style = WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 
@@ -34,10 +34,7 @@ namespace Window
 			wndClass.lpszClassName = m_ClassName.c_str();
 
 			if (!RegisterClass(&wndClass))
-			{
-				CrAssert(0, "WIN32 ERROR: %d", GetLastError());
-				return false;
-			}
+				throw CrException("RegisterClass() failed");
 
 			RECT wr = { 0, 0, (LONG)a_WindowContext.width, (LONG)a_WindowContext.height };
 			AdjustWindowRect(&wr, style, FALSE);
@@ -56,7 +53,6 @@ namespace Window
 				this);
 
 			CrLogSuccess("Window initialized [OK]");
-			return true;
 		}
 
 

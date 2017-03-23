@@ -24,6 +24,8 @@ namespace Scene
 			m_Behaviour->Run();
 			m_Behaviour->Invoke<void>("Init");
 		}
+
+		CrLogSuccess("Scene initialized [OK]");
 	}
 
 	void CrScene::Update(const float& a_Delta)

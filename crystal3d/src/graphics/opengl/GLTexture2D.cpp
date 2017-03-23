@@ -27,8 +27,6 @@ namespace Graphics
 			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-			CrLog("Texture2D was loaded: %s", a_File.c_str());
 		}
 
 		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_Type, GLenum a_Format)
@@ -54,7 +52,7 @@ namespace Graphics
 				return 0;
 			}
 
-			return BindUniform(a_Program, textureLocation);
+			return this->BindUniform(a_Program, textureLocation);
 		}
 
 		GLuint GLTexture2D::BindUniform(GLuint a_Program, const GLint a_AttributeLocation) const

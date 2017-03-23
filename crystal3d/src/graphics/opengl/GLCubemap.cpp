@@ -23,8 +23,6 @@ namespace Graphics
 			this->SetParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			this->SetParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			this->SetParameter(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-			CrLog("Cubemap was loaded: %s", a_Filename.c_str());
 		}
 
 		GLCubemap::~GLCubemap()

@@ -2,7 +2,7 @@
 
 #include "graphics\opengl\GLRenderer.h"
 
-#ifdef Cr_WINDOWS
+#ifdef CR_PLATFORM_WINDOWS
 #include "window\win32\Win32Window.h"
 #include "input\xinput\XIInputManager.h"
 #endif
@@ -28,44 +28,35 @@ namespace Core
 		delete m_Renderer;
 	}
 
-	bool CrEngine::Initialize()
+	void CrEngine::Initialize(CrEngineContext& a_Context)
 	{
-#ifdef Cr_WINDOWS
+#ifdef CR_PLATFORM_WINDOWS
 		m_MainWindow = new Window::Windows32::Win32Window();
 		m_InputManager = new Input::XInput::XIInputManager();
 #endif
 
 		m_GameTimer = new Core::CrGameTimer();
 		m_ResourceManager = new Resources::CrResourceManager();
+		m_Renderer = new Graphics::OpenGL::GLRenderer();
 
 		Window::CrWindowContext windowContext{};
-		windowContext.title = ENGINE_WINDOW_TITLE;
-		windowContext.width = ENGINE_WINDOW_WIDTH;
-		windowContext.height = ENGINE_WINDOW_HEIGHT;
-		windowContext.fullscreen = false;
+		windowContext.title = a_Context.windowTitle;
+		windowContext.width = a_Context.windowDimensions.x;
+		windowContext.height = a_Context.windowDimensions.y;
+		windowContext.fullscreen = a_Context.windowFullscreen;
 
-		if (!m_MainWindow->Initialize(windowContext))
-		{
-			CrAssert(0, "Window failed to initialize.");
-			return false;
-		}
-
+		m_MainWindow->Initialize(windowContext);
 		m_MainWindow->OnClose(std::bind(&CrEngine::Quit, this));
 
-		m_Renderer = new Graphics::OpenGL::GLRenderer();
+		m_InputManager->Initialize();
 
 		Graphics::CrRendererContext rendererContext{};
 		rendererContext.targetWindow = m_MainWindow;
 		rendererContext.viewportHeight = windowContext.height;
 		rendererContext.viewportWidth = windowContext.width;
 
-		if (!m_Renderer->Initialize(rendererContext))
-		{
-			CrAssert(0, "Renderer failed to initialize.");
-			return false;
-		}
-
-		return true;
+		m_Renderer->Initialize(rendererContext);
+		m_Context = a_Context;
 	}
 
 	void CrEngine::Run()
@@ -77,7 +68,7 @@ namespace Core
 		{
 			const float_t delta = m_GameTimer->GetDelta<float_t>();
 
-			if (delta >= 1.0f / MAX_FPS)
+			if (delta >= 1 / m_Context.maxFps)
 			{
 				//TODO: MOVE WIN32 STUFF
 				MSG msg{};

@@ -7,7 +7,6 @@ namespace Graphics
 	{
 		GLRenderer::GLRenderer()
 		{
-			m_CurrentContext = nullptr;
 			m_UniformMVPBuffer = nullptr;
 			m_UniformUtilityBuffer = nullptr;
 			m_GeometryBuffer = nullptr;
@@ -20,7 +19,6 @@ namespace Graphics
 			delete m_UniformUtilityBuffer;
 			delete m_GeometryBuffer;
 			delete m_DeferredRenderer;
-			delete m_CurrentContext;
 
 			for (auto& re : m_RenderEntities)
 			{
@@ -28,24 +26,15 @@ namespace Graphics
 			}
 		}
 
-		bool GLRenderer::Initialize(CrRendererContext& a_Context)
+		void GLRenderer::Initialize(CrRendererContext& a_Context)
 		{
-			m_CurrentContext = new GLContext();
 			m_Window = a_Context.targetWindow;
-
-			if (!m_CurrentContext->CreateContext(m_Window->GetHandle()))
-			{
-				CrAssert(0, "Could not create OpenGL Context!");
-				return false;
-			}
+			m_CurrentContext.Create(m_Window->GetHandle());
 
 			GLenum err = glewInit();
 
 			if (GLEW_OK != err)
-			{
-				CrAssert(0, "Glew failed to initialize: %s", glewGetErrorString(err));
-				return false;
-			}
+				throw CrException(CrStringFormat("GLEW ERROR: %s", glewGetErrorString(err)));
 
 			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
 				glGetString(GL_VERSION), glGetString(GL_VENDOR), glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -59,13 +48,14 @@ namespace Graphics
 
 #ifdef CR_GRAPHICS_DEBUG
 			glEnable(GL_DEBUG_OUTPUT);
-			glDebugMessageCallback(ErrorCallback, NULL);
+			glDebugMessageCallback(GLDebugCallback, NULL);
 
 			GLuint unusedIds = 0;
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE,
 				GL_DONT_CARE, 0, &unusedIds, GL_TRUE);
 #endif
 
+			//Geometry Buffer
 			GLFramebufferContext ctx{};
 			ctx.formats = { G_BUFFER_FORMATS };
 			ctx.width = a_Context.viewportWidth;
@@ -85,9 +75,7 @@ namespace Graphics
 			m_DeferredRenderer->Initialize(deferredContext);
 
 			CrLogSuccess("Renderer initialized [OK]");
-			return true;
 		}
-
 
 		void GLRenderer::Render(Scene::CrScene* a_Scene)
 		{
@@ -130,7 +118,7 @@ namespace Graphics
 			m_GeometryBuffer->Unbind();
 
 			m_DeferredRenderer->Render(a_Scene);
-			m_CurrentContext->SwapBuffer();
+			m_CurrentContext.SwapBuffer();
 		}
 
 		GLUniformBuffer<MVP>* GLRenderer::GetMVPBuffer() const

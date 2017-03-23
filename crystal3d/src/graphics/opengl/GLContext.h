@@ -14,7 +14,7 @@ namespace Graphics
 			GLContext();
 			~GLContext();
 
-			bool CreateContext(Window::CrWindowHandle a_WindowHandle);
+			void Create(Window::CrWindowHandle a_WindowHandle);
 			bool SwapBuffer() const;
 
 		private:
