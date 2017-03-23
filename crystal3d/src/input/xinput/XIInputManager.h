@@ -23,7 +23,7 @@ namespace Input
 			~XIInputManager() override;
 			void Initialize() override;
 			void Poll() override;
-			bool IsKeyPressed(EKeyCode a_KeyCode) override;
+			bool IsKeyPressed(KeyboardInput::EKeyCode a_KeyCode) override;
 			double_t GetAxis(uint32_t a_ControllerID, ControllerInput::EAxis a_Axis) override;
 			bool IsButtonPressed(uint32_t a_ControllerID, ControllerInput::EButtons a_Button) override;
 			std::vector<uint32_t> ListDevices() override;

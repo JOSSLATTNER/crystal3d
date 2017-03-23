@@ -130,6 +130,7 @@
     <ClInclude Include="src\core\allocator\LinearAllocator.hpp" />
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
     <ClInclude Include="src\core\profile\Benchmark.hpp" />
+    <ClInclude Include="src\input\interface\Mappings.h" />
     <ClInclude Include="src\resources\interface\Resource.h" />
     <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />

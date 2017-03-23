@@ -18,7 +18,7 @@ namespace Input
 			CrLogSuccess("InputManager initialized [OK]");
 		}
 
-		bool XIInputManager::IsKeyPressed(EKeyCode a_KeyCode)
+		bool XIInputManager::IsKeyPressed(KeyboardInput::EKeyCode a_KeyCode)
 		{
 			return GetAsyncKeyState(a_KeyCode) & 0x8000;
 		}
