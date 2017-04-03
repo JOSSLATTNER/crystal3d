@@ -1,9 +1,16 @@
 #pragma once
 #include "core\Core.h"
+
 #include <packages/glew/include/glew.h>
 
-//@DEBUG
+#ifdef CR_PLATFORM_WINDOWS
+#include <packages/glew/include/wglew.h>
+#endif
+
+//@PARAMS
 #define CR_GRAPHICS_DEBUG CR_DEBUG
+#define CR_GL_VERSION_MAJOR 4
+#define CR_GL_VERSION_MINOR 0
 
 namespace Graphics
 {
@@ -14,19 +21,19 @@ namespace Graphics
 			switch (type)
 			{
 			case GL_DEBUG_TYPE_ERROR:
-				return"Error";
+				return"GL_DEBUG_TYPE_ERROR";
 			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-				return "Deprecated behavior";
+				return "GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR";
 			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-				return "Undefined behavior";
+				return "GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR";
 			case GL_DEBUG_TYPE_PORTABILITY:
-				return "Portability issue";
+				return "GL_DEBUG_TYPE_PORTABILITY";
 			case GL_DEBUG_TYPE_PERFORMANCE:
-				return "Performance issue";
+				return "GL_DEBUG_TYPE_PERFORMANCE";
 			case GL_DEBUG_TYPE_MARKER:
-				return "Stream annotation";
+				return "GL_DEBUG_TYPE_MARKER";
 			case GL_DEBUG_TYPE_OTHER_ARB:
-				return "Other";
+				return "GL_DEBUG_TYPE_OTHER_ARB";
 			default:
 				return "Unknown";
 			}
@@ -39,11 +46,11 @@ namespace Graphics
 			case GL_DEBUG_SOURCE_API:
 				return "API";
 			case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-				return "Window system";
+				return "Window System";
 			case GL_DEBUG_SOURCE_SHADER_COMPILER:
-				return "Shader compiler";
+				return "Shader Compiler";
 			case GL_DEBUG_SOURCE_THIRD_PARTY:
-				return "Third party";
+				return "Third-Party";
 			case GL_DEBUG_SOURCE_APPLICATION:
 				return "Application";
 			case GL_DEBUG_SOURCE_OTHER:
@@ -80,7 +87,7 @@ namespace Graphics
 			const GLchar* message,
 			const void* userParam)
 		{
-#ifdef CR_GRAPHICS_DEBUG
+#if CR_GRAPHICS_DEBUG
 			CrDebugOutput
 			(
 				"***\nOpenGL Debug Output\nSource: %s\nType: %s\n Severity: %s\n Debug Call: %s\n***",

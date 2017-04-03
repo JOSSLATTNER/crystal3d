@@ -7,8 +7,9 @@ in vec3 inVertex;
 in vec2 inUV;
 in vec3 inNormal;
 
-//MVP
-layout(std140) uniform MVPBuffer {
+//Model, View, Projection
+layout(std140) uniform MVPBuffer
+{
 	mat4 transformMatrix;
 	mat4 viewMatrix;
 	mat4 projectionMatrix;
@@ -19,14 +20,13 @@ out vec2 fragUV;
 out vec3 fragNormal;
 out vec3 fragVertex;
 
-
 void main ()
-{
-	vec4 world = vec4(inVertex,1)*transformMatrix;
+{	
+	vec4 world = vec4(inVertex,1) * transformMatrix;
 
 	fragUV = inUV;
 	fragNormal = inNormal;
 	fragVertex = world.xyz;
 
-	gl_Position = world*viewMatrix*projectionMatrix;
+	gl_Position = world * viewMatrix * projectionMatrix;
 };

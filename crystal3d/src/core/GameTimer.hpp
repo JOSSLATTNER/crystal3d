@@ -41,7 +41,7 @@ namespace Core
 			}
 
 			template <typename DurationType>
-			DurationType GetElapsed() const
+			DurationType GetTotal() const
 			{
 				auto current = chrono_clock::now();
 				auto duration = current - m_Start;

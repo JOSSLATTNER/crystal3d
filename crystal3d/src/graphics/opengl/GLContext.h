@@ -1,4 +1,5 @@
 #pragma once
+#include "GL.h"
 
 #include "core\Core.h"
 #include "core\Platform.h"
@@ -19,7 +20,7 @@ namespace Graphics
 
 		private:
 			HDC m_HDC;
-			HGLRC m_Context;
+			HGLRC m_HGLRC;
 		};
 	}
 }

@@ -7,16 +7,7 @@ namespace Graphics
 	{
 		GLCubemap::GLCubemap(const std::string & a_Filename)
 		{
-			m_Handle = SOIL_load_OGL_single_cubemap
-			(
-				a_Filename.c_str(),
-				"WNESUD", /*WNESUD*/
-				SOIL_LOAD_AUTO,
-				SOIL_CREATE_NEW_ID,
-				SOIL_FLAG_MIPMAPS
-			);
-
-			CrAssert(m_Handle != 0, "SOIL loading error: '%s'", SOIL_last_result());
+			CrAssert(0, "Currently not implemented!");
 
 			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);

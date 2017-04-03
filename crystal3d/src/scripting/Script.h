@@ -2,13 +2,11 @@
 #include "core\Core.h"
 #include <packages/sol/sol.hpp>
 
-#include "resources\interface\Resource.h"
 #include "Framework.h"
 
 namespace Scripting
 {
-	class CrScript :
-		public Resources::CrResource
+	class CrScript
 	{
 	public:
 		CrScript(const std::string & a_File);

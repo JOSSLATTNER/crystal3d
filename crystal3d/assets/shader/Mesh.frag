@@ -13,8 +13,9 @@ uniform sampler2D tDiffuse;
 uniform sampler2D tSpecular;
 uniform sampler2D tNormal;
 
-//MVP
-layout(std140) uniform MVPBuffer {
+//Model, View, Projection
+layout(std140) uniform MVPBuffer
+{
 	mat4 transformMatrix;
 	mat4 viewMatrix;
 	mat4 projectionMatrix;

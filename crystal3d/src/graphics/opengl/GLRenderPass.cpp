@@ -30,7 +30,6 @@ namespace Graphics
 
 		void GLRenderPass::Render() const
 		{
-
 			//Projection setup
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
@@ -43,9 +42,7 @@ namespace Graphics
 
 			m_ShaderProgram->Bind();
 
-			// Render the quad
 			//TODO: REPLACE WITH VBO
-
 			glLoadIdentity();
 			glColor3f(1, 1, 1);
 			glTranslatef(0, 0, -1.0);
@@ -65,8 +62,6 @@ namespace Graphics
 			glVertex3f(0.0f, m_ViewportHeight, 0.0f);
 
 			glEnd();
-
-			m_ShaderProgram->Unbind();
 
 			glMatrixMode(GL_PROJECTION);
 			glPopMatrix();

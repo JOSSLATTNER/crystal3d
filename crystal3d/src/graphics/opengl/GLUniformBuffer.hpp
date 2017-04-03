@@ -16,12 +16,10 @@ namespace Graphics
 			GLUniformBuffer(const std::string& a_BlockName, GLenum a_Usage, uint32_t a_BindingPoint) :
 				m_Handle(0), m_BlockName(a_BlockName), m_Usage(a_Usage), m_BindingPoint(a_BindingPoint)
 			{
-				T initData{};
-
 				glGenBuffers(1, &m_Handle);
 				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
-				glBufferData(GL_UNIFORM_BUFFER, sizeof(initData), &initData, m_Usage);
-				glBindBufferBase(GL_UNIFORM_BUFFER, a_BindingPoint, m_Handle);
+				glBufferData(GL_UNIFORM_BUFFER, sizeof(T), NULL, m_Usage);
+				glBindBufferBase(GL_UNIFORM_BUFFER, m_BindingPoint, m_Handle);
 			}
 
 			GLUniformBuffer(std::string a_BlockName, GLenum a_Usage)
@@ -35,7 +33,7 @@ namespace Graphics
 			}
 
 			template <typename MT>
-			void Subdata(MT* a_Data, uint32_t a_Offset = 0)
+			void Subdata(MT* a_Data, size_t a_Offset = 0)
 			{
 				glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
 				glBufferSubData(GL_UNIFORM_BUFFER, a_Offset, sizeof(MT), a_Data);

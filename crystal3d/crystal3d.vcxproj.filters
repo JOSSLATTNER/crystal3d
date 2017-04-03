@@ -99,9 +99,6 @@
     <ClInclude Include="src\graphics\ShaderType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\TextureTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\input\interface\IInputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -621,9 +618,6 @@
     <ClInclude Include="src\window\win32\Win32Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\packages\soil\src\SOIL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\crystal3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -657,9 +651,6 @@
     <ClInclude Include="src\scripting\Framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\resources\interface\Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\allocator\LinearAllocator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -670,6 +661,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\input\interface\Mappings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\import\TGA.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\import\Import.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -756,9 +753,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scripting\Framework.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\resources\interface\Resource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,40 +1,47 @@
 #include "GLTexture2D.h"
 #include "core\Engine.h"
+#include "resources\import\TGA.hpp"
 
 namespace Graphics
 {
 	namespace OpenGL
 	{
 		GLTexture2D::GLTexture2D(const std::string & a_File)
-			: m_Handle(0), m_Type(ETextureType::Diffuse)
 		{
-			m_Handle = SOIL_load_OGL_texture
-			(
-				a_File.c_str(),
-				SOIL_LOAD_AUTO,
-				SOIL_CREATE_NEW_ID,
-				SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
-			);
+			using namespace Resources::Import;
 
-			CrAssert(m_Handle != 0, "SOIL loading error: '%s'", SOIL_last_result());
+			TGA::Header hd;
+			std::vector<GLchar> data;
+			bool hasAlpha;
 
-			float aniso = 0.0f;
+			try
+			{
+				TGA::Import(a_File, &hd, data, hasAlpha, TGA::ReadFormat::RGB);
+			}
+			catch (const CrImportException& ex)
+			{
+				CrAssert(0, "Failed load texture: %s", ex.what());
+			}
+
+			GLenum format = hasAlpha ? GL_RGBA : GL_RGB;
+			GLvoid* buffer = reinterpret_cast<GLvoid*>(data.data());
+			GLTexture2D(buffer, hd.width, hd.height, format, format, GL_UNSIGNED_BYTE);
+		}
+
+		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_InternalFormat, GLenum a_SourceFormat, GLenum a_Type)
+		{
+			glGenTextures(1, &m_Handle);
 			glBindTexture(GL_TEXTURE_2D, m_Handle);
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, a_InternalFormat, a_Width, a_Height, 0, a_SourceFormat, a_Type, a_PixelData);
+
+			//Generate Mipmaps
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 			this->SetParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
 			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		}
-
-		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_Type, GLenum a_Format)
-		{
-			glGenTextures(1, &m_Handle);
-			glBindTexture(GL_TEXTURE_2D, m_Handle);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, a_Type, a_Width, a_Height, 0, a_Format, GL_FLOAT, a_PixelData);
 		}
 
 		GLTexture2D::~GLTexture2D()
@@ -81,11 +88,5 @@ namespace Graphics
 		{
 			return m_Handle;
 		}
-
-		ETextureType GLTexture2D::GetType() const
-		{
-			return m_Type;
-		}
-
 	}
 }

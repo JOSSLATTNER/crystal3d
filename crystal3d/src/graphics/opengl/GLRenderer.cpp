@@ -28,16 +28,9 @@ namespace Graphics
 
 		void GLRenderer::Initialize(CrRendererContext& a_Context)
 		{
+			//Create Context
 			m_Window = a_Context.targetWindow;
 			m_CurrentContext.Create(m_Window->GetHandle());
-
-			GLenum err = glewInit();
-
-			if (GLEW_OK != err)
-				throw CrException(CrStringFormat("GLEW ERROR: %s", glewGetErrorString(err)));
-
-			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
-				glGetString(GL_VERSION), glGetString(GL_VENDOR), glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 			//@GL Settings
 			glEnable(GL_DEPTH_TEST);
@@ -48,11 +41,12 @@ namespace Graphics
 
 #ifdef CR_GRAPHICS_DEBUG
 			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 			glDebugMessageCallback(GLDebugCallback, NULL);
 
 			GLuint unusedIds = 0;
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE,
-				GL_DONT_CARE, 0, &unusedIds, GL_TRUE);
+			GL_DONT_CARE, 0, &unusedIds, GL_TRUE);
 #endif
 
 			//Geometry Buffer
@@ -66,6 +60,7 @@ namespace Graphics
 			m_UniformMVPBuffer = new GLUniformBuffer<MVP>("MVPBuffer", GL_DYNAMIC_DRAW);
 			m_UniformUtilityBuffer = new GLUniformBuffer<ShaderUtil>("UtilBuffer", GL_DYNAMIC_DRAW);
 
+			//Deferred Renderer
 			GLDeferredRendererContext deferredContext{};
 			deferredContext.viewportHeight = a_Context.viewportHeight;
 			deferredContext.viewportWidth = a_Context.viewportWidth;
@@ -86,17 +81,6 @@ namespace Graphics
 			3) Additional Passes: Shadows, Reflections, PostFX
 			*/
 
-			auto renderList = a_Scene->GetRenderList();
-			for (auto& renderable : renderList)
-			{
-				auto it = m_RenderEntities.find(renderable);
-
-				if (it != m_RenderEntities.end())
-					it->second->Render();
-				else
-					this->CreateEntity(renderable);
-			}
-
 			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>();
 
 			MVP mvp{};
@@ -106,7 +90,7 @@ namespace Graphics
 			m_UniformMVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};
-			util.globalTime = SEngine->GetGameTimer()->GetElapsed<float_t>();
+			util.globalTime = SEngine->GetGameTimer()->GetTotal<float_t>();
 			m_UniformUtilityBuffer->Subdata(&util,0);
 
 			m_GeometryBuffer->Bind();
@@ -119,6 +103,14 @@ namespace Graphics
 
 			m_DeferredRenderer->Render(a_Scene);
 			m_CurrentContext.SwapBuffer();
+		}
+
+		void GLRenderer::LoadAssets(Scene::CrScene * a_Scene)
+		{
+			auto renderList = a_Scene->GetRenderList();
+			for (auto& renderable : renderList)
+				this->CreateEntity(renderable);
+			CrLogSuccess("Assets loaded!");
 		}
 
 		GLUniformBuffer<MVP>* GLRenderer::GetMVPBuffer() const

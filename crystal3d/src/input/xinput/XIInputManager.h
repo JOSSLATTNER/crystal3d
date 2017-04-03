@@ -5,7 +5,6 @@
 
 #include <Xinput.h>
 
-
 namespace Input
 {
 	namespace XInput

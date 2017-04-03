@@ -27,6 +27,7 @@ out VertexData{
 	float TextureBlend;
 } VertexOut;
 
+//Model, View, Projection
 layout(std140) uniform MVPBuffer
 {
 	mat4 transformMatrix;

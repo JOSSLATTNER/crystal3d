@@ -35,11 +35,11 @@ namespace Graphics
 		};
 
 		CrSupressWarning(4324,
-			struct alignas(16) LightInfo
+			struct LightInfo
 			{
-				uint32_t hasDirectionalLight;
-				alignas(16) glm::vec3 cameraPosition;
-				float numPointLights;
+				bool hasDirectionalLight;
+				glm::vec3 cameraPosition;
+				uint32_t numPointLights;
 			};
 
 			struct PointLight

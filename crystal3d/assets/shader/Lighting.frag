@@ -9,10 +9,7 @@
 //4 = DEPTH
 //5 = RED
 //6 = SPECULAR
-#define MODE 0
-
-//GLOBALS
-#define MAX_POINT_LIGHT 1
+#define MODE 1
 
 //IN
 in vec2 fragCoord;
@@ -53,9 +50,9 @@ layout(std140) uniform DirectionalLightBlock
 //LIGHT INFO
 layout(std140) uniform LightInfoBlock
 {
-	uint hasDirectionalLight;
+	bool hasDirectionalLight;
 	vec3 cameraPosition;
-	int numPointLights;
+	uint numPointLights;
 } lightInfo;
 
 vec3 CalcPointLight(int i, vec3 normal, vec3 fragPos, vec3 viewDir)

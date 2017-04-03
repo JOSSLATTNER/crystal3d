@@ -15,40 +15,50 @@
 #include <set>
 #include <fstream>
 
-#define CrSupressWarning(w, s) \
-__pragma(warning( push )) \
-__pragma(warning( disable : w )) \
-s \
-__pragma(warning( pop ))
+//###########
+//##TYPES####
+//###########
+#ifdef CR_PLATFORM_WINDOWS
+typedef WORD CrWord;
+typedef BYTE CrByte;
+#endif
 
-#define FORWARD_DECL(t) class t
-#define BIT_HAS_FLAG(b,f) (b & f) == f 
+//###########
+//##LOGGING##
+//###########
 
 #ifdef CR_PLATFORM_WINDOWS
 static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
 static char* CURRENT_FUNC = "_";
 
-#define WIN32_COLOR_BLACK 0
-#define WIN32_COLOR_BLUE 31
-#define WIN32_COLOR_GREEN 10
-#define WIN32_COLOR_RED 12
-#define WIN32_COLOR_GREY 8
-#define WIN32_COLOR_WHITE 15
-#define WIN32_COLOR_YELLOW 14
+#define CONSOLE_COLOR_BLACK 0
+#define CONSOLE_COLOR_BLUE 31
+#define CONSOLE_COLOR_GREEN 10
+#define CONSOLE_COLOR_RED 12
+#define CONSOLE_COLOR_GREY 8
+#define CONSOLE_COLOR_WHITE 15
+#define CONSOLE_COLOR_YELLOW 14
 
-#define WIN32_CONSOLE_SET_COLOR(code) \
+#define CONSOLE_SET_COLOR(code) \
 SetConsoleTextAttribute(WIN32_CONSOLE_HANDLE, code);
+
+template<typename...Args>
+void T_DebugOutput(const std::string& format, Args...args)
+{
+	OutputDebugString(CrStringFormat(format, args...).c_str());
+}
+#endif
 
 template<typename...Args>
 void T_Log(char* function, WORD color, const std::string& format, Args...args)
 {
 	if (strcmp(function, CURRENT_FUNC) != 0)
 	{
-		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
+		CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
 		std::cout << "[" << function << "]" << std::endl;
 	}
 	
-	WIN32_CONSOLE_SET_COLOR(color);
+	CONSOLE_SET_COLOR(color);
 	std::cout << CrStringFormat(format, args...) << std::endl;
 
 	CURRENT_FUNC = function;
@@ -61,35 +71,41 @@ bool T_Assert(const bool condition, char* function, const std::string& format, A
 	{
 		if (strcmp(function, CURRENT_FUNC) != 0)
 		{
-			WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_GREY);
+			CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
 			std::cerr << "[" << function << "]" << std::endl;
 		}
 
-		WIN32_CONSOLE_SET_COLOR(WIN32_COLOR_RED);
+		CONSOLE_SET_COLOR(CONSOLE_COLOR_RED);
 		std::cerr << CrStringFormat(format, args...) << std::endl;
 		return true;
 	}
 	return false;
 }
 
-template<typename...Args>
-void T_DebugOutput(const std::string& format, Args...args)
-{
-	OutputDebugString(CrStringFormat(format, args...).c_str());
-}
-
 #define CrLog_C(format, color, ...) T_Log(__FUNCTION__, color, format, ##__VA_ARGS__)
-#define CrLog(format, ...) CrLog_C(format, WIN32_COLOR_WHITE, ##__VA_ARGS__)
-#define CrLogSuccess(format, ...) CrLog_C(format, WIN32_COLOR_GREEN, ##__VA_ARGS__)
-#define CrLogWarning(format, ...) CrLog_C(format, WIN32_COLOR_YELLOW, ##__VA_ARGS__)
-#define CrLogInfo(format, ...) CrLog_C(format, WIN32_COLOR_BLUE, ##__VA_ARGS__)
+#define CrLog(format, ...) CrLog_C(format, CONSOLE_COLOR_WHITE, ##__VA_ARGS__)
+#define CrLogSuccess(format, ...) CrLog_C(format, CONSOLE_COLOR_GREEN, ##__VA_ARGS__)
+#define CrLogWarning(format, ...) CrLog_C(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
+#define CrLogInfo(format, ...) CrLog_C(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
 
 #define CrAssert(condition, format, ...) \
 if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
 	DebugBreak();
 
 #define CrDebugOutput(format, ...) T_DebugOutput(format, ##__VA_ARGS__)
-#endif
+
+//##############
+//#####UTIL#####
+//##############
+
+#define CrSupressWarning(w, s) \
+__pragma(warning( push )) \
+__pragma(warning( disable : w )) \
+s \
+__pragma(warning( pop ))
+
+#define FORWARD_DECL(t) class t
+#define BIT_HAS_FLAG(b,f) (b & f) == f 
 
 template<typename ... Args>
 std::string CrStringFormat(const std::string& format, Args ... args)
@@ -99,6 +115,10 @@ std::string CrStringFormat(const std::string& format, Args ... args)
 	snprintf(buf.get(), size, format.c_str(), args ...);
 	return std::string(buf.get(), buf.get() + size - 1);
 }
+
+//##############
+//##EXCEPTIONS##
+//##############
 
 class CrException
 	: public std::exception

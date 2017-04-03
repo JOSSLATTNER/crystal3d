@@ -1,6 +1,5 @@
 #pragma once
 #include "graphics\Material.h"
-#include "resources\interface\Resource.h"
 
 #include "GL.h"
 #include "GLState.h"

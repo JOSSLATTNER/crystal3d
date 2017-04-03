@@ -36,6 +36,7 @@ namespace Graphics
 			~GLRenderer() override;
 			void Initialize(CrRendererContext& a_RendererContext) override;
 			void Render(Scene::CrScene* a_Scene) override;
+			void LoadAssets(Scene::CrScene* a_Scene) override;
 
 		public:
 			GLUniformBuffer<MVP>* GetMVPBuffer() const;

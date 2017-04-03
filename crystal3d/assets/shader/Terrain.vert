@@ -1,19 +1,21 @@
 #version 330 compatibility
 
+//IN
+layout (location = 0) in vec3 inPosition;
+layout (location = 1) in vec2 inUV;
+
 //UNIFORM
 uniform sampler2D tHeightmap;
 uniform sampler2D tNormalMap;
 uniform float displacementScale;
 
-layout(std140) uniform MVPBuffer {
+//Model, View, Projection
+layout(std140) uniform MVPBuffer
+{
 	mat4 transformMatrix;
 	mat4 viewMatrix;
 	mat4 projectionMatrix;
 };
-
-//IN
-layout (location = 0) in vec3 inPosition;
-layout (location = 1) in vec2 inUV;
 
 //OUT (->Fragment Shader)
 out VertexData{

@@ -24,9 +24,7 @@ namespace Graphics
 			delete m_RenderPassFramebuffer;
 
 			for (auto& rp : m_RenderPasses)
-			{
 				delete rp;
-			}
 		}
 
 		void GLDeferredRenderer::Initialize(GLDeferredRendererContext& a_Context)
@@ -53,15 +51,15 @@ namespace Graphics
 			GLRenderPass* lightingPass = new GLRenderPass(lpCx);
 			this->RegisterRenderPass(lightingPass, BUFFER_FLAG_POINT_LIGHT | BUFFER_FLAG_DIRECTIONAL_LIGHT | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_LIGHT_INFO);
 
-			//Skybox pass
-			GLRenderPassContext sbpCx{};
-			sbpCx.vertexShaderFile = "shader\\Deferred.vert";
-			sbpCx.fragmentShaderFile = "shader\\Skybox.frag";
-			sbpCx.viewportHeight = m_ViewportHeight;
-			sbpCx.viewportWidth = m_ViewportWidth;
+			////Skybox pass
+			//GLRenderPassContext sbpCx{};
+			//sbpCx.vertexShaderFile = "shader\\Deferred.vert";
+			//sbpCx.fragmentShaderFile = "shader\\Skybox.frag";
+			//sbpCx.viewportHeight = m_ViewportHeight;
+			//sbpCx.viewportWidth = m_ViewportWidth;
 
-			GLRenderPass* skyboxPass = new GLRenderPass(sbpCx);
-			this->RegisterRenderPass(skyboxPass, BUFFER_FLAG_PREVIOUS_PASS | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_DEPTH);
+			//GLRenderPass* skyboxPass = new GLRenderPass(sbpCx);
+			//this->RegisterRenderPass(skyboxPass, BUFFER_FLAG_PREVIOUS_PASS | BUFFER_FLAG_GEOMETRY | BUFFER_FLAG_DEPTH);
 		}
 
 		void GLDeferredRenderer::RegisterRenderPass(GLRenderPass* a_RenderPass, unsigned int a_BufferFlags)
@@ -127,6 +125,7 @@ namespace Graphics
 				m_RenderPassFramebuffer->Unbind();
 			}
 
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			m_RenderPasses.back()->Render();
 		}
 
@@ -134,14 +133,14 @@ namespace Graphics
 		{
 			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>();
 
-			LightInfo lightInfo;
-			lightInfo.hasDirectionalLight = uint32_t(true);
-			lightInfo.numPointLights = uint32_t(1);
+			LightInfo lightInfo{};
+			lightInfo.hasDirectionalLight = true;
+			lightInfo.numPointLights = 1;
 			lightInfo.cameraPosition = camNode->m_Transform.Translation;
 
 			m_LightInfoBuffer->Subdata(&lightInfo, 0);
 
-			PointLight pointLight;
+			PointLight pointLight{};
 			pointLight.diffuse = { 1.0f, 0.0f, 0.0f };
 			pointLight.position = { 0, 0, 0 };
 			pointLight.radius = 10;
@@ -149,7 +148,7 @@ namespace Graphics
 
 			m_PointLightBuffer->Subdata(&pointLight);
 		
-			DirectionalLight dirLight;
+			DirectionalLight dirLight{};
 			dirLight.diffuse = { 1.0f, 1.0f, 1.0f };
 			dirLight.direction = { 1.0f, 0.0f, 1.0f };
 			dirLight.ambientFactor = 0.6f;

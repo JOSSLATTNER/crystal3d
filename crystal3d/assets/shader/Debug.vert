@@ -4,7 +4,8 @@ in vec3 position;
 out vec3 fragPosition;
 
 //Model, View, Projection
-layout(std140) uniform MVPBuffer {
+layout(std140) uniform MVPBuffer
+{
 	mat4 transformMatrix;
 	mat4 viewMatrix;
 	mat4 projectionMatrix;

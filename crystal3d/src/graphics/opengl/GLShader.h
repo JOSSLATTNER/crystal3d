@@ -1,6 +1,5 @@
 #pragma once
 #include "core\Core.h"
-#include "resources\interface\Resource.h"
 
 #include "GL.h"
 #include "graphics\ShaderType.h"
@@ -12,7 +11,6 @@ namespace Graphics
 	namespace OpenGL
 	{
 		class GLShader
-			: public Resources::CrResource
 		{
 		public:
 			GLShader(const std::string& a_Filename, EShaderType a_Type);

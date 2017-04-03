@@ -3,7 +3,6 @@
 #if defined _WIN32 || defined _WIN64
 #define CR_PLATFORM_WINDOWS
 #include <Windows.h>
-
 #elif defined __unix__ || defined unix
 #define CR_PLATFORM_UNIX
 #elif defined __linux__

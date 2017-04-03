@@ -31,6 +31,7 @@ namespace Window
 			static LRESULT CALLBACK WndProc(HWND a_Hwnd, unsigned int a_Message, WPARAM a_WParam, LPARAM a_LPARAM);
 
 		protected:
+			glm::vec2 m_Size;
 			HWND m_Handle;
 			HINSTANCE m_HInstance;
 			std::string m_ClassName;

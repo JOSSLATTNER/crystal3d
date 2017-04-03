@@ -23,9 +23,9 @@ namespace Core
 		delete m_MainWindow;
 		delete m_ActiveScene;
 		delete m_GameTimer;
-		delete m_ResourceManager;
 		delete m_InputManager;
 		delete m_Renderer;
+		delete m_ResourceManager;
 	}
 
 	void CrEngine::Initialize(CrEngineContext& a_Context)
@@ -93,11 +93,12 @@ namespace Core
 
 		m_ActiveScene = a_GameScene;
 		m_ActiveScene->Initialize();
+		m_Renderer->LoadAssets(m_ActiveScene);
 	}
 
 	void CrEngine::Quit()
 	{
-		CrLog("Shutting down...");
+		CrLog("Terminating...");
 		m_IsRunning = false;
 	}
 

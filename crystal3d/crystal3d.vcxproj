@@ -91,7 +91,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\soil\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32.lib;SOIL.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,7 +131,8 @@
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
     <ClInclude Include="src\core\profile\Benchmark.hpp" />
     <ClInclude Include="src\input\interface\Mappings.h" />
-    <ClInclude Include="src\resources\interface\Resource.h" />
+    <ClInclude Include="src\resources\import\Import.hpp" />
+    <ClInclude Include="src\resources\import\TGA.hpp" />
     <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
@@ -163,7 +164,6 @@
     <ClInclude Include="src\graphics\RendererContext.h" />
     <ClInclude Include="src\graphics\RenderMode.h" />
     <ClInclude Include="src\graphics\ShaderType.h" />
-    <ClInclude Include="src\graphics\TextureTypes.h" />
     <ClInclude Include="src\input\interface\IInputManager.h" />
     <ClInclude Include="src\input\xinput\XIInputManager.h" />
     <ClInclude Include="src\math\AABB.h" />
@@ -324,7 +324,6 @@
     <ClInclude Include="src\packages\lua-5.2.4\include\lua.hpp" />
     <ClInclude Include="src\packages\lua-5.2.4\include\luaconf.h" />
     <ClInclude Include="src\packages\lua-5.2.4\include\lualib.h" />
-    <ClInclude Include="src\packages\soil\src\SOIL.h" />
     <ClInclude Include="src\packages\sol\SOL.HPP" />
     <ClInclude Include="src\packages\tinyobj\tiny_obj_loader.h" />
     <ClInclude Include="src\graphics\Material.h" />
@@ -348,7 +347,6 @@
     <ClInclude Include="src\window\win32\Win32Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\resources\interface\Resource.cpp" />
     <ClCompile Include="src\scripting\Framework.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />

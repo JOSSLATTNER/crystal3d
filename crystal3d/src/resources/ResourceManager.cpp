@@ -4,6 +4,7 @@ namespace Resources
 {
 	CrResourceManager::CrResourceManager()
 	{
+		//TODO: ALLOCATOR
 		CrLogSuccess("ResourceManager initialized [OK]");
 	}
 

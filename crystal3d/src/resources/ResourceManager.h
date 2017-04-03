@@ -1,10 +1,11 @@
 #pragma once
 #include "core\Core.h"
-#include "interface\Resource.h"
 #include "core\allocator\LinearAllocator.hpp"
 
 namespace Resources
 {
+	typedef uint64_t CrResourceHandle;
+
 	class CrResourceManager
 	{
 	public:
@@ -31,10 +32,10 @@ namespace Resources
 			if (fnd != nullptr)
 				return fnd;
 
-			auto fullPath = this->ResolvePath(a_Filename);
+			const std::string fullPath = this->ResolvePath(a_Filename);
 			auto res = new T(fullPath, std::forward<TArgs>(a_Args)...);
 
-			m_Resources.insert({ hash, static_cast<CrResource*>(res) });
+			m_Resources.insert({ hash, static_cast<void*>(res) });
 
 			CrLog(a_Filename.c_str());
 			return res;
@@ -44,7 +45,7 @@ namespace Resources
 		void FreeAll();
 
 	private:
-		std::unordered_map<CrResourceHandle, CrResource*> m_Resources;
+		std::unordered_map<CrResourceHandle, void*> m_Resources;
 
 		const CrResourceHandle GenerateHandle(const std::string& a_String) const;
 		const std::string ResolvePath(const std::string& a_FileName) const;

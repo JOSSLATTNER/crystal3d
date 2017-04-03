@@ -23,6 +23,7 @@ namespace Window
 
 			m_HInstance = GetModuleHandle(0);
 			m_ClassName = CR_WIN32_CLASS_NAME;
+			m_Size = { a_WindowContext.width, a_WindowContext.height };
 
 			WNDCLASS wndClass = {};
 			wndClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -98,9 +99,10 @@ namespace Window
 
 		glm::vec2 Win32Window::GetSize() const
 		{
-			RECT rect{};
-			GetWindowRect(m_Handle, &rect);
-			return { rect.right - rect.left , rect.bottom - rect.top };
+			//RECT rect{};
+			//GetWindowRect(m_Handle, &rect);
+			//return { rect.right - rect.left , rect.bottom - rect.top };
+			return m_Size;
 		}
 
 		void Win32Window::OnClose(std::function<void()> a_Callback)

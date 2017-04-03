@@ -59,15 +59,8 @@ namespace Graphics
 			m_ShaderProgram->Bind();
 			this->BufferTransform();
 
-			glPushAttrib(GL_POLYGON_BIT);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				
 			m_VertexArray->Bind();
 			glDrawElements(m_Mode, m_VertexArray->m_ElementCount, GL_UNSIGNED_INT, 0);
-			m_VertexArray->Unbind();
-
-			glPopAttrib();
-			m_ShaderProgram->Unbind();
 		}
 
 		void GLRenderEntity::BufferTransform()

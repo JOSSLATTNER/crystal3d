@@ -12,9 +12,16 @@ namespace Core
 			m_Start = a_Start;
 			m_End = a_End;
 			m_Current = m_Start;
+
+			this->Reset();
 		}
 		~CrLinearAllocator()
 		{
+		}
+
+		void Reset()
+		{
+			memset(m_Start, '\0', m_End - m_Start);
 		}
 
 		template<typename T>

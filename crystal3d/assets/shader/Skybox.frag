@@ -29,14 +29,16 @@ uniform sampler2D tDepthTexture;
 uniform samplerCube skybox;
 
 //Model, View, Projection
-layout(std140) uniform MVPBuffer {
+layout(std140) uniform MVPBuffer
+{
 	mat4 transformMatrix;
 	mat4 viewMatrix;
 	mat4 projectionMatrix;
 };
 
 //Util
-layout(std140) uniform UtilBuffer {
+layout(std140) uniform UtilBuffer
+{
 	float globalTime;
 };
 

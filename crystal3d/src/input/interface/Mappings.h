@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Input
+{
 struct KeyboardInput
 {
 	enum EKeyCode
@@ -162,7 +164,6 @@ struct KeyboardInput
 		OEMClear = 0xFE
 	};
 };
-
 struct ControllerInput
 {
 	enum EButtons
@@ -190,3 +191,4 @@ struct ControllerInput
 		RIGHT_Y
 	};
 };
+}

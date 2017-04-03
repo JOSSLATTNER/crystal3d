@@ -69,9 +69,9 @@ namespace Graphics
 			material.fragmentShader = "Shader\\Mesh.frag";
 
 			material.textures["tDiffuse"] = mat.diffuse_texname.empty() ? "Textures\\uvcheck.png" : "Textures\\" + mat.diffuse_texname;
-			material.textures["tSpecular"] = mat.specular_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.specular_texname;
-			material.textures["tNormal"] = mat.normal_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.normal_texname;
-			material.textures["tNormal"] = mat.bump_texname.empty() ? "Textures\\white.png" : "Textures\\" + mat.bump_texname;
+			material.textures["tSpecular"] = mat.specular_texname.empty() ? "Textures\\white.tga" : "Textures\\" + mat.specular_texname;
+			material.textures["tNormal"] = mat.normal_texname.empty() ? "Textures\\white.tga" : "Textures\\" + mat.normal_texname;
+			material.textures["tNormal"] = mat.bump_texname.empty() ? "Textures\\white.tga" : "Textures\\" + mat.bump_texname;
 
 			m_MaterialEntries.push_back(material);
 		}
