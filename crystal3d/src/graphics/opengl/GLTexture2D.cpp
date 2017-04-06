@@ -10,22 +10,23 @@ namespace Graphics
 		{
 			using namespace Resources::Import;
 
-			TGA::Header hd;
 			std::vector<GLchar> data;
-			bool hasAlpha;
+			TGA::ImageInfo inf;
 
 			try
 			{
-				TGA::Import(a_File, &hd, data, hasAlpha, TGA::ReadFormat::RGB);
+				TGA::Import(a_File, data, inf);
 			}
 			catch (const CrImportException& ex)
 			{
 				CrAssert(0, "Failed load texture: %s", ex.what());
 			}
 
-			GLenum format = hasAlpha ? GL_RGBA : GL_RGB;
+			GLenum srcFormat = inf.hasAlpha ? GL_BGRA : GL_BGR;
+			GLenum dstFormat = inf.hasAlpha ? GL_RGBA : GL_RGB;
+
 			GLvoid* buffer = reinterpret_cast<GLvoid*>(data.data());
-			GLTexture2D(buffer, hd.width, hd.height, format, format, GL_UNSIGNED_BYTE);
+			GLTexture2D(buffer, inf.width, inf.height, dstFormat, srcFormat, GL_UNSIGNED_BYTE);
 		}
 
 		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_InternalFormat, GLenum a_SourceFormat, GLenum a_Type)

@@ -105,7 +105,7 @@ s \
 __pragma(warning( pop ))
 
 #define FORWARD_DECL(t) class t
-#define BIT_HAS_FLAG(b,f) (b & f) == f 
+#define BIT_HAS_FLAG(b,f) (b & f) == f
 
 template<typename ... Args>
 std::string CrStringFormat(const std::string& format, Args ... args)

@@ -4,6 +4,23 @@
 
 namespace Core
 {
+	template<typename T>
+	class CrMemory
+	{
+	public:
+		CrMemory(T* a_Ptr)
+			: m_Raw(a_Ptr) {};
+
+		template<typename...Args>
+		T* Construct(Args...a_Args)
+		{	
+			return new (m_Raw) T(std::forward<Args>(a_Args)...);
+		}
+
+	private:
+		T* m_Raw;
+	};
+
 	class CrLinearAllocator
 	{
 	public:
@@ -25,14 +42,14 @@ namespace Core
 		}
 
 		template<typename T>
-		T* Allocate()
+		CrMemory<T> Allocate()
 		{
 			if (m_End - m_Current < sizeof(T))
 				throw std::bad_alloc();
 
 			T* ptr = reinterpret_cast<T*>(m_Current);
 			m_Current += sizeof(T);
-			return ptr;
+			return { ptr };
 		}
 
 	private:
