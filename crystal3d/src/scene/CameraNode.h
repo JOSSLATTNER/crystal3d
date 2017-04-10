@@ -28,7 +28,7 @@ namespace Scene
 
 		//Inherited via CrSceneNode
 		~CrCameraNode() override;
-		void Update(const float& a_DeltaTime) override;
+		void Update(const float a_DeltaTime) override;
 
 		glm::vec3 GetLook() const;
 		glm::vec3 GetRight() const;

@@ -3,6 +3,11 @@
 #include "Platform.h"
 #include "Singleton.hpp"
 
+#ifdef CR_PLATFORM_WINDOWS
+//Disables iterator debugging.
+//#define _SECURE_SCL 0
+#endif
+
 #include <vector>
 #include <cstdint>
 #include <map>
@@ -16,7 +21,7 @@
 #include <fstream>
 
 //###########
-//##TYPES####
+//###TYPES###
 //###########
 #ifdef CR_PLATFORM_WINDOWS
 typedef WORD CrWord;
@@ -26,7 +31,6 @@ typedef BYTE CrByte;
 //###########
 //##LOGGING##
 //###########
-
 #ifdef CR_PLATFORM_WINDOWS
 static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
 static char* CURRENT_FUNC = "_";
@@ -50,13 +54,15 @@ void T_DebugOutput(const std::string& format, Args...args)
 #endif
 
 template<typename...Args>
-void T_Log(char* function, WORD color, const std::string& format, Args...args)
+void T_Log(char* function, CrWord color, const std::string& format, Args...args)
 {
+#if CR_DEBUG
 	if (strcmp(function, CURRENT_FUNC) != 0)
 	{
 		CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
 		std::cout << "[" << function << "]" << std::endl;
 	}
+#endif
 	
 	CONSOLE_SET_COLOR(color);
 	std::cout << CrStringFormat(format, args...) << std::endl;
@@ -69,11 +75,13 @@ bool T_Assert(const bool condition, char* function, const std::string& format, A
 {
 	if (!condition)
 	{
+#if CR_DEBUG
 		if (strcmp(function, CURRENT_FUNC) != 0)
 		{
 			CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
 			std::cerr << "[" << function << "]" << std::endl;
 		}
+#endif
 
 		CONSOLE_SET_COLOR(CONSOLE_COLOR_RED);
 		std::cerr << CrStringFormat(format, args...) << std::endl;
@@ -94,10 +102,9 @@ if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
 
 #define CrDebugOutput(format, ...) T_DebugOutput(format, ##__VA_ARGS__)
 
-//##############
-//#####UTIL#####
-//##############
-
+//########
+//##UTIL##
+//########
 #define CrSupressWarning(w, s) \
 __pragma(warning( push )) \
 __pragma(warning( disable : w )) \
@@ -119,7 +126,6 @@ std::string CrStringFormat(const std::string& format, Args ... args)
 //##############
 //##EXCEPTIONS##
 //##############
-
 class CrException
 	: public std::exception
 {

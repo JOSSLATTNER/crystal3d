@@ -1,5 +1,6 @@
 #include "GLRenderPass.h"
 #include "GLRenderer.h"
+#include "GLCache.h"
 
 #include "core\Engine.h"
 
@@ -10,10 +11,9 @@ namespace Graphics
 		GLRenderPass::GLRenderPass(GLRenderPassContext& a_Context)
 		{
 			m_ShaderProgram = new GLShaderProgram();
-			auto pResources = SEngine->GetResourceManager();
 
-			auto vertShader = pResources->LoadResource<GLShader>(a_Context.vertexShaderFile, EShaderType::VertexShader);
-			auto fragShader = pResources->LoadResource<GLShader>(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
+			auto vertShader = GLCache::LoadShader(a_Context.vertexShaderFile, EShaderType::VertexShader);
+			auto fragShader = GLCache::LoadShader(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
 
 			m_ShaderProgram->AttachShader(vertShader);
 			m_ShaderProgram->AttachShader(fragShader);
@@ -30,6 +30,8 @@ namespace Graphics
 
 		void GLRenderPass::Render() const
 		{
+			//TODO: REPLACE WITH VBO!!!
+
 			//Projection setup
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
@@ -42,7 +44,6 @@ namespace Graphics
 
 			m_ShaderProgram->Bind();
 
-			//TODO: REPLACE WITH VBO
 			glLoadIdentity();
 			glColor3f(1, 1, 1);
 			glTranslatef(0, 0, -1.0);

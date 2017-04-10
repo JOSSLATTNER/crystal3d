@@ -16,7 +16,7 @@ namespace Scene
 			~CrScriptComponent() override;
 			void OnDetach() override;
 			void OnAttach(CrSceneNode* a_Node) override;
-			void Update(const float & a_Delta) override;
+			void Update(const float a_Delta) override;
 
 			void SetScript(Scripting::CrScript* a_Script);
 

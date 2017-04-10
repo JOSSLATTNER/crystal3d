@@ -3,6 +3,7 @@
 #include <packages/sol/sol.hpp>
 
 #include "Framework.h"
+#include "resources\Resources.h"
 
 namespace Scripting
 {

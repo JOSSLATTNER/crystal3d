@@ -1,17 +1,47 @@
 #pragma once
+#include "core\Core.h"
+
 namespace Core
 {
-	template<size_t Size>
+	template<typename T>
+	class CrConstructable
+	{
+	public:
+		CrConstructable(T* a_Ptr)
+			: m_Raw(a_Ptr) {};
+
+		template<typename...Args>
+		T* Construct(Args...a_Args)
+		{
+			return new (m_Raw) T(std::forward<Args>(a_Args)...);
+		}
+
+	private:
+		T* m_Raw;
+	};
+
 	class CrMemoryArena
 	{
 	public:
-		CrMemoryArena()
+		CrMemoryArena(const size_t a_Size)
+			: m_Size(a_Size), m_Released(false)
 		{
-			m_Start = new char[Size];
+			m_Start = new char[m_Size];
+
+			CrLog("Allocated %zu bytes.", a_Size);
 		}
 		~CrMemoryArena()
 		{
-			delete m_Start;
+			this->Release();
+		}
+
+		void Release()
+		{
+			if (!m_Released)
+			{
+				delete m_Start;
+				m_Released = true;
+			}
 		}
 
 		char* Begin()
@@ -21,10 +51,12 @@ namespace Core
 
 		char* End()
 		{
-			return m_Start + Size;
+			return m_Start + m_Size;
 		}
 
 	private:
-			char* m_Start;
+		bool m_Released;
+		size_t m_Size;
+		char* m_Start;
 	};
 }

@@ -23,7 +23,6 @@ namespace Graphics
 			void SetVertexArray(GLVertexArray* a_VertexArray);
 			void SetBoundingBox(Math::AABB* a_BB);
 			void SetMode(GLenum a_Mode);
-			void SetTransformBufferFunc(std::function<void(glm::mat4& transform)> a_Func);
 
 			void Render();
 
@@ -31,7 +30,6 @@ namespace Graphics
 			void BufferTransform();
 
 		private:
-			std::function<void(glm::mat4& transform)> m_TransformBufferFunc;
 			Scene::CrTransform* m_Transform;
 
 			GLenum m_Mode;

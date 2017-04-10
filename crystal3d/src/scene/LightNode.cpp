@@ -11,7 +11,7 @@ namespace Scene
 	{
 	}
 
-	void CrLightNode::Update(const float & a_DeltaTime)
+	void CrLightNode::Update(const float a_Delta)
 	{
 	}
 

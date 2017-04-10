@@ -1,6 +1,6 @@
 #pragma once
-#include "Import.hpp"
-#include "core\Core.h"
+#include "Common.h"
+#include "core\profiling\Benchmark.hpp"
 
 namespace Resources
 {
@@ -19,7 +19,6 @@ namespace Resources
 				RGB24_RLE = 10,
 				MONO_RLE = 11
 			};
-
 
 #pragma pack(push)
 #pragma pack(1)
@@ -41,63 +40,55 @@ namespace Resources
 #pragma pack(pop)
 
 
-			struct ImageInfo
-			{
-				unsigned int width;
-				unsigned int height;
-				bool hasAlpha;
-			};
-
-			static constexpr size_t kHeaderSize = sizeof(char);
+			static constexpr size_t kPacketHeaderSize = sizeof(char);
 
 			//http://paulbourke.net/dataformats/tga/
-			inline void DecompressRLE(unsigned int bytePerPixel, std::vector<char>& a_In, std::vector<char>& a_Out)
+			inline void DecompressRLE(unsigned int a_BytePerPixel, std::vector<CrByte>& a_In, std::vector<CrByte>& a_Out)
 			{
-				a_Out.resize(a_In.size());
-				
-				for (size_t i = 0; i < a_In.size();)
+				_CR_BENCHMARK("TARGA RLE DECOMPRESSION");
+				auto it = a_In.begin();
+
+				while (a_Out.size() < a_Out.capacity())
 				{
-					char cc = a_In[i];
+					//Read packet header
+					const unsigned char c = *it;
+					int count = (c & 0x7f) + 1;
+					int type = c & 0x80;
 
-					char type = (cc & 0xff) >> 7;
-					char count = cc & 7;
+					//Skip header
+					std::advance(it, kPacketHeaderSize);
 
-					if (type == 1)
+					if (type != 0)
 					{
 						//For the run length packet, the header is followed by
 						//a single color value, which is assumed to be repeated
 						//the number of times specified in the header.
 
-						char* packetStart = &cc + kHeaderSize;
-						char* packetEnd = packetStart + bytePerPixel;
-
 						//Insert packets into output buffer
-						for (size_t i = 0; i < count; i++)
+						for (size_t pk = 0; pk < count; ++pk)
 						{
-							a_Out.insert(a_Out.end(), packetStart, packetEnd);
+							a_Out.insert(a_Out.end(), it, it + a_BytePerPixel);
 						}
 
 						//Jump to next header
-						i += (kHeaderSize + bytePerPixel);
+						std::advance(it, a_BytePerPixel);
 					}
 					else
 					{
-						//For the raw packet, the header is followed by
+						//For the raw packet, the header s followed by
 						//the number of color values specified in the header.
-
-						char* packetsStart = &cc + kHeaderSize;
-						char* packetsEnd = packetsStart + count * bytePerPixel;
+						size_t paLength = count * a_BytePerPixel;
 
 						//Insert packets into output buffer
-						a_Out.insert(a_Out.end(), packetsStart, packetsEnd);
+						a_Out.insert(a_Out.end(), it, it + paLength);
 
 						//Jump to next header
-						i += (kHeaderSize + count * bytePerPixel);
+						std::advance(it, paLength);
 					}
 				}
 			}
 
-			inline void Import(const std::string& a_Filename, std::vector<char>& a_Buffer, ImageInfo& a_Info)
+			inline void Import(const std::string& a_Filename, std::vector<CrByte>& a_Buffer, CrImageInfo& a_Info)
 			{
 				std::ifstream ifs(a_Filename, std::ifstream::in | std::ifstream::binary);
 
@@ -125,31 +116,31 @@ namespace Resources
 
 				size_t imageSize = hd.width * hd.height * bytePerPixel;
 
-				//Read pixel data
-				a_Buffer.resize(imageSize);
-				ifs.read(a_Buffer.data(), imageSize);
-
-				//Decompress
-				if (hd.type == RGB24_RLE || hd.type == MONO_RLE)
+				if (hd.type == RGB24_UNCOMPRESSED || hd.type == MONO_UNCOMPRESSED)
 				{
-					std::vector<char> decompressed;
-					DecompressRLE(bytePerPixel, a_Buffer, decompressed);
+					a_Buffer.resize(imageSize);
+					ifs.seekg(sizeof(Header), std::ifstream::beg);
+					ifs.read(reinterpret_cast<char*>(a_Buffer.data()), imageSize);
+				}
+				else if (hd.type == RGB24_RLE || hd.type == MONO_RLE)
+				{
+					//Get remaining size
+					ifs.seekg(sizeof(Header), std::ifstream::end);
+					std::streampos remainingSize = ifs.tellg();
+
+					//Read compressed data
+					std::vector<CrByte> compressed(remainingSize);
+					ifs.seekg(sizeof(Header), std::ifstream::beg);
+					ifs.read(reinterpret_cast<char*>(compressed.data()), remainingSize);
+
+					//Decompress
+					std::vector<CrByte> decompressed;
+					decompressed.reserve(imageSize);
+					DecompressRLE(bytePerPixel, compressed, decompressed);
 
 					//Swap decompressed data into output buffer 
 					a_Buffer.swap(decompressed);
 				}
-
-				////Adjust Format (RGB/BGR)
-				//if (format == ReadFormat::RGB)
-				//{
-				//	unsigned char colorSwap;
-				//	for (int imageIdx = 0; imageIdx < a_Buffer.size(); imageIdx += bytePerPixel)
-				//	{
-				//		colorSwap = a_Buffer[imageIdx];
-				//		a_Buffer[imageIdx] = a_Buffer[imageIdx + 2];
-				//		a_Buffer[imageIdx + 2] = colorSwap;
-				//	}
-				//}
 			}
 
 		}

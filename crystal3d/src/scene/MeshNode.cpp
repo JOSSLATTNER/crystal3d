@@ -49,7 +49,7 @@ namespace Scene
 		m_RenderMode = a_RenderMode;
 	}
 
-	void CrMeshNode::Update(const float& a_DeltaTime)
+	void CrMeshNode::Update(const float a_DeltaTime)
 	{
 		glm::mat4 modelMatrix = m_Transform.LocalMatrix();
 		m_BoundingBoxTransformed.m_Max = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Max, 1.0f) * modelMatrix);

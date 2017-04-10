@@ -5,7 +5,6 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
 		GLShader::GLShader(const std::string& a_Filename, EShaderType a_Type)
 			: m_Type(a_Type)
 		{

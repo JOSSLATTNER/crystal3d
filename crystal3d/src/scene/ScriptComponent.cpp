@@ -33,7 +33,7 @@ namespace Scene
 			m_Script = a_Script;
 		}
 
-		void CrScriptComponent::Update(const float & a_Delta)
+		void CrScriptComponent::Update(const float a_Delta)
 		{
 			if (m_Script != nullptr)
 			{

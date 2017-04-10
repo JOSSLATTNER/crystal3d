@@ -18,10 +18,9 @@ namespace Scene
 
 		//Inherited via CrSceneNode
 		~CrLightNode() override;
-		void Update(const float& a_DeltaTime) override;
+		void Update(const float a_DeltaTime) override;
 
 		ELightType GetType();
-
 		//TODO: LIGHT VALUES
 
 	private:

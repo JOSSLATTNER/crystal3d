@@ -6,15 +6,9 @@
 
 namespace Graphics
 {
-	class CrModel 
+	struct CrModel
 	{
-	public:
-		CrModel(const std::string & a_File);
-		~CrModel();
-
-	public:
 		std::vector<CrMesh> m_MeshEntries;
 		std::vector<CrMaterial> m_MaterialEntries;
-
 	};
 }

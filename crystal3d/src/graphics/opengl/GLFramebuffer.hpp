@@ -33,7 +33,14 @@ namespace Graphics
 
 				for (uint32_t i = 0; i < numTextures; i++)
 				{
-					m_Textures[i] = new GLTexture2D(nullptr, m_Width, m_Height, a_Context.formats[i], GL_RGBA);
+					GLTextureContext ctx;
+					ctx.width = m_Width;
+					ctx.height = m_Height;
+					ctx.sourceFormat = GL_RGBA;
+					ctx.internalFormat = a_Context.formats[i];
+					ctx.type = GL_UNSIGNED_BYTE;
+
+					m_Textures[i] = new GLTexture2D(nullptr, ctx);
 					m_Textures[i]->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 					m_Textures[i]->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -47,11 +54,17 @@ namespace Graphics
 				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_Width, m_Height);
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
 
-
 				//Create depth texture
 				if (a_Context.useDepthTexture)
 				{
-					m_DepthTexture = new GLTexture2D(nullptr, m_Width, m_Height, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT);
+					GLTextureContext ctx;
+					ctx.width = m_Width;
+					ctx.height = m_Height;
+					ctx.sourceFormat = GL_DEPTH_COMPONENT;
+					ctx.internalFormat = GL_DEPTH_COMPONENT24;
+					ctx.type = GL_UNSIGNED_BYTE;
+
+					m_DepthTexture = new GLTexture2D(nullptr, ctx);
 
 					m_DepthTexture->SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					m_DepthTexture->SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -96,16 +109,13 @@ namespace Graphics
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 
-				glPushAttrib(GL_VIEWPORT_BIT);
 				glViewport(0, 0, m_Width, m_Height);
-
 				glClear(GL_DEPTH_BUFFER_BIT);
 			}
 
 			void Unbind() const
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				glPopAttrib();
 			}
 
 			std::vector<GLTexture2D*>& GetTextures()

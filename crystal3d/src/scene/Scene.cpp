@@ -4,8 +4,8 @@
 namespace Scene 
 {
 	CrScene::CrScene(const std::string& a_Script)
+		: m_Behaviour(a_Script)
 	{
-		m_Behaviour = SEngine->GetResourceManager()->LoadResource<Scripting::CrScript>(a_Script);
 	}
 
 	CrScene::~CrScene()
@@ -18,22 +18,16 @@ namespace Scene
 
 	void CrScene::Initialize()
 	{
-		if (m_Behaviour != nullptr)
-		{
-			m_Behaviour->BindGlobal("this", this);
-			m_Behaviour->Run();
-			m_Behaviour->Invoke<void>("Init");
-		}
+		m_Behaviour.BindGlobal("this", this);
+		m_Behaviour.Run();
+		m_Behaviour.Invoke<void>("Init");
 
 		CrLogSuccess("Scene initialized [OK]");
 	}
 
-	void CrScene::Update(const float& a_Delta)
+	void CrScene::Update(const float a_Delta)
 	{
-		if (m_Behaviour != nullptr)
-		{
-			m_Behaviour->Invoke<void, float>("Update", a_Delta);
-		}
+		m_Behaviour.Invoke<void, float>("Update", a_Delta);
 
 		for (auto& node : m_Nodes)
 		{

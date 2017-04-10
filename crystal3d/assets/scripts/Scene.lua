@@ -1,6 +1,6 @@
 function Init()
 	--Camera
-	cameraTransform = Transform.new(Vector3.new(0,0,0), Vector3.new(0,0,0), Vector3.new(0,0,0))
+	cameraTransform = Transform.new(Vector3.new(0,0,-10), Vector3.new(0,0,0), Vector3.new(0,0,0))
 	dimensions = GameWindow:GetSize()
 
 	cameraNode = CameraNode.Create(cameraTransform)
@@ -11,8 +11,8 @@ function Init()
 	this:AddNode(cameraNode)
 
 	--Player
-	model1 = Resources:LoadModel("Meshes\\gunslinger.obj", nil)
-	playerTransform = Transform.new(Vector3.new(0,0,0), Vector3.new(0,0,0), Vector3.new(3,3,3))
+	model1 = ImportModel("Meshes\\gunslinger.obj")
+	playerTransform = Transform.new(Vector3.new(0,80,0), Vector3.new(0,0,0), Vector3.new(3,3,3))
 	playerNode = SceneNode.Create(playerTransform)
 
 	for i=1,#model1.Meshes do
@@ -30,30 +30,30 @@ function Init()
 
 	this:AddNode(playerNode)
 	
-	----Terrain
-	--terrainNode01 = TerrainNode.Create(Transform.new(Vector3.new(-200,0,-200), Vector3.new(0,0,0), Vector3.new(5,1,5)))
-	--
-	--terrain = Terrain.new()
-	--terrain.Heightmap = "Textures\\Heightmaps\\heightmap01.png"
-	--terrain.NormalMap = "Textures\\NormalMap.png"
-	--terrain.DisplacementScale = 120
-	--terrain.Size = iVector2.new(500,500)
-	--
-	--terrain.DiffuseTextures[1] = "Textures\\stone02.png"
-	--terrain.DiffuseTextures[2] = "Textures\\Seamless-Rock-Wall-2.jpg"
-	--terrain.NormalMaps[1] = "Textures\\stone02_normal.png"
-	--terrain.NormalMaps[2] = "Textures\\Seamless-Rock-Wall-2_normal.jpg"
-	--
-	--terrain.GrassTexture = "Textures\\d3cb5d5d2cfa938f42677906370fecba.png"
-	--terrain.GrassMap = "Textures\\grassMap.png"
-	--
-	--terrainNode01:SetTerrain(terrain)
-	--this:AddNode(terrainNode01)
+	--Terrain
+	terrainNode01 = TerrainNode.Create(Transform.new(Vector3.new(-200,0,-200), Vector3.new(0,0,0), Vector3.new(5,1,5)))
+	
+	terrain = Terrain.new()
+	terrain.Heightmap = "Textures\\Heightmaps\\heightmap.tga"
+	terrain.NormalMap = "Textures\\NormalMap.tga"
+	terrain.DisplacementScale = 120
+	terrain.Size = iVector2.new(500,500)
+	
+	terrain.DiffuseTextures[1] = "Textures\\stone02.tga"
+	terrain.DiffuseTextures[2] = "Textures\\Seamless-Rock-Wall-2.tga"
+	terrain.NormalMaps[1] = "Textures\\stone02_normal.tga"
+	terrain.NormalMaps[2] = "Textures\\Seamless-Rock-Wall-2_normal.tga"
+	
+	terrain.GrassTexture = "Textures\\d3cb5d5d2cfa938f42677906370fecba.tga"
+	terrain.GrassMap = "Textures\\grassMap.tga"
+	
+	terrainNode01:SetTerrain(terrain)
+	this:AddNode(terrainNode01)
 end
 
 function Update(delta)
-	local cameraMovementSpeed = 0.2 --delta * 50
-	local cameraRotationSpeed = 0.2 --delta * 100
+	local cameraMovementSpeed = 0.8 --delta * 50
+	local cameraRotationSpeed = 0.8 --delta * 100
 	local treshold = 0.2
 
 	if Input:IsKeyPressed(87) or Input:GetAxis(0,1) > treshold then --W

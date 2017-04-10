@@ -7,7 +7,7 @@ namespace Graphics
 	struct CrTerrain
 	{
 		CrTerrain() 
-			: displacementScale(50.0f), diffuseTextures(2), normalMaps(2) {};
+			: diffuseTextures(2), normalMaps(2) {};
 
 		float displacementScale;
 		glm::ivec2 size;

@@ -12,10 +12,9 @@ namespace Graphics
 		class GLContext
 		{
 		public:
-			GLContext();
+			GLContext(Window::CrWindowHandle a_WindowHandle);
 			~GLContext();
 
-			void Create(Window::CrWindowHandle a_WindowHandle);
 			bool SwapBuffer() const;
 
 		private:

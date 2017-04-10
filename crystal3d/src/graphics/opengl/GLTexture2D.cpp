@@ -1,6 +1,6 @@
 #include "GLTexture2D.h"
 #include "core\Engine.h"
-#include "resources\import\TGA.hpp"
+#include "resources\import\Import.hpp"
 
 namespace Graphics
 {
@@ -8,41 +8,62 @@ namespace Graphics
 	{
 		GLTexture2D::GLTexture2D(const std::string & a_File)
 		{
-			using namespace Resources::Import;
-
-			std::vector<GLchar> data;
-			TGA::ImageInfo inf;
+			std::vector<CrByte> data;
+			Resources::Import::CrImageInfo inf;
 
 			try
 			{
-				TGA::Import(a_File, data, inf);
+				Resources::Import::ImportTexture(a_File, data, inf);
 			}
-			catch (const CrImportException& ex)
+			catch (const Resources::Import::CrImportException& ex)
 			{
-				CrAssert(0, "Failed load texture: %s", ex.what());
+				CrAssert(0, "Failed loading texture(%s): %s", a_File.c_str(), ex.what());
 			}
 
 			GLenum srcFormat = inf.hasAlpha ? GL_BGRA : GL_BGR;
 			GLenum dstFormat = inf.hasAlpha ? GL_RGBA : GL_RGB;
-
 			GLvoid* buffer = reinterpret_cast<GLvoid*>(data.data());
-			GLTexture2D(buffer, inf.width, inf.height, dstFormat, srcFormat, GL_UNSIGNED_BYTE);
-		}
 
-		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_InternalFormat, GLenum a_SourceFormat, GLenum a_Type)
-		{
 			glGenTextures(1, &m_Handle);
-			glBindTexture(GL_TEXTURE_2D, m_Handle);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, a_InternalFormat, a_Width, a_Height, 0, a_SourceFormat, a_Type, a_PixelData);
+			GLTextureContext ctx;
+			ctx.height = inf.height;
+			ctx.width = inf.width;
+			ctx.internalFormat = dstFormat;
+			ctx.sourceFormat = srcFormat;
+			ctx.type = GL_UNSIGNED_BYTE;
 
-			//Generate Mipmaps
-			glGenerateMipmap(GL_TEXTURE_2D);
+			this->LoadPixel(buffer, ctx);
 
 			this->SetParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
 			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		}
+
+		GLTexture2D::GLTexture2D(GLvoid * a_PixelData, GLTextureContext& a_Context)
+		{
+			glGenTextures(1, &m_Handle);
+			this->LoadPixel(a_PixelData, a_Context);
+
+			this->SetParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+			this->SetParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+			this->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			this->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		}
+
+		void GLTexture2D::LoadPixel(GLvoid * a_PixelData, GLTextureContext & a_Context)
+		{
+			glBindTexture(GL_TEXTURE_2D, m_Handle);
+			glTexImage2D(GL_TEXTURE_2D, 0, a_Context.internalFormat, a_Context.width, a_Context.height, 0, a_Context.sourceFormat, a_Context.type, a_PixelData);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			if (a_Context.aniso)
+			{
+				float aniso = 0.0f;
+				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);
+			}
 		}
 
 		GLTexture2D::~GLTexture2D()

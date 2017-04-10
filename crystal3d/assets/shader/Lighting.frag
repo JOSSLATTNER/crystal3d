@@ -9,7 +9,7 @@
 //4 = DEPTH
 //5 = RED
 //6 = SPECULAR
-#define MODE 1
+#define MODE 0
 
 //IN
 in vec2 fragCoord;

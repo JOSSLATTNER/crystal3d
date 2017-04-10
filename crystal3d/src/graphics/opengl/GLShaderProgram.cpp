@@ -8,19 +8,17 @@ namespace Graphics
 		GLShaderProgram::GLShaderProgram(Graphics::CrMaterial* a_Material) 
 			: GLShaderProgram()
 		{
-			auto pResources = SEngine->GetResourceManager();
-
-			auto vertShader = pResources->LoadResource<GLShader>(a_Material->vertexShader, EShaderType::VertexShader);
+			auto vertShader = GLCache::LoadShader(a_Material->vertexShader, EShaderType::VertexShader);
 			vertShader->Compile();
 			this->AttachShader(vertShader);
 
-			auto fragShader = pResources->LoadResource<GLShader>(a_Material->fragmentShader, EShaderType::FragmentShader);
+			auto fragShader = GLCache::LoadShader(a_Material->fragmentShader, EShaderType::FragmentShader);
 			fragShader->Compile();
 			this->AttachShader(fragShader);
 
 			if (!a_Material->geometryShader.empty())
 			{
-				auto geoShader = pResources->LoadResource<GLShader>(a_Material->geometryShader, EShaderType::GeometryShader);
+				auto geoShader = GLCache::LoadShader(a_Material->geometryShader, EShaderType::GeometryShader);
 				geoShader->Compile();
 				this->AttachShader(geoShader);
 			}
@@ -29,17 +27,17 @@ namespace Graphics
 
 			for (auto &g : a_Material->textures)
 			{
-				auto texture = pResources->LoadResource<GLTexture2D>(g.second);
+				auto texture = GLCache::LoadTexture(g.second);
 				this->AttachTexture(texture, g.first);
 			}
 
 			for (auto &g : a_Material->cubemaps)
 			{
-				auto cubemap = pResources->LoadResource<GLCubemap>(g.second);
+				auto cubemap = GLCache::LoadCubemap(g.second);
 				this->AttachCubemap(cubemap, g.first);
 			}
 
-			m_Uniforms = a_Material->properties;
+			m_Uniforms = std::move(a_Material->properties);
 		}
 
 		GLShaderProgram::GLShaderProgram()

@@ -16,11 +16,11 @@ namespace Scene
 			CrSceneNode();
 			CrSceneNode(Scene::CrTransform& a_Transform);
 
-			//Do not call this!
-			void _Update(const float& a_DeltaTime);
+			//Internal update method. Cannot be overwritten.
+			void _Update(const float a_DeltaTime);
 
 			virtual ~CrSceneNode();
-			virtual void Update(const float& a_DeltaTime);
+			virtual void Update(const float a_DeltaTime);
 
 			void AddComponent(Components::IComponent* a_Component);
 			void RemoveComponent(Components::IComponent* a_Component);

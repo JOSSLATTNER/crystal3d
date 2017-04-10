@@ -4,30 +4,13 @@
 
 namespace Core
 {
-	template<typename T>
-	class CrMemory
-	{
-	public:
-		CrMemory(T* a_Ptr)
-			: m_Raw(a_Ptr) {};
-
-		template<typename...Args>
-		T* Construct(Args...a_Args)
-		{	
-			return new (m_Raw) T(std::forward<Args>(a_Args)...);
-		}
-
-	private:
-		T* m_Raw;
-	};
-
 	class CrLinearAllocator
 	{
 	public:
-		CrLinearAllocator(char* a_Start, char* a_End)
+		CrLinearAllocator(CrMemoryArena& a_Arena)
 		{
-			m_Start = a_Start;
-			m_End = a_End;
+			m_Start = a_Arena.Begin();
+			m_End = a_Arena.End();
 			m_Current = m_Start;
 
 			this->Reset();
@@ -42,7 +25,7 @@ namespace Core
 		}
 
 		template<typename T>
-		CrMemory<T> Allocate()
+		CrConstructable<T> Allocate()
 		{
 			if (m_End - m_Current < sizeof(T))
 				throw std::bad_alloc();

@@ -4,19 +4,8 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-
-		GLContext::GLContext() 
+		GLContext::GLContext(Window::CrWindowHandle a_WindowHandle)
 			: m_HDC(0), m_HGLRC(0)
-		{
-		}
-
-		GLContext::~GLContext()
-		{
-			wglMakeCurrent(NULL, NULL);
-			wglDeleteContext(m_HGLRC);
-		}
-
-		void GLContext::Create(Window::CrWindowHandle a_WindowHandle)
 		{
 			PIXELFORMATDESCRIPTOR pfd{};
 			pfd.nSize = sizeof(pfd);
@@ -53,7 +42,6 @@ namespace Graphics
 			{
 				WGL_CONTEXT_MAJOR_VERSION_ARB, CR_GL_VERSION_MAJOR,
 				WGL_CONTEXT_MINOR_VERSION_ARB, CR_GL_VERSION_MINOR,
-				WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 				WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 				0
 			};
@@ -75,10 +63,19 @@ namespace Graphics
 				CrLogInfo("wglCreateContextAttribsARB() not available.");
 			}
 
+			//V-SYNC
+			wglSwapIntervalEXT(0);
+
 			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
 				glGetString(GL_VERSION),
 				glGetString(GL_VENDOR),
 				glGetString(GL_SHADING_LANGUAGE_VERSION));
+		}
+
+		GLContext::~GLContext()
+		{
+			wglMakeCurrent(NULL, NULL);
+			wglDeleteContext(m_HGLRC);
 		}
 
 		bool GLContext::SwapBuffer() const

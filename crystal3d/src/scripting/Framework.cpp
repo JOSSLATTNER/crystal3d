@@ -1,5 +1,6 @@
 #include "Framework.h"
 #include "core\Engine.h"
+#include "resources\import\Import.hpp"
 
 #include "scene\TerrainNode.h"
 #include "scene\MeshNode.h"
@@ -8,7 +9,6 @@
 #include "scene\LightNode.h"
 
 #include "input\interface\IInputManager.h"
-
 #include "graphics\Model.h"
 #include "graphics\Terrain.h"
 
@@ -16,7 +16,6 @@ using namespace Core;
 using namespace Graphics;
 using namespace Scene;
 using namespace Input;
-using namespace Resources;
 using namespace Components;
 using namespace Window;
 
@@ -32,8 +31,9 @@ namespace Scripting
 			sol::lib::table, sol::lib::string, sol::lib::bit32);
 
 		a_State["Input"] = SEngine->GetInputManager();
-		a_State["Resources"] = SEngine->GetResourceManager();
 		a_State["GameWindow"] = SEngine->GetMainWindow();
+
+		a_State.set_function("ImportModel", Resources::Import::ImportModel);
 
 		auto addNodeGeneric = [](CrScene* thiz, CrSceneNode* node)
 		{ thiz->AddNode<CrSceneNode>(node); };
@@ -148,9 +148,6 @@ namespace Scripting
 			"GetAxis", &IInputManager::GetAxis,
 			"ListDevices", &IInputManager::ListDevices);
 
-		a_State.new_usertype<CrResourceManager>("__Resources",
-			"LoadScript", &CrResourceManager::LoadResource<CrScript>,
-			"LoadModel", &CrResourceManager::LoadResource<CrModel>);
 
 		a_State.new_usertype<CrFrustum>("Frustum",
 			"FOV", &CrFrustum::fov,

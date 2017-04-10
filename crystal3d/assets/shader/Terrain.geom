@@ -64,7 +64,7 @@ void main()
 	
 	vec4 noise = texture2D(tGrassMap,VertexIn[0].UV);
 
-	if (mod(ceil(center).xz,7.)==0 && noise.r > 0.6)
+	if (mod(ceil(center).xz,4.)==0 && noise.r > 0.5)
 	{
 
 		vec2 billboardSize = vec2(20,22.);

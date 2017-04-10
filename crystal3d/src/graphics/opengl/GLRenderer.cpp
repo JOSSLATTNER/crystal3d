@@ -5,32 +5,33 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
+		GLUniformBuffer<MVP>* GLRenderer::MVPBuffer = nullptr;
+		GLUniformBuffer<ShaderUtil>* GLRenderer::UtilBuffer = nullptr;
+
 		GLRenderer::GLRenderer()
 		{
-			m_UniformMVPBuffer = nullptr;
-			m_UniformUtilityBuffer = nullptr;
 			m_GeometryBuffer = nullptr;
-			m_DeferredRenderer = nullptr;
+			m_CurrentContext = nullptr;
 		}
 
 		GLRenderer::~GLRenderer()
 		{
-			delete m_UniformMVPBuffer;
-			delete m_UniformUtilityBuffer;
 			delete m_GeometryBuffer;
-			delete m_DeferredRenderer;
+			delete GLRenderer::MVPBuffer;
+			delete GLRenderer::UtilBuffer;
 
 			for (auto& re : m_RenderEntities)
-			{
 				delete re.second;
-			}
+
+			GLCache::Clear();
+			delete m_CurrentContext;
 		}
 
 		void GLRenderer::Initialize(CrRendererContext& a_Context)
 		{
 			//Create Context
 			m_Window = a_Context.targetWindow;
-			m_CurrentContext.Create(m_Window->GetHandle());
+			m_CurrentContext = new GLContext(m_Window->GetHandle());
 
 			//@GL Settings
 			glEnable(GL_DEPTH_TEST);
@@ -57,8 +58,10 @@ namespace Graphics
 			ctx.useDepthTexture = true;
 
 			m_GeometryBuffer = new GLFramebuffer(ctx);
-			m_UniformMVPBuffer = new GLUniformBuffer<MVP>("MVPBuffer", GL_DYNAMIC_DRAW);
-			m_UniformUtilityBuffer = new GLUniformBuffer<ShaderUtil>("UtilBuffer", GL_DYNAMIC_DRAW);
+
+			//Uniform Buffer
+			GLRenderer::MVPBuffer = new GLUniformBuffer<MVP>("MVPBuffer", GL_DYNAMIC_DRAW);
+			GLRenderer::UtilBuffer = new GLUniformBuffer<ShaderUtil>("UtilBuffer", GL_DYNAMIC_DRAW);
 
 			//Deferred Renderer
 			GLDeferredRendererContext deferredContext{};
@@ -80,18 +83,17 @@ namespace Graphics
 			2) Lighting Pass: Applies Lighting to geometry
 			3) Additional Passes: Shadows, Reflections, PostFX
 			*/
-
 			auto camNode = a_Scene->GetNode<Scene::CrCameraNode>();
 
 			MVP mvp{};
 			mvp.modelMatrix = glm::mat4(0);
 			mvp.projectionMatrix = camNode->GetProjectionMatrix();
 			mvp.viewMatrix = camNode->GetViewMatrix();
-			m_UniformMVPBuffer->Subdata(&mvp,0);
+			GLRenderer::MVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};
 			util.globalTime = SEngine->GetGameTimer()->GetTotal<float_t>();
-			m_UniformUtilityBuffer->Subdata(&util,0);
+			GLRenderer::UtilBuffer->Subdata(&util,0);
 
 			m_GeometryBuffer->Bind();
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -102,7 +104,7 @@ namespace Graphics
 			m_GeometryBuffer->Unbind();
 
 			m_DeferredRenderer->Render(a_Scene);
-			m_CurrentContext.SwapBuffer();
+			m_CurrentContext->SwapBuffer();
 		}
 
 		void GLRenderer::LoadAssets(Scene::CrScene * a_Scene)
@@ -111,16 +113,6 @@ namespace Graphics
 			for (auto& renderable : renderList)
 				this->CreateEntity(renderable);
 			CrLogSuccess("Assets loaded!");
-		}
-
-		GLUniformBuffer<MVP>* GLRenderer::GetMVPBuffer() const
-		{
-			return m_UniformMVPBuffer;
-		}
-
-		GLUniformBuffer<ShaderUtil>* GLRenderer::GetUtilBuffer() const
-		{
-			return m_UniformUtilityBuffer;
 		}
 
 		void GLRenderer::CreateEntity(IRenderable * a_Renderable)
@@ -133,7 +125,7 @@ namespace Graphics
 
 			GLVertexArray* vao = new GLVertexArray(mesh);
 			GLShaderProgram* program = new GLShaderProgram(material);
-			m_UniformMVPBuffer->Bind(program->GetHandle());
+			GLRenderer::MVPBuffer->Bind(program->GetHandle());
 
 			GLenum glmode = m_RenderModeMappings[mode];
 	
@@ -141,10 +133,6 @@ namespace Graphics
 			entity->SetMode(glmode);
 			entity->SetBoundingBox(boundingBox);
 			entity->SetTransform(transform);
-			entity->SetTransformBufferFunc([&](glm::mat4& ma)
-			{
-				m_UniformMVPBuffer->Subdata(&ma);
-			});
 
 			m_RenderEntities[a_Renderable] = entity;
 		}

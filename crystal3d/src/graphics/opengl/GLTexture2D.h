@@ -8,11 +8,21 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
+		struct GLTextureContext
+		{
+			GLuint width;
+			GLuint height;
+			GLenum internalFormat;
+			GLenum sourceFormat;
+			GLenum type = GL_UNSIGNED_BYTE;
+			bool aniso = true;
+		};
+
 		class GLTexture2D
 		{
 		public:
 			GLTexture2D(const std::string & a_File);
-			GLTexture2D(GLvoid* a_PixelData, const uint32_t a_Width, const uint32_t a_Height, GLenum a_InternalFormat, GLenum a_SourceFormat, GLenum a_Type = GL_UNSIGNED_BYTE);
+			GLTexture2D(GLvoid* a_PixelData, GLTextureContext& a_Context);
 			~GLTexture2D();
 
 			GLuint BindUniform(GLuint a_Program, const std::string& a_Attribute) const;
@@ -24,6 +34,7 @@ namespace Graphics
 			GLuint GetHandle() const;
 
 		private:
+			void LoadPixel(GLvoid* a_PixelData, GLTextureContext& a_Context);
 			GLuint m_Handle;
 
 

@@ -6,6 +6,7 @@
 #include "GLCubemap.h"
 #include "GLTexture2D.h"
 #include "GLShader.h"
+#include "GLCache.h"
 
 namespace Graphics
 {

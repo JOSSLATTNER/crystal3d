@@ -122,17 +122,25 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\soil\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32.lib;SOIL.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\audio\openal\ALAudioSystem.h" />
+    <ClInclude Include="src\audio\interface\AudioFile.h" />
+    <ClInclude Include="src\audio\interface\IAudioSystem.h" />
+    <ClInclude Include="src\audio\openal\AL.h" />
+    <ClInclude Include="src\graphics\opengl\GLCache.h" />
     <ClInclude Include="src\core\allocator\LinearAllocator.hpp" />
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
-    <ClInclude Include="src\core\profile\Benchmark.hpp" />
+    <ClInclude Include="src\core\profiling\Benchmark.hpp" />
     <ClInclude Include="src\input\interface\Mappings.h" />
+    <ClInclude Include="src\resources\import\Common.h" />
     <ClInclude Include="src\resources\import\Import.hpp" />
+    <ClInclude Include="src\resources\import\OBJ.hpp" />
     <ClInclude Include="src\resources\import\TGA.hpp" />
+    <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
@@ -161,7 +169,7 @@
     <ClInclude Include="src\graphics\opengl\GLUniformBuffer.hpp" />
     <ClInclude Include="src\graphics\opengl\GLVertexArray.h" />
     <ClInclude Include="src\graphics\Primitives.h" />
-    <ClInclude Include="src\graphics\RendererContext.h" />
+    <ClInclude Include="src\graphics\interface\RendererContext.h" />
     <ClInclude Include="src\graphics\RenderMode.h" />
     <ClInclude Include="src\graphics\ShaderType.h" />
     <ClInclude Include="src\input\interface\IInputManager.h" />
@@ -329,7 +337,6 @@
     <ClInclude Include="src\graphics\Material.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\Model.h" />
-    <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\scripting\Script.h" />
     <ClInclude Include="src\graphics\Terrain.h" />
     <ClInclude Include="src\scene\CameraNode.h" />
@@ -347,6 +354,8 @@
     <ClInclude Include="src\window\win32\Win32Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\audio\openal\ALAudioSystem.cpp" />
+    <ClCompile Include="src\graphics\opengl\GLCache.cpp" />
     <ClCompile Include="src\scripting\Framework.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />
@@ -364,8 +373,6 @@
     <ClCompile Include="src\input\xinput\XIInputManager.cpp" />
     <ClCompile Include="src\math\Transform.cpp" />
     <ClCompile Include="src\packages\glm\detail\glm.cpp" />
-    <ClCompile Include="src\graphics\Model.cpp" />
-    <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\scripting\Script.cpp" />
     <ClCompile Include="src\scene\CameraNode.cpp" />
     <ClCompile Include="src\scene\LightNode.cpp" />

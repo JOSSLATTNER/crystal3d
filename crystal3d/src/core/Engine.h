@@ -2,14 +2,12 @@
 #include "Core.h"
 #include "Platform.h"
 #include "GameTimer.hpp"
-#include "profile\Benchmark.hpp"
 
 #include "window\interface\IWindow.h"
 #include "graphics\interface\IRenderer.h"
 #include "input\interface\IInputManager.h"
 
 #include "scene\Scene.h"
-#include "resources\ResourceManager.h"
 
 #define SEngine Core::CrEngine::s_SharedInstance
 
@@ -18,7 +16,7 @@ namespace Core
 	struct CrEngineContext
 	{
 		uint32_t maxFps = 100U;
-		std::string windowTitle = "Crystal3D";
+		std::string windowTitle = "crystal3d | 60FPS";
 		glm::ivec2 windowDimensions = {1920, 1080};
 		bool windowFullscreen = false;
 	};
@@ -41,7 +39,6 @@ namespace Core
 		Window::IWindow* GetMainWindow();
 		Scene::CrScene* GetCurrentScene();
 		Core::CrGameTimer* GetGameTimer();
-		Resources::CrResourceManager* GetResourceManager();
 		Input::IInputManager* GetInputManager();
 		Graphics::IRenderer* GetRenderer();
 
@@ -49,12 +46,11 @@ namespace Core
 		Window::IWindow* m_MainWindow;
 		Scene::CrScene* m_ActiveScene;
 		Core::CrGameTimer* m_GameTimer;
-		Resources::CrResourceManager* m_ResourceManager;
 		Input::IInputManager* m_InputManager;
 		Graphics::IRenderer* m_Renderer;
 
 	private:
-		void Update(const float& delta) const;
+		void Update(const float delta) const;
 		void Render();
 	
 	private:

@@ -49,11 +49,6 @@ namespace Graphics
 			m_Mode = a_Mode;
 		}
 
-		void GLRenderEntity::SetTransformBufferFunc(std::function<void(glm::mat4& transform)> a_Func)
-		{
-			m_TransformBufferFunc = a_Func;
-		}
-
 		void GLRenderEntity::Render()
 		{
 			m_ShaderProgram->Bind();
@@ -68,7 +63,7 @@ namespace Graphics
 			if (m_Transform != nullptr)
 			{
 				glm::mat4 worldMatrix = m_Transform->WorldMatrix();
-				m_TransformBufferFunc(worldMatrix);
+				GLRenderer::MVPBuffer->Subdata(&worldMatrix);
 			}
 		}
 

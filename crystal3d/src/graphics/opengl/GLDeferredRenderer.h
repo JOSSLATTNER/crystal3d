@@ -20,9 +20,6 @@ const unsigned char BUFFER_FLAG_DEPTH = 0x10;
 const unsigned char BUFFER_FLAG_GEOMETRY = 0x20;
 const unsigned char BUFFER_FLAG_UTILITY = 0x40;
 
-//Globals
-#define MAX_POINT_LIGHT 1
-
 namespace Graphics
 {
 	namespace OpenGL
@@ -69,17 +66,15 @@ namespace Graphics
 			void Render(Scene::CrScene* a_Scene);
 			void RegisterRenderPass(GLRenderPass* a_RenderPass, unsigned int a_BufferFlags);
 
-		public:
+		private:
+			void UpdateLightBuffer(Scene::CrScene* a_Scene) const;
+
+		private:
 			GLUniformBuffer<PointLight>* m_PointLightBuffer;
 			GLUniformBuffer<DirectionalLight>* m_DirectionalLightBuffer;
 			GLUniformBuffer<LightInfo>* m_LightInfoBuffer;
 
 			GLFramebuffer* m_RenderPassFramebuffer;
-
-		private:
-			void UpdateLightBuffer(Scene::CrScene* a_Scene) const;
-
-		private:
 			GLFramebuffer* m_GeometryBuffer;
 
 			uint32_t m_ViewportWidth;

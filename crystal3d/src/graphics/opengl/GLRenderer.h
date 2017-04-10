@@ -7,6 +7,7 @@
 #include "GLRenderEntity.h"
 #include "GLUniformBuffer.hpp"
 #include "GLFramebuffer.hpp"
+#include "GLCache.h"
 
 #define G_BUFFER_FORMATS GL_RGBA32F, GL_RGBA32F, GL_RGBA32F, GL_RGBA32F
 
@@ -39,8 +40,8 @@ namespace Graphics
 			void LoadAssets(Scene::CrScene* a_Scene) override;
 
 		public:
-			GLUniformBuffer<MVP>* GetMVPBuffer() const;
-			GLUniformBuffer<ShaderUtil>* GetUtilBuffer() const;
+			static GLUniformBuffer<MVP>* MVPBuffer;
+			static GLUniformBuffer<ShaderUtil>* UtilBuffer;
 			
 		private:
 			void CreateEntity(IRenderable* a_Renderable);
@@ -54,10 +55,8 @@ namespace Graphics
 				{ ERenderMode::Triangle_Strip, GL_TRIANGLE_STRIP },
 			};
 
-			GLContext m_CurrentContext;
+			GLContext* m_CurrentContext;
 
-			GLUniformBuffer<MVP>* m_UniformMVPBuffer;
-			GLUniformBuffer<ShaderUtil>* m_UniformUtilityBuffer;
 			GLFramebuffer* m_GeometryBuffer;
 			GLDeferredRenderer* m_DeferredRenderer;
 

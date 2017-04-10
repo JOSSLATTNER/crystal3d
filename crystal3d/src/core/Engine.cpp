@@ -12,7 +12,7 @@ Core::CrEngine* Core::CrEngine::s_SharedInstance = nullptr;
 namespace Core
 {
 	CrEngine::CrEngine()
-		: m_MainWindow(nullptr), m_ActiveScene(nullptr), m_GameTimer(nullptr), m_ResourceManager(nullptr),
+		: m_MainWindow(nullptr), m_ActiveScene(nullptr), m_GameTimer(nullptr),
 		m_InputManager(nullptr), m_Renderer(nullptr)
 	{
 		CrEngine::s_SharedInstance = this;
@@ -25,7 +25,6 @@ namespace Core
 		delete m_GameTimer;
 		delete m_InputManager;
 		delete m_Renderer;
-		delete m_ResourceManager;
 	}
 
 	void CrEngine::Initialize(CrEngineContext& a_Context)
@@ -36,7 +35,6 @@ namespace Core
 #endif
 
 		m_GameTimer = new Core::CrGameTimer();
-		m_ResourceManager = new Resources::CrResourceManager();
 		m_Renderer = new Graphics::OpenGL::GLRenderer();
 
 		Window::CrWindowContext windowContext{};
@@ -117,11 +115,6 @@ namespace Core
 		return m_GameTimer;
 	}
 
-	Resources::CrResourceManager * CrEngine::GetResourceManager()
-	{
-		return m_ResourceManager;
-	}
-
 	Input::IInputManager * CrEngine::GetInputManager()
 	{
 		return m_InputManager;
@@ -140,7 +133,7 @@ namespace Core
 		}
 	}
 
-	void CrEngine::Update(const float& delta) const
+	void CrEngine::Update(const float delta) const
 	{
 		if (m_ActiveScene != nullptr)
 		{

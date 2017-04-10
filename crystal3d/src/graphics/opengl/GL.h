@@ -9,7 +9,7 @@
 
 //@PARAMS
 #define CR_GRAPHICS_DEBUG CR_DEBUG
-#define CR_GL_VERSION_MAJOR 4
+#define CR_GL_VERSION_MAJOR 3
 #define CR_GL_VERSION_MINOR 0
 
 namespace Graphics

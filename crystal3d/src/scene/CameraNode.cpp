@@ -12,7 +12,7 @@ namespace Scene
 	{
 	}
 
-	void CrCameraNode::Update(const float& a_DeltaTime)
+	void CrCameraNode::Update(const float a_DeltaTime)
 	{
 		m_Transform.Scale = glm::vec3(1, 1, 1);
 

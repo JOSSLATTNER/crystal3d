@@ -19,18 +19,18 @@ namespace Scene
 	{
 	}
 
-	void CrSceneNode::_Update(const float & a_DeltaTime)
+	void CrSceneNode::_Update(const float a_DeltaTime)
 	{
 		for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
 		{
 			(*it)->Update(a_DeltaTime);
 		}
+		this->Update(a_DeltaTime);
 	}
 
-	void CrSceneNode::Update(const float& a_DeltaTime)
+	void CrSceneNode::Update(const float a_DeltaTime)
 	{	
 	}
-
 
 	void CrSceneNode::AddComponent(Components::IComponent * a_Component)
 	{

@@ -4,7 +4,6 @@
 #include "SceneNode.h"
 #include "graphics\interface\IRenderable.h"
 #include "scripting\Script.h"
-#include "resources\ResourceManager.h"
 
 namespace Scene
 {
@@ -15,7 +14,7 @@ namespace Scene
 		~CrScene();
 	
 		void Initialize();
-		void Update(const float& delta);
+		void Update(const float delta);
 		std::vector<Graphics::IRenderable*>& GetRenderList();
 
 		template<typename T>
@@ -47,7 +46,7 @@ namespace Scene
 		std::vector<Graphics::IRenderable*> m_RenderList;
 
 		std::unordered_multimap<size_t, CrSceneNode*> m_Nodes;
-		Scripting::CrScript* m_Behaviour;
+		Scripting::CrScript m_Behaviour;
 
 	};
 }

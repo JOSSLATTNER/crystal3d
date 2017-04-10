@@ -6,7 +6,7 @@ in vec3 fragNormal;
 in vec3 fragVertex;
 
 //Out (->Geometry Buffer)
-out vec4 [4] output;
+out vec4 [4] gBuffer;
 
 //Textures
 uniform sampler2D tDiffuse;
@@ -51,15 +51,15 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
     return normalize(TBN * map);
 }
 
-vec3 DoNormalMapping(vec3 normal, vec3 sampledNormal)
-{
-	//FAKE TANGENT (0,1,0)
-	vec3 tangent = cross(sampledNormal, vec3(0,1,0));
-	vec3 bitangent = cross(sampledNormal, tangent);
-	mat3 TBN = mat3(tangent, bitangent, sampledNormal); 
-
-	return normalize(normal*TBN);
-}
+//vec3 DoNormalMapping(vec3 normal, vec3 sampledNormal)
+//{
+//	//FAKE TANGENT (0,1,0)
+//	vec3 tangent = cross(sampledNormal, vec3(0,1,0));
+//	vec3 bitangent = cross(sampledNormal, tangent);
+//	mat3 TBN = mat3(tangent, bitangent, sampledNormal); 
+//
+//	return normalize(normal*TBN);
+//}
 
 vec3 GetNormal()
 {
@@ -83,8 +83,8 @@ vec3 GetNormal()
 
 void main ()
 {
-	output[0] = vec4(texture2D(tDiffuse,fragUV).rgb, 0);
-	output[1] = vec4(texture2D(tSpecular, fragUV).rgb, 0);
-	output[2] = vec4(fragVertex,0);
-	output[3] = vec4(GetNormal(),0);
+	gBuffer[0] = vec4(texture2D(tDiffuse,fragUV).rgb, 0);
+	gBuffer[1] = vec4(texture2D(tSpecular, fragUV).rgb, 0);
+	gBuffer[2] = vec4(fragVertex,0);
+	gBuffer[3] = vec4(GetNormal(),0);
 }

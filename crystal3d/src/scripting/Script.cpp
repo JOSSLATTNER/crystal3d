@@ -5,7 +5,7 @@ namespace Scripting
 
 	CrScript::CrScript(const std::string & a_File)
 	{
-		m_Script = m_State.load_file(a_File);
+		m_Script = m_State.load_file(Resources::ResolvePath(a_File));
 		CrFramework::RegisterTypes(m_State);
 	}
 
