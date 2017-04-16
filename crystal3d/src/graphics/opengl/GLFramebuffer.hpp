@@ -74,15 +74,14 @@ namespace Graphics
 					glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_DepthTexture->GetHandle(), 0);
 				}
 
-				GLenum* buffers = new GLenum[numTextures];
+				std::vector<GLenum> buffers(numTextures);
 				for (uint32_t i = 0; i < numTextures; i++)
 				{
 					buffers[i] = GL_COLOR_ATTACHMENT0 + i;
 				}
 
 				//Assign color attachments to color buffer
-				glDrawBuffers(numTextures, buffers);
-				delete buffers;
+				glDrawBuffers(numTextures, buffers.data());
 
 				GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 				if (status != GL_FRAMEBUFFER_COMPLETE)

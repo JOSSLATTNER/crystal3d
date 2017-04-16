@@ -39,7 +39,6 @@ namespace Resources
 			};
 #pragma pack(pop)
 
-
 			static constexpr size_t kPacketHeaderSize = sizeof(char);
 
 			//http://paulbourke.net/dataformats/tga/
@@ -52,8 +51,9 @@ namespace Resources
 				{
 					//Read packet header
 					const unsigned char c = *it;
-					int count = (c & 0x7f) + 1;
-					int type = c & 0x80;
+
+					int count = (c & 0x7f) + 1; //pixel repetition count
+					int type = c & 0x80; //0 = RAW, ~0 = RLE
 
 					//Skip header
 					std::advance(it, kPacketHeaderSize);
@@ -88,7 +88,7 @@ namespace Resources
 				}
 			}
 
-			inline void Import(const std::string& a_Filename, std::vector<CrByte>& a_Buffer, CrImageInfo& a_Info)
+			inline void Import(const IO::CrPath& a_Filename, std::vector<CrByte>& a_Buffer, CrImageInfo& a_Info)
 			{
 				std::ifstream ifs(a_Filename, std::ifstream::in | std::ifstream::binary);
 

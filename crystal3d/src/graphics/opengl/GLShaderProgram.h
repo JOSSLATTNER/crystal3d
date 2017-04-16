@@ -38,7 +38,7 @@ namespace Graphics
 		protected:
 			std::unordered_map<GLuint, GLTexture2D*> m2DTextures;
 			std::unordered_map<GLuint, GLCubemap*> m_CubemapTextures;
-			std::unordered_map<EShaderType, GLShader*> m_Shader;
+			std::unordered_map<GLenum, GLShader*> m_Shader;
 			std::unordered_map<std::string, float> m_Uniforms;
 
 

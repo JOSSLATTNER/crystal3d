@@ -12,8 +12,8 @@ namespace Graphics
 		{
 			m_ShaderProgram = new GLShaderProgram();
 
-			auto vertShader = GLCache::LoadShader(a_Context.vertexShaderFile, EShaderType::VertexShader);
-			auto fragShader = GLCache::LoadShader(a_Context.fragmentShaderFile, EShaderType::FragmentShader);
+			auto vertShader = GLCache::LoadShader(a_Context.vertexShaderFile, GL_VERTEX_SHADER);
+			auto fragShader = GLCache::LoadShader(a_Context.fragmentShaderFile, GL_FRAGMENT_SHADER);
 
 			m_ShaderProgram->AttachShader(vertShader);
 			m_ShaderProgram->AttachShader(fragShader);

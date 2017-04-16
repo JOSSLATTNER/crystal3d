@@ -8,17 +8,17 @@ namespace Graphics
 		GLShaderProgram::GLShaderProgram(Graphics::CrMaterial* a_Material) 
 			: GLShaderProgram()
 		{
-			auto vertShader = GLCache::LoadShader(a_Material->vertexShader, EShaderType::VertexShader);
+			auto vertShader = GLCache::LoadShader(a_Material->vertexShader, GL_VERTEX_SHADER);
 			vertShader->Compile();
 			this->AttachShader(vertShader);
 
-			auto fragShader = GLCache::LoadShader(a_Material->fragmentShader, EShaderType::FragmentShader);
+			auto fragShader = GLCache::LoadShader(a_Material->fragmentShader, GL_FRAGMENT_SHADER);
 			fragShader->Compile();
 			this->AttachShader(fragShader);
 
 			if (!a_Material->geometryShader.empty())
 			{
-				auto geoShader = GLCache::LoadShader(a_Material->geometryShader, EShaderType::GeometryShader);
+				auto geoShader = GLCache::LoadShader(a_Material->geometryShader, GL_GEOMETRY_SHADER);
 				geoShader->Compile();
 				this->AttachShader(geoShader);
 			}

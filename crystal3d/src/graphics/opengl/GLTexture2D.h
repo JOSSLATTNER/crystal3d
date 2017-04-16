@@ -21,7 +21,7 @@ namespace Graphics
 		class GLTexture2D
 		{
 		public:
-			GLTexture2D(const std::string & a_File);
+			GLTexture2D(const IO::CrPath& a_File);
 			GLTexture2D(GLvoid* a_PixelData, GLTextureContext& a_Context);
 			~GLTexture2D();
 

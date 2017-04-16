@@ -9,6 +9,7 @@
 
 #include "scene\Scene.h"
 
+//Global engine instance
 #define SEngine Core::CrEngine::s_SharedInstance
 
 namespace Core
@@ -16,7 +17,7 @@ namespace Core
 	struct CrEngineContext
 	{
 		uint32_t maxFps = 100U;
-		std::string windowTitle = "crystal3d | 60FPS";
+		std::string windowTitle = "CRYSTAL3D | 60FPS";
 		glm::ivec2 windowDimensions = {1920, 1080};
 		bool windowFullscreen = false;
 	};

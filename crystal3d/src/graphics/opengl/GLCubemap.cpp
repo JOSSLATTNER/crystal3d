@@ -5,7 +5,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLCubemap::GLCubemap(const std::string & a_Filename)
+		GLCubemap::GLCubemap(const IO::CrPath& a_Filename)
 		{
 			CrAssert(0, "Currently not implemented!");
 

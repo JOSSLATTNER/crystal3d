@@ -10,7 +10,7 @@ namespace Scripting
 	class CrScript
 	{
 	public:
-		CrScript(const std::string & a_File);
+		CrScript(const IO::CrPath& a_File);
 		~CrScript();
 
 	public:

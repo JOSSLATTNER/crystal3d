@@ -2,11 +2,7 @@
 
 #include "Platform.h"
 #include "Singleton.hpp"
-
-#ifdef CR_PLATFORM_WINDOWS
-//Disables iterator debugging.
-//#define _SECURE_SCL 0
-#endif
+#include "Utility.h"
 
 #include <vector>
 #include <cstdint>
@@ -17,8 +13,13 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <limits>
 #include <set>
 #include <fstream>
+#include <sstream>
+#include <bitset>
+#include <mutex>
+#include <filesystem>
 
 //###########
 //###TYPES###
@@ -28,100 +29,124 @@ typedef WORD CrWord;
 typedef BYTE CrByte;
 #endif
 
+//######
+//##IO##
+//######
+namespace IO
+{
+	typedef std::experimental::filesystem::path CrPath;
+}
+
+namespace std
+{
+	//Provide std::hash specialization for path
+	template<> struct hash<std::experimental::filesystem::path>
+	{
+		size_t operator()(const std::experimental::filesystem::path& p) const
+		{
+			return std::experimental::filesystem::hash_value(p);
+		}
+	};
+}
+
 //###########
 //##LOGGING##
 //###########
 #ifdef CR_PLATFORM_WINDOWS
-static HANDLE WIN32_CONSOLE_HANDLE = GetStdHandle(STD_OUTPUT_HANDLE);
-static char* CURRENT_FUNC = "_";
+static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+static std::once_flag _DebugClearFlag;
+static char* _LastFunction = "_";
 
-#define CONSOLE_COLOR_BLACK 0
-#define CONSOLE_COLOR_BLUE 31
-#define CONSOLE_COLOR_GREEN 10
-#define CONSOLE_COLOR_RED 12
-#define CONSOLE_COLOR_GREY 8
-#define CONSOLE_COLOR_WHITE 15
-#define CONSOLE_COLOR_YELLOW 14
+enum ConsoleColor : WORD
+{
+	CONSOLE_COLOR_BLACK = 0,
+	CONSOLE_COLOR_BLUE = 31,
+	CONSOLE_COLOR_GREEN = 10,
+	CONSOLE_COLOR_RED = 12,
+	CONSOLE_COLOR_GREY = 8,
+	CONSOLE_COLOR_WHITE = 15,
+	CONSOLE_COLOR_YELLOW = 14
+};
 
-#define CONSOLE_SET_COLOR(code) \
-SetConsoleTextAttribute(WIN32_CONSOLE_HANDLE, code);
+inline void _SetConsoleColor(const ConsoleColor a_Color)
+{
+	SetConsoleTextAttribute(ConsoleHandle, a_Color);
+}
 
 template<typename...Args>
-void T_DebugOutput(const std::string& format, Args...args)
+void T_DebugOutput(const std::string& a_Format, Args...a_Args)
 {
-	OutputDebugString(CrStringFormat(format, args...).c_str());
+	std::call_once(_DebugClearFlag, []()
+	{
+		OutputDebugString("\n###########\nDEBUG SESSION\n###########\n");
+	});
+
+	const std::string buff = Util::sprintf_safe(a_Format + "\n", a_Args...);
+	OutputDebugString(buff.c_str());
 }
+
+//DebugBreak()
+#define _CR_DEBUG_BREAK DebugBreak
 #endif
 
-template<typename...Args>
-void T_Log(char* function, CrWord color, const std::string& format, Args...args)
+inline void _PrintFunction(char* a_Function, char* a_LastFunc)
 {
 #if CR_DEBUG
-	if (strcmp(function, CURRENT_FUNC) != 0)
+	if (strcmp(a_Function, a_LastFunc) != 0)
 	{
-		CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
-		std::cout << "[" << function << "]" << std::endl;
+		//Print current function
+		_SetConsoleColor(CONSOLE_COLOR_GREY);
+		std::cout << "[" << a_Function << "]" << std::endl;
 	}
 #endif
-	
-	CONSOLE_SET_COLOR(color);
-	std::cout << CrStringFormat(format, args...) << std::endl;
-
-	CURRENT_FUNC = function;
 }
 
 template<typename...Args>
-bool T_Assert(const bool condition, char* function, const std::string& format, Args...args)
+void T_Log(char* a_Function, ConsoleColor a_Color, const std::string& a_Format, Args...a_Args)
 {
-	if (!condition)
-	{
-#if CR_DEBUG
-		if (strcmp(function, CURRENT_FUNC) != 0)
-		{
-			CONSOLE_SET_COLOR(CONSOLE_COLOR_GREY);
-			std::cerr << "[" << function << "]" << std::endl;
-		}
-#endif
+	//Print current function
+	_PrintFunction(a_Function, _LastFunction);
 
-		CONSOLE_SET_COLOR(CONSOLE_COLOR_RED);
-		std::cerr << CrStringFormat(format, args...) << std::endl;
+	//Print message
+	_SetConsoleColor(a_Color);
+	std::cout << Util::sprintf_safe(a_Format, a_Args...) << std::endl;
+
+	//Remember current function
+	_LastFunction = a_Function;
+}
+
+template<typename...Args>
+bool T_Assert(const bool a_Condition, char* a_Function, const std::string& a_Format, Args...a_Args)
+{
+	if (!a_Condition)
+	{	
+		//Print current function
+		_PrintFunction(a_Function, _LastFunction);
+
+		//Print message
+		_SetConsoleColor(CONSOLE_COLOR_RED);
+		std::cerr << Util::sprintf_safe(a_Format, a_Args...) << std::endl;
+
+		//Return true when assertion failed
 		return true;
 	}
 	return false;
 }
 
+//Logging
 #define CrLog_C(format, color, ...) T_Log(__FUNCTION__, color, format, ##__VA_ARGS__)
 #define CrLog(format, ...) CrLog_C(format, CONSOLE_COLOR_WHITE, ##__VA_ARGS__)
 #define CrLogSuccess(format, ...) CrLog_C(format, CONSOLE_COLOR_GREEN, ##__VA_ARGS__)
 #define CrLogWarning(format, ...) CrLog_C(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
 #define CrLogInfo(format, ...) CrLog_C(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
 
+//Assertion
 #define CrAssert(condition, format, ...) \
 if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
-	DebugBreak();
+	_CR_DEBUG_BREAK();
 
+//Debug
 #define CrDebugOutput(format, ...) T_DebugOutput(format, ##__VA_ARGS__)
-
-//########
-//##UTIL##
-//########
-#define CrSupressWarning(w, s) \
-__pragma(warning( push )) \
-__pragma(warning( disable : w )) \
-s \
-__pragma(warning( pop ))
-
-#define FORWARD_DECL(t) class t
-#define BIT_HAS_FLAG(b,f) (b & f) == f
-
-template<typename ... Args>
-std::string CrStringFormat(const std::string& format, Args ... args)
-{
-	size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1;
-	std::unique_ptr<char[]> buf(new char[size]);
-	snprintf(buf.get(), size, format.c_str(), args ...);
-	return std::string(buf.get(), buf.get() + size - 1);
-}
 
 //##############
 //##EXCEPTIONS##

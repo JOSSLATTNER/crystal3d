@@ -5,24 +5,24 @@ namespace Math
 {
 	struct AABB
 	{
-		glm::vec3 m_Min;
-		glm::vec3 m_Max;
+		glm::vec3 min;
+		glm::vec3 max;
 	};
 
-	inline AABB CreateBoundingBox(glm::vec3* vertices, uint32_t size)
+	inline AABB CreateBoundingBox(glm::vec3* vertices, size_t size)
 	{
 		AABB b;
-		b.m_Max = vertices[0];
-		b.m_Min = vertices[0];
+		b.max = vertices[0];
+		b.min = vertices[0];
 
 		for (uint32_t i = 1; i < size; ++i)
 		{
-			if (vertices[i].x < b.m_Min.x) b.m_Min.x = vertices[i].x;
-			if (vertices[i].y < b.m_Min.y) b.m_Min.y = vertices[i].y;
-			if (vertices[i].z < b.m_Min.z) b.m_Min.z = vertices[i].z;
-			if (vertices[i].x > b.m_Max.x) b.m_Max.x = vertices[i].x;
-			if (vertices[i].y > b.m_Max.y) b.m_Max.y = vertices[i].y;
-			if (vertices[i].z > b.m_Max.z) b.m_Max.z = vertices[i].z;
+			if (vertices[i].x < b.min.x) b.min.x = vertices[i].x;
+			if (vertices[i].y < b.min.y) b.min.y = vertices[i].y;
+			if (vertices[i].z < b.min.z) b.min.z = vertices[i].z;
+			if (vertices[i].x > b.max.x) b.max.x = vertices[i].x;
+			if (vertices[i].y > b.max.y) b.max.y = vertices[i].y;
+			if (vertices[i].z > b.max.z) b.max.z = vertices[i].z;
 		}
 		return b;
 	}

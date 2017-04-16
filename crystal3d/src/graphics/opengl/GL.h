@@ -101,6 +101,7 @@ namespace Graphics
 #endif
 		}
 
+		//LEGACY
 		static void CheckGLError()
 		{
 #ifdef CR_GRAPHICS_DEBUG

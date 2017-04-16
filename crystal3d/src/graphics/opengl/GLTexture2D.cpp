@@ -6,7 +6,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLTexture2D::GLTexture2D(const std::string & a_File)
+		GLTexture2D::GLTexture2D(const IO::CrPath& a_File)
 		{
 			std::vector<CrByte> data;
 			Resources::Import::CrImageInfo inf;

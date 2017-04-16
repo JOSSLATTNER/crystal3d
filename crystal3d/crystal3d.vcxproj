@@ -90,8 +90,8 @@
       <PreprocessorDefinitions>ASSET_PATH=LR"($(ProjectDir)assets\)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\soil\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\OpenAL 1.1\libs\Win64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,8 +122,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\OpenAL 1.1\libs\Win64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGL32.lib;glew32.lib;liblua52.a;Xinput9_1_0.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -131,6 +131,7 @@
     <ClInclude Include="src\audio\interface\AudioFile.h" />
     <ClInclude Include="src\audio\interface\IAudioSystem.h" />
     <ClInclude Include="src\audio\openal\AL.h" />
+    <ClInclude Include="src\core\FlagSet.hpp" />
     <ClInclude Include="src\graphics\opengl\GLCache.h" />
     <ClInclude Include="src\core\allocator\LinearAllocator.hpp" />
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
@@ -171,7 +172,6 @@
     <ClInclude Include="src\graphics\Primitives.h" />
     <ClInclude Include="src\graphics\interface\RendererContext.h" />
     <ClInclude Include="src\graphics\RenderMode.h" />
-    <ClInclude Include="src\graphics\ShaderType.h" />
     <ClInclude Include="src\input\interface\IInputManager.h" />
     <ClInclude Include="src\input\xinput\XIInputManager.h" />
     <ClInclude Include="src\math\AABB.h" />
@@ -333,7 +333,6 @@
     <ClInclude Include="src\packages\lua-5.2.4\include\luaconf.h" />
     <ClInclude Include="src\packages\lua-5.2.4\include\lualib.h" />
     <ClInclude Include="src\packages\sol\SOL.HPP" />
-    <ClInclude Include="src\packages\tinyobj\tiny_obj_loader.h" />
     <ClInclude Include="src\graphics\Material.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\Model.h" />
@@ -349,6 +348,7 @@
     <ClInclude Include="src\scene\SceneNode.h" />
     <ClInclude Include="src\scene\ScriptComponent.h" />
     <ClInclude Include="src\scene\TerrainNode.h" />
+    <ClInclude Include="src\core\Utility.h" />
     <ClInclude Include="src\window\interface\IWindow.h" />
     <ClInclude Include="src\window\interface\WindowContext.h" />
     <ClInclude Include="src\window\win32\Win32Window.h" />

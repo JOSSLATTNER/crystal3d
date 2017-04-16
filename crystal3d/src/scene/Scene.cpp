@@ -3,7 +3,7 @@
 
 namespace Scene 
 {
-	CrScene::CrScene(const std::string& a_Script)
+	CrScene::CrScene(const IO::CrPath& a_Script)
 		: m_Behaviour(a_Script)
 	{
 	}

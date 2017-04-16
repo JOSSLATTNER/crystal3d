@@ -7,41 +7,37 @@ namespace Resources
 {
 	namespace Import
 	{
-		inline const std::string _GetExtension(const std::string& a_Filename)
+		inline void ImportTexture(const IO::CrPath& a_Filename, std::vector<CrByte>& a_Buffer, CrImageInfo& a_Info)
 		{
-			auto idx = a_Filename.find('.');
-			if (idx != std::string::npos)
-			{
-				return a_Filename.substr(idx + 1);
-			}
-			return "?";
-		}
-
-		inline void ImportTexture(const std::string& a_Filename, std::vector<CrByte>& a_Buffer, CrImageInfo& a_Info)
-		{
-			const std::string extension = _GetExtension(a_Filename);
-
-			if (extension == "tga")
+			auto ext = a_Filename.extension();
+			if (ext == ".tga")
 			{
 				TGA::Import(a_Filename, a_Buffer, a_Info);
 			}
 			else
 			{
-				throw CrImportException("Unknown file extension.");
+				throw CrImportException("Format not supported.");
 			}
 		}
 
-		inline Graphics::CrModel* ImportModel(const std::string& a_Filename)
+		inline Graphics::CrModel* ImportModel(const IO::CrPath& a_Filename)
 		{
-			const std::string extension = _GetExtension(a_Filename);
-
-			if (extension == "obj")
+			auto ext = a_Filename.extension();
+			if (ext == ".obj")
 			{
-				return OBJ::Import(a_Filename);
+				std::vector<OBJ::Geometry> faces;
+				std::vector<OBJ::Material> mats;
+
+				const IO::CrPath fullPath = Resources::ResolvePath(a_Filename);
+				OBJ::Import(fullPath, faces, mats);
+
+
+				//TODO: CONSTRUCT MODEL
+				return nullptr;
 			}
 			else
 			{
-				throw CrImportException("Unknown file extension.");
+				throw CrImportException("Format not supported.");
 			}
 
 		}

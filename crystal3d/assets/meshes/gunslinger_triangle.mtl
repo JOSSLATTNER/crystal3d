@@ -1,0 +1,28 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl gunslinger.001
+Ns 29.411765
+Ka 0.550000 0.550000 0.550000
+Kd 0.550000 0.550000 0.550000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd gunslinger_dfs.tga
+map_Ka gunslinger_dfs.tga
+map_Ks gunslinger_spc.tga
+
+newmtl revolver.001
+Ns 29.411765
+Ka 0.550000 0.550000 0.550000
+Kd 0.550000 0.550000 0.550000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd revolver_dfs.tga
+map_Bump revolver_nrm.tga
+map_Ka revolver_dfs.tga

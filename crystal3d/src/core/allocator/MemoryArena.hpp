@@ -27,9 +27,9 @@ namespace Core
 			: m_Size(a_Size), m_Released(false)
 		{
 			m_Start = new char[m_Size];
-
 			CrLog("Allocated %zu bytes.", a_Size);
 		}
+
 		~CrMemoryArena()
 		{
 			this->Release();

@@ -3,9 +3,10 @@
 namespace Scripting
 {
 
-	CrScript::CrScript(const std::string & a_File)
+	CrScript::CrScript(const IO::CrPath& a_File)
 	{
-		m_Script = m_State.load_file(Resources::ResolvePath(a_File));
+		auto path = Resources::ResolvePath(a_File);
+		m_Script = m_State.load_file(path.string());
 		CrFramework::RegisterTypes(m_State);
 	}
 

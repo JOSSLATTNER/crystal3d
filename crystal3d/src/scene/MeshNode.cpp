@@ -36,7 +36,7 @@ namespace Scene
 		m_Mesh = a_Mesh;
 
 		std::vector<glm::vec3> vertices(a_Mesh.vertices.begin(), a_Mesh.vertices.end());
-		m_BoundingBoxBase = Math::CreateBoundingBox(vertices.data(), uint32_t(vertices.size()));
+		m_BoundingBoxBase = Math::CreateBoundingBox(vertices.data(), vertices.size());
 	}
 
 	void CrMeshNode::SetMaterial(Graphics::CrMaterial& a_Material)
@@ -52,8 +52,8 @@ namespace Scene
 	void CrMeshNode::Update(const float a_DeltaTime)
 	{
 		glm::mat4 modelMatrix = m_Transform.LocalMatrix();
-		m_BoundingBoxTransformed.m_Max = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Max, 1.0f) * modelMatrix);
-		m_BoundingBoxTransformed.m_Min = glm::vec3(glm::vec4(m_BoundingBoxBase.m_Min, 1.0f) * modelMatrix);
+		m_BoundingBoxTransformed.max = glm::vec3(glm::vec4(m_BoundingBoxBase.max, 1.0f) * modelMatrix);
+		m_BoundingBoxTransformed.min = glm::vec3(glm::vec4(m_BoundingBoxBase.min, 1.0f) * modelMatrix);
 	}
 
 	Math::AABB* CrMeshNode::GetBoundingBox()

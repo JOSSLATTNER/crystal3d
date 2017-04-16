@@ -10,7 +10,7 @@ namespace Scene
 	class CrScene
 	{
 	public:
-		CrScene(const std::string& a_Script);
+		CrScene(const IO::CrPath& a_Script);
 		~CrScene();
 	
 		void Initialize();

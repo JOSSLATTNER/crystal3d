@@ -20,13 +20,13 @@ namespace Graphics
 
 			static void Clear();
 
-			static GLTexture2D* LoadTexture(const std::string& a_Filename);
-			static GLShader* LoadShader(const std::string& a_Filename, EShaderType a_Type);
-			static GLCubemap* LoadCubemap(const std::string& a_Filename);
+			static GLTexture2D* LoadTexture(const IO::CrPath& a_Filename);
+			static GLShader* LoadShader(const IO::CrPath& a_Filename, GLenum a_Type);
+			static GLCubemap* LoadCubemap(const IO::CrPath& a_Filename);
 
-			static std::unordered_map<std::string, GLTexture2D*> Textures;
-			static std::unordered_map<std::string, GLShader*> Shader;
-			static std::unordered_map<std::string, GLCubemap*> Cubemaps;
+			static std::unordered_map<IO::CrPath, GLTexture2D*> Textures;
+			static std::unordered_map<IO::CrPath, GLShader*> Shader;
+			static std::unordered_map<IO::CrPath, GLCubemap*> Cubemaps;
 
 			static Core::CrMemoryArena Memory;
 			static Core::CrLinearAllocator Allocator;

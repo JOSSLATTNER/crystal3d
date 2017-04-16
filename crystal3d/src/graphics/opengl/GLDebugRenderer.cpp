@@ -10,10 +10,10 @@ namespace Graphics
 	{
 		GLDebugRenderer::GLDebugRenderer()
 		{
-			auto vertShader = GLCache::LoadShader("Shader\\debugDraw.vert", EShaderType::VertexShader);
+			auto vertShader = GLCache::LoadShader("Shader\\debugDraw.vert", GL_VERTEX_SHADER);
 			vertShader->Compile();
 
-			auto fragShader = GLCache::LoadShader("Shader\\debugDraw.frag", EShaderType::FragmentShader);
+			auto fragShader = GLCache::LoadShader("Shader\\debugDraw.frag", GL_FRAGMENT_SHADER);
 			fragShader->Compile();
 
 			m_ShaderProgram = new GLShaderProgram();
@@ -46,64 +46,64 @@ namespace Graphics
 			glBegin(mode);
 
 			//glNormal3f(0, 0, 1);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, 0, 1);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, 0, 1);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, 0, 1);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 
 			//--- pos x
 			//glNormal3f(1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 
 			//---- pos y
 			//glNormal3f(0, 1, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, 1, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, 1, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, 1, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 
 			//--- neg z
 			//glNormal3f(0, 0, -1);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, 0, -1);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, 0, -1);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, 0, -1);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 
 			//--- neg y
 			glBegin(mode);
 			//glNormal3f(0, -1, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, -1, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(0, -1, 0);
-			glVertex3f((GLfloat)a_Box.m_Max.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.max.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(0, -1, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 
 			//--- neg x
 			//glNormal3f(-1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.min.z);
 			//glNormal3f(-1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Min.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.min.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(-1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Max.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.max.z);
 			//glNormal3f(-1, 0, 0);
-			glVertex3f((GLfloat)a_Box.m_Min.x, (GLfloat)a_Box.m_Max.y, (GLfloat)a_Box.m_Min.z);
+			glVertex3f((GLfloat)a_Box.min.x, (GLfloat)a_Box.max.y, (GLfloat)a_Box.min.z);
 
 			glEnd();
 

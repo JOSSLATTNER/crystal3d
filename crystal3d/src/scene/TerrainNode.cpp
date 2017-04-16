@@ -38,7 +38,7 @@ namespace Scene
 		m_Material = new Graphics::CrMaterial();
 
 		for (uint32_t i = 0; i < m_Terrain->diffuseTextures.size(); i++)
-			m_Material->textures[CrStringFormat("tDiffuseTextures[%d]", i)] = m_Terrain->diffuseTextures[i];
+			m_Material->textures[Util::sprintf_safe("tDiffuseTextures[%d]", i)] = m_Terrain->diffuseTextures[i];
 
 		m_Material->fragmentShader = "Shader\\Terrain.frag";
 		m_Material->vertexShader = "Shader\\Terrain.vert";
@@ -51,7 +51,7 @@ namespace Scene
 
 		for (uint32_t i = 0; i < m_Terrain->normalMaps.size(); i++)
 		{
-			m_Material->textures[CrStringFormat("tNormalMaps[%d]", i)] = m_Terrain->normalMaps[i];
+			m_Material->textures[Util::sprintf_safe("tNormalMaps[%d]", i)] = m_Terrain->normalMaps[i];
 		}
 
 		m_Mesh = Primitives::Make_Plane(m_Terrain->size.x, m_Terrain->size.y);

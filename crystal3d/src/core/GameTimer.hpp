@@ -18,6 +18,7 @@ namespace Core
 			{
 				m_Start = chrono_clock::now();
 				m_Timestamp = chrono_clock::now();
+				CrLogSuccess("Game Timer initialized [OK]");
 			}
 
 			~CrGameTimer()

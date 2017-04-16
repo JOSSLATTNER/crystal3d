@@ -11,7 +11,7 @@ namespace Graphics
 		class GLCubemap 
 		{
 		public:
-			GLCubemap(const std::string& a_Filename);
+			GLCubemap(const IO::CrPath& a_Filename);
 			~GLCubemap();
 
 			GLuint GetHandle() const;

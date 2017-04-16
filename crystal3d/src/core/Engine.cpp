@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 #include "graphics\opengl\GLRenderer.h"
+#include "resources\Resources.h"
 
 #ifdef CR_PLATFORM_WINDOWS
 #include "window\win32\Win32Window.h"
@@ -33,10 +34,10 @@ namespace Core
 		m_MainWindow = new Window::Windows32::Win32Window();
 		m_InputManager = new Input::XInput::XIInputManager();
 #endif
-
 		m_GameTimer = new Core::CrGameTimer();
 		m_Renderer = new Graphics::OpenGL::GLRenderer();
 
+		//Initialize Window
 		Window::CrWindowContext windowContext{};
 		windowContext.title = a_Context.windowTitle;
 		windowContext.width = a_Context.windowDimensions.x;
@@ -46,8 +47,10 @@ namespace Core
 		m_MainWindow->Initialize(windowContext);
 		m_MainWindow->OnClose(std::bind(&CrEngine::Quit, this));
 
+		//Initialize Input Manager
 		m_InputManager->Initialize();
 
+		//Initialize Renderer
 		Graphics::CrRendererContext rendererContext{};
 		rendererContext.targetWindow = m_MainWindow;
 		rendererContext.viewportHeight = windowContext.height;

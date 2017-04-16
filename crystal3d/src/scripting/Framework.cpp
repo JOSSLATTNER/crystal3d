@@ -33,7 +33,10 @@ namespace Scripting
 		a_State["Input"] = SEngine->GetInputManager();
 		a_State["GameWindow"] = SEngine->GetMainWindow();
 
-		a_State.set_function("ImportModel", Resources::Import::ImportModel);
+		a_State.set_function("ImportModel", [](const std::string& a_Path)
+		{
+			return Resources::Import::ImportModel(a_Path);
+		});
 
 		auto addNodeGeneric = [](CrScene* thiz, CrSceneNode* node)
 		{ thiz->AddNode<CrSceneNode>(node); };
@@ -46,6 +49,7 @@ namespace Scripting
 		{ thiz->AddNode<CrTerrainNode>(node); }),
 		"AddNode", sol::overload(addNodeGeneric, [](CrScene* thiz, CrCameraNode* node)
 		{ thiz->AddNode<CrCameraNode>(node); }));
+
 
 		a_State.new_usertype<CrSceneNode>("SceneNode",
 			"Create", [](CrTransform t) { return new CrSceneNode(t); },

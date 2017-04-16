@@ -1,5 +1,6 @@
 #pragma once
 #include "core\Core.h"
+#include "core\FlagSet.hpp"
 #include "scene\Scene.h"
 #include "math\glm\GLM.h"
 #include "scene\LightNode.h"
@@ -11,14 +12,16 @@
 #include "GLRenderPass.h"
 #include "GLFramebuffer.hpp"
 
-//Buffer flags
-const unsigned char BUFFER_FLAG_DIRECTIONAL_LIGHT = 0x01;
-const unsigned char BUFFER_FLAG_POINT_LIGHT = 0x02;
-const unsigned char BUFFER_FLAG_LIGHT_INFO = 0x04;
-const unsigned char BUFFER_FLAG_PREVIOUS_PASS = 0x08;
-const unsigned char BUFFER_FLAG_DEPTH = 0x10;
-const unsigned char BUFFER_FLAG_GEOMETRY = 0x20;
-const unsigned char BUFFER_FLAG_UTILITY = 0x40;
+enum BUFFER_FLAGS
+{
+	BUFFER_FLAG_DIRECTIONAL_LIGHT,
+	BUFFER_FLAG_POINT_LIGHT,
+	BUFFER_FLAG_LIGHT_INFO,
+	BUFFER_FLAG_PREVIOUS_PASS,
+	BUFFER_FLAG_DEPTH,
+	BUFFER_FLAG_GEOMETRY,
+	BUFFER_FLAG_UTILITY
+};
 
 namespace Graphics
 {
@@ -31,7 +34,7 @@ namespace Graphics
 			GLFramebuffer* geometryBuffer;
 		};
 
-		CrSupressWarning(4324,
+		//_SUPPRESS_WARNING(4324,
 			struct LightInfo
 			{
 				bool hasDirectionalLight;
@@ -54,7 +57,7 @@ namespace Graphics
 				glm::vec3 diffuse;
 				float specularFactor;
 			};
-		)
+		//)
 
 		class GLDeferredRenderer
 		{
@@ -64,7 +67,7 @@ namespace Graphics
 
 			void Initialize(GLDeferredRendererContext& a_Context);
 			void Render(Scene::CrScene* a_Scene);
-			void RegisterRenderPass(GLRenderPass* a_RenderPass, unsigned int a_BufferFlags);
+			void RegisterRenderPass(GLRenderPass* a_RenderPass, Core::CrFlagSet<BUFFER_FLAGS, 7> a_Flags);
 
 		private:
 			void UpdateLightBuffer(Scene::CrScene* a_Scene) const;

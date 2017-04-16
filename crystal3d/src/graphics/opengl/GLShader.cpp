@@ -5,39 +5,16 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLShader::GLShader(const std::string& a_Filename, EShaderType a_Type)
+		GLShader::GLShader(const IO::CrPath& a_Filename, GLenum a_Type)
 			: m_Type(a_Type)
 		{
 			std::ifstream stream(a_Filename);
-			CrAssert(stream.good(), "Shader file not found! (%s)", a_Filename.c_str());
+			CrAssert(stream.good(), "Shader file not found! (%ls)", a_Filename.c_str());
 
 			m_Source = { std::istreambuf_iterator<char>(stream),
 				std::istreambuf_iterator<char>() };
 
-			GLenum type = 0;
-			switch (m_Type)
-			{
-			case Graphics::EShaderType::VertexShader:
-				type = GL_VERTEX_SHADER;
-				break;
-			case Graphics::EShaderType::FragmentShader:
-				type = GL_FRAGMENT_SHADER;
-				break;
-			case Graphics::EShaderType::GeometryShader:
-				type = GL_GEOMETRY_SHADER;
-				break;
-			case Graphics::EShaderType::TesselationShader:
-			case Graphics::EShaderType::HullShader:
-			case Graphics::EShaderType::DomainShader:
-				CrAssert(0, "Not implemented!");
-				return;
-			case Graphics::EShaderType::Unknown:
-			default:
-				CrAssert(0, "Unknown Type");
-				return;
-			}
-
-			m_Handle = glCreateShader(type);
+			m_Handle = glCreateShader(m_Type);
 			CrAssert(m_Handle != 0, "Invalid shader handle.");
 
 			const GLchar* srcBuffer = reinterpret_cast<const GLchar*>(m_Source.c_str());
@@ -62,7 +39,7 @@ namespace Graphics
 			return m_Handle;
 		}
 
-		EShaderType GLShader::GetType() const
+		GLenum GLShader::GetType() const
 		{
 			return m_Type;
 		}

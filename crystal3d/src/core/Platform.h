@@ -2,6 +2,17 @@
 
 #if defined _WIN32 || defined _WIN64
 #define CR_PLATFORM_WINDOWS
+
+//################
+//Disables iterator debugging.
+//#define _SECURE_SCL 0
+//################
+
+//################
+//Prevents min()/max() name clashes with std::numeric_limits<T>::max()
+//#define NOMINMAX
+//################
+
 #include <Windows.h>
 #elif defined __unix__ || defined unix
 #define CR_PLATFORM_UNIX

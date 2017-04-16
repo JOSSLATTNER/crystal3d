@@ -93,9 +93,6 @@
     <ClInclude Include="src\graphics\RenderMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\ShaderType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\input\interface\IInputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -579,9 +576,6 @@
     <ClInclude Include="src\packages\sol\SOL.HPP">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\packages\tinyobj\tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\scene\interface\IComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -688,6 +682,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\graphics\interface\RendererContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\FlagSet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
