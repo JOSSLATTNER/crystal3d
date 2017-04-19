@@ -48,14 +48,14 @@ namespace Graphics
 			glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			m_ElementCount = uint32_t(a_Mesh->indices.size());
+			m_ElementCount = a_Mesh->indices.size();
 		}
 
 		GLVertexArray::~GLVertexArray()
 		{
 			for (uint32_t i = 0; i < 4; i++)
 			{
-				if (m_Vbo[i])
+				if (m_Vbo[i] != 0)
 				{
 					glDeleteBuffers(1, &m_Vbo[i]);
 				}

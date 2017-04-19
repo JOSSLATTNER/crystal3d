@@ -684,10 +684,10 @@
     <ClInclude Include="src\graphics\interface\RendererContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\Utility.h">
+    <ClInclude Include="src\core\FlagSet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\FlagSet.hpp">
+    <ClInclude Include="src\core\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

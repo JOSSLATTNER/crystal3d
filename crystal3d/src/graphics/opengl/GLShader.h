@@ -2,7 +2,7 @@
 #include "core\Core.h"
 #include "GL.h"
 
-#define SHADER_DEBUG_BUFFER 500
+#define SHADER_DEBUG_BUFFER_SIZE 500
 
 namespace Graphics
 {

@@ -11,12 +11,15 @@ namespace Graphics
 			std::ifstream stream(a_Filename);
 			CrAssert(stream.good(), "Shader file not found! (%ls)", a_Filename.c_str());
 
+			//Read shader file
 			m_Source = { std::istreambuf_iterator<char>(stream),
 				std::istreambuf_iterator<char>() };
 
+			//Create handle
 			m_Handle = glCreateShader(m_Type);
 			CrAssert(m_Handle != 0, "Invalid shader handle.");
 
+			//Supply shader source
 			const GLchar* srcBuffer = reinterpret_cast<const GLchar*>(m_Source.c_str());
 			glShaderSource(m_Handle, 1, &srcBuffer, 0);
 
@@ -51,8 +54,8 @@ namespace Graphics
 
 		void GLShader::CheckError() const
 		{
-			GLchar strInfoLog[SHADER_DEBUG_BUFFER];
-			glGetShaderInfoLog(m_Handle, SHADER_DEBUG_BUFFER, 0, strInfoLog);
+			GLchar strInfoLog[SHADER_DEBUG_BUFFER_SIZE];
+			glGetShaderInfoLog(m_Handle, SHADER_DEBUG_BUFFER_SIZE, 0, strInfoLog);
 
 			CrAssert(strlen(strInfoLog) == 0, "SHADER ERROR \n%s", strInfoLog);
 		}

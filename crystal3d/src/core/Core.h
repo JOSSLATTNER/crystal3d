@@ -55,7 +55,6 @@ namespace std
 #ifdef CR_PLATFORM_WINDOWS
 static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 static std::once_flag _DebugClearFlag;
-static char* _LastFunction = "_";
 
 enum ConsoleColor : WORD
 {
@@ -68,13 +67,13 @@ enum ConsoleColor : WORD
 	CONSOLE_COLOR_YELLOW = 14
 };
 
-inline void _SetConsoleColor(const ConsoleColor a_Color)
+inline void _CrSetConsoleColor(const ConsoleColor a_Color)
 {
 	SetConsoleTextAttribute(ConsoleHandle, a_Color);
 }
 
 template<typename...Args>
-void T_DebugOutput(const std::string& a_Format, Args...a_Args)
+void _CrDebugOutput(const std::string& a_Format, Args...a_Args)
 {
 	std::call_once(_DebugClearFlag, []()
 	{
@@ -85,68 +84,48 @@ void T_DebugOutput(const std::string& a_Format, Args...a_Args)
 	OutputDebugString(buff.c_str());
 }
 
-//DebugBreak()
 #define _CR_DEBUG_BREAK DebugBreak
 #endif
 
-inline void _PrintFunction(char* a_Function, char* a_LastFunc)
+
+inline void _CrPrintFunction(char* a_Function)
 {
 #if CR_DEBUG
-	if (strcmp(a_Function, a_LastFunc) != 0)
-	{
-		//Print current function
-		_SetConsoleColor(CONSOLE_COLOR_GREY);
-		std::cout << "[" << a_Function << "]" << std::endl;
-	}
+	_CrSetConsoleColor(CONSOLE_COLOR_GREY);
+	std::cout << "[" << a_Function << "]" << std::endl;
 #endif
 }
 
 template<typename...Args>
-void T_Log(char* a_Function, ConsoleColor a_Color, const std::string& a_Format, Args...a_Args)
+void _CrLog(char* a_Function, ConsoleColor a_Color, const std::string& a_Format, Args...a_Args)
 {
-	//Print current function
-	_PrintFunction(a_Function, _LastFunction);
-
-	//Print message
-	_SetConsoleColor(a_Color);
+	_CrPrintFunction(a_Function);
+	_CrSetConsoleColor(a_Color);
 	std::cout << Util::sprintf_safe(a_Format, a_Args...) << std::endl;
-
-	//Remember current function
-	_LastFunction = a_Function;
 }
 
 template<typename...Args>
-bool T_Assert(const bool a_Condition, char* a_Function, const std::string& a_Format, Args...a_Args)
+bool _CrAssert(const bool a_Condition, char* a_Function, const std::string& a_Format, Args...a_Args)
 {
 	if (!a_Condition)
 	{	
-		//Print current function
-		_PrintFunction(a_Function, _LastFunction);
-
-		//Print message
-		_SetConsoleColor(CONSOLE_COLOR_RED);
+		_CrPrintFunction(a_Function);
+		_CrSetConsoleColor(CONSOLE_COLOR_RED);
 		std::cerr << Util::sprintf_safe(a_Format, a_Args...) << std::endl;
-
-		//Return true when assertion failed
 		return true;
 	}
 	return false;
 }
 
 //Logging
-#define CrLog_C(format, color, ...) T_Log(__FUNCTION__, color, format, ##__VA_ARGS__)
-#define CrLog(format, ...) CrLog_C(format, CONSOLE_COLOR_WHITE, ##__VA_ARGS__)
-#define CrLogSuccess(format, ...) CrLog_C(format, CONSOLE_COLOR_GREEN, ##__VA_ARGS__)
-#define CrLogWarning(format, ...) CrLog_C(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
-#define CrLogInfo(format, ...) CrLog_C(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
+#define CrLogColor(format, color, ...) _CrLog(__FUNCTION__, color, format, ##__VA_ARGS__)
+#define CrAssert(condition, format, ...) if(_CrAssert(condition, __FUNCTION__, format, ##__VA_ARGS__)) _CR_DEBUG_BREAK();
+#define CrLog(format, ...) CrLogColor(format, CONSOLE_COLOR_WHITE, ##__VA_ARGS__)
+#define CrLogSuccess(format, ...) CrLogColor(format, CONSOLE_COLOR_GREEN, ##__VA_ARGS__)
+#define CrLogWarning(format, ...) CrLogColor(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
+#define CrLogInfo(format, ...) CrLogColor(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
+#define CrDebugOutput(format, ...) _CrDebugOutput(format, ##__VA_ARGS__)
 
-//Assertion
-#define CrAssert(condition, format, ...) \
-if(T_Assert(condition, __FUNCTION__, format, ##__VA_ARGS__)) \
-	_CR_DEBUG_BREAK();
-
-//Debug
-#define CrDebugOutput(format, ...) T_DebugOutput(format, ##__VA_ARGS__)
 
 //##############
 //##EXCEPTIONS##

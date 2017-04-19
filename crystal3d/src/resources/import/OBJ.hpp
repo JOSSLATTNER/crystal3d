@@ -41,19 +41,20 @@ namespace Resources
 		{
 			struct Face
 			{
-				int v_idx[3]; //vertex index
-				int n_idx[3]; //normal index
-				int uv_idx[3]; //uv index
+				size_t v_idx[3];	//vertex index
+				size_t n_idx[3];	//normal index
+				size_t uv_idx[3]; //texcoord index
 			};
 
 			struct Geometry
 			{
 				std::string name;
+				size_t materialIndex;
 
 				std::vector<Face> faces;
-				std::vector<glm::vec3> positions;
+				std::vector<glm::vec3> vertices;
 				std::vector<glm::vec3> normals;
-				std::vector<glm::vec2> uvs;
+				std::vector<glm::vec2> texCoords;
 			};
 
 			//https://github.com/Alhadis/language-wavefront/blob/master/specs/mtl.rst
@@ -119,7 +120,6 @@ namespace Resources
 					}
 					else if (token == TOKEN_NEWMTL)
 					{
-						//Create new material
 						CrDebugOutput("Material: %s", value.c_str());
 						a_Materials.push_back({ value });
 					}
@@ -203,6 +203,14 @@ namespace Resources
 				}
 			}
 
+			inline size_t FindMaterialIndex(const std::string& a_Name, std::vector<Material>& a_Materials)
+			{
+				for (size_t i = 0; i < a_Materials.size(); i++)
+					if (a_Materials[i].name == a_Name)
+						return i;
+				return 0;
+			}
+
 			inline void Import(const IO::CrPath& a_Filename, std::vector<Geometry>& a_Shapes, std::vector<Material>& a_Materials)
 			{
 				std::ifstream ifs(a_Filename, std::ifstream::in | std::ifstream::binary);
@@ -231,14 +239,23 @@ namespace Resources
 						CrDebugOutput("Material File: %s", value.c_str());
 						ImportMaterials(value, a_Materials, a_Filename.parent_path());
 					}
+					else if (token == TOKEN_USE_MTL)
+					{
+						//Find material index
+						a_Shapes.back().materialIndex = FindMaterialIndex(value, a_Materials);
+					}
 					else if (token == TOKEN_GROUP)
 					{
 						//Group
 					}
 					else if (token == TOKEN_OBJECT)
 					{
-						//Create new shape
-						a_Shapes.push_back({ value });
+						//Create new shape (name, matIndex)
+						Geometry geom;
+						geom.name = value;
+						geom.materialIndex = 0;
+						a_Shapes.push_back(geom);
+
 						CrDebugOutput("Object: %s", value.c_str());
 					}
 					else if (token == TOKEN_VERTEX)
@@ -248,7 +265,7 @@ namespace Resources
 						if (!Util::sscanf_safe(value, "%f %f %f", vertex.x, vertex.y, vertex.z))
 							throw CrImportException("Malformed Vertex");
 
-						a_Shapes.back().positions.push_back(vertex);
+						a_Shapes.back().vertices.push_back(vertex);
 					}
 					else if (token == TOKEN_NORMAL)
 					{
@@ -266,11 +283,26 @@ namespace Resources
 						if (!Util::sscanf_safe(value, "%f %f", uv.x, uv.y))
 							throw CrImportException("Malformed UV");
 
-						a_Shapes.back().uvs.push_back(uv);
+						a_Shapes.back().texCoords.push_back(uv);
 					}
 					else if (token == TOKEN_FACE)
 					{
-						Face fc;
+						size_t numPolys = a_Shapes.back().faces.size();
+						if (numPolys == 0)
+						{
+							//Reserve memory for faces
+							size_t vertCount = a_Shapes.back().vertices.size();
+							a_Shapes.back().faces.reserve(vertCount / 3);
+						}
+
+						//Default indices
+						size_t idx = numPolys * 3 + 1;
+						Face fc
+						{
+							{ idx, idx + 1, idx + 2 },
+							{ idx, idx + 1, idx + 2 },
+							{ idx, idx + 1, idx + 2 }
+						};
 
 						//Option #1: Vertex Vertex Vertex
 						//Example: f 1 2 3
@@ -282,7 +314,7 @@ namespace Resources
 							a_Shapes.back().faces.push_back(fc);
 						}
 						//Option #2: Vertex/UV Vertex/UV Vertex/UV
-						//Example: 2/1 3/1 4/1
+						//Example: f 2/1 3/1 4/1
 						else if (Util::sscanf_safe(value, "%d/%d %d/%d %d/%d",
 							fc.v_idx[0], fc.uv_idx[0],
 							fc.v_idx[1], fc.uv_idx[1],
@@ -312,11 +344,10 @@ namespace Resources
 						{
 							//Note: we should check for faces with more than 3 verts.
 							//ATM it only supports pre-triangulated faces.
-							throw CrImportException("Failed to parse face format");
+							throw CrImportException("Failed to parse face format. Make sure faces are triangulated.");
 						}
 					}
 				}
-
 			}
 
 		}

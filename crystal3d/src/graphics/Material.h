@@ -13,5 +13,6 @@ namespace Graphics
 		std::string geometryShader;
 
 		std::unordered_map<std::string, float> properties;
+
 	};
 }

@@ -17,7 +17,7 @@ namespace Graphics
 			}
 			catch (const Resources::Import::CrImportException& ex)
 			{
-				CrAssert(0, "Failed loading texture(%s): %s", a_File.c_str(), ex.what());
+				CrAssert(0, "Failed loading texture(%ls): %s", a_File.filename().c_str(), ex.what());
 			}
 
 			GLenum srcFormat = inf.hasAlpha ? GL_BGRA : GL_BGR;

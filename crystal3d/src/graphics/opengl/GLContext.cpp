@@ -63,11 +63,11 @@ namespace Graphics
 				CrLogInfo("wglCreateContextAttribsARB() not available.");
 			}
 
-			if (wglewIsSupported("wglSwapIntervalEXT"))
-			{
-				//V-SYNC
-				wglSwapIntervalEXT(0);
-			}
+			//if (wglewIsSupported("wglSwapIntervalEXT"))
+			//{
+			//	//V-SYNC
+			//	wglSwapIntervalEXT(0);
+			//}
 
 			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
 				glGetString(GL_VERSION),

@@ -17,7 +17,7 @@ namespace Core
 	struct CrEngineContext
 	{
 		uint32_t maxFps = 100U;
-		std::string windowTitle = "CRYSTAL3D | 60FPS";
+		std::string windowTitle = "sandbox|60fps";
 		glm::ivec2 windowDimensions = {1920, 1080};
 		bool windowFullscreen = false;
 	};
