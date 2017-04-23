@@ -1,15 +1,12 @@
 #version 330
-
 #define rot(x) mat2(cos(x), -sin(x), sin(x), cos(x))
 
 //LAYOUT
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 11) out;
 
-
 //UNIFORM
-uniform float gTime;
-uniform sampler2D tGrassMap;
+uniform sampler2D u_grass_map;
 
 //IN
 in VertexData{
@@ -38,7 +35,7 @@ layout(std140) uniform MVPBuffer
 //VP
 vec4 VP(vec4 inVertex)
 {
-	return inVertex*viewMatrix*projectionMatrix;
+	return inVertex * viewMatrix * projectionMatrix;
 }
 
 void main()
@@ -62,7 +59,7 @@ void main()
 				   gl_in[2].gl_Position.xyz)/3.;
 
 	
-	vec4 noise = texture2D(tGrassMap,VertexIn[0].UV);
+	vec4 noise = texture2D(u_grass_map, VertexIn[0].UV);
 
 	if (mod(ceil(center).xz,4.)==0 && noise.r > 0.5)
 	{
@@ -81,7 +78,6 @@ void main()
 		billboardMatrix[3] = vec4(center, 1);
 
 		billboardMatrix = transpose(billboardMatrix);
-
 
 		//A
 		VertexOut.Position = vec3(-billboardSize.x,-billboardSize.y,0);

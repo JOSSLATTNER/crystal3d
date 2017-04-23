@@ -3,31 +3,22 @@
 
 namespace Core
 {
-	template<typename T>
-	class CrConstructable
-	{
-	public:
-		CrConstructable(T* a_Ptr)
-			: m_Raw(a_Ptr) {};
-
-		template<typename...Args>
-		T* Construct(Args...a_Args)
-		{
-			return new (m_Raw) T(std::forward<Args>(a_Args)...);
-		}
-
-	private:
-		T* m_Raw;
-	};
+	typedef char* CrMemoryPosition;
 
 	class CrMemoryArena
 	{
 	public:
-		CrMemoryArena(const size_t a_Size)
-			: m_Size(a_Size), m_Released(false)
+		CrMemoryArena(CrMemoryPosition a_Start, CrMemoryPosition a_End)
+			: m_Start(a_Start), m_Size(a_End - a_Start), m_Released(false)
 		{
-			m_Start = new char[m_Size];
-			CrLog("Allocated %zu bytes.", a_Size);
+			this->Reset();
+			CrDebugOutput("Reserved %zu bytes", m_Size);
+		}
+
+		CrMemoryArena(const size_t a_Size)
+			: m_Released(false)
+		{
+			this->Reserve(a_Size);
 		}
 
 		~CrMemoryArena()
@@ -35,28 +26,67 @@ namespace Core
 			this->Release();
 		}
 
+		void Reserve(const size_t a_Size)
+		{
+			m_Size = a_Size;
+			m_Start = new char[m_Size];
+			this->Reset();
+			CrDebugOutput("Reserved %zu bytes", m_Size);
+		}
+
+		void Reset(CrMemoryPosition a_Start, CrMemoryPosition a_End)
+		{
+			memset(a_Start, '\0', a_End - a_Start);
+		}
+
+		void Reset()
+		{
+			this->Reset(this->Begin(), this->End());
+		}
+
 		void Release()
 		{
 			if (!m_Released)
 			{
-				delete m_Start;
+				delete[] m_Start;
 				m_Released = true;
+				CrDebugOutput("Released %zu bytes", m_Size);
 			}
 		}
 
-		char* Begin()
+		CrMemoryArena Partition(size_t a_Size)
+		{
+			if (a_Size > m_Size)
+				throw std::bad_alloc();
+
+			//Shrink arena
+			m_Size -= a_Size;
+
+			//Create new arena
+			auto beg = m_Start + m_Size;
+			auto end = beg + a_Size;
+
+			return {beg, end};
+		}
+
+		CrMemoryPosition Begin()
 		{
 			return m_Start;
 		}
 
-		char* End()
+		CrMemoryPosition End()
 		{
 			return m_Start + m_Size;
+		}
+
+		size_t Size()
+		{
+			return m_Size;
 		}
 
 	private:
 		bool m_Released;
 		size_t m_Size;
-		char* m_Start;
+		CrMemoryPosition m_Start;
 	};
 }

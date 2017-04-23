@@ -24,6 +24,15 @@ namespace Util
 		buffer >> a_Val;
 	}
 
+	template<typename T>
+	T string_parse(const std::string& a_Str)
+	{
+		T t;
+		std::istringstream buffer(a_Str);
+		buffer >> t;
+		return t;
+	}
+
 	template<typename...Args>
 	bool sscanf_safe(const std::string& buffer, const std::string& format, Args&...args)
 	{
@@ -48,27 +57,27 @@ namespace Util
 			int c = sb->sbumpc();
 			switch (c)
 			{
-			case '\n':
-			{
-				return is;
-			}
-			case '\r':
-			{
-				if (sb->sgetc() == '\n')
-					sb->sbumpc();
-				return is;
-			}
-			case EOF:
-			{
-				// Also handle the case when the last line has no line ending
-				if (t.empty())
-					is.setstate(std::ios::eofbit);
-				return is;
-			}
-			default:
-			{
-				t += (char)c;
-			}
+				case '\n':
+				{
+					return is;
+				}
+				case '\r':
+				{
+					if (sb->sgetc() == '\n')
+						sb->sbumpc();
+					return is;
+				}
+				case EOF:
+				{
+					// Also handle the case when the last line has no line ending
+					if (t.empty())
+						is.setstate(std::ios::eofbit);
+					return is;
+				}
+				default:
+				{
+					t += static_cast<char>(c);
+				}
 			}
 		}
 	}

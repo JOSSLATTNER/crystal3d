@@ -46,7 +46,7 @@ namespace Scene
 		std::vector<Graphics::IRenderable*> m_RenderList;
 
 		std::unordered_multimap<size_t, CrSceneNode*> m_Nodes;
-		Scripting::CrScript m_Behaviour;
+		Scripting::CrScript* m_SceneScript;
 
 	};
 }

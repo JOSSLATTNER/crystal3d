@@ -1,6 +1,7 @@
 #pragma once
 #include "core\Core.h"
 
+#include "graphics\interface\ITexture.h"
 #include "GL.h"
 #include "GLState.h"
 
@@ -18,12 +19,14 @@ namespace Graphics
 			bool aniso = true;
 		};
 
-		class GLTexture2D
+		class GLTexture
+			: public ITexture
 		{
 		public:
-			GLTexture2D(const IO::CrPath& a_File);
-			GLTexture2D(GLvoid* a_PixelData, GLTextureContext& a_Context);
-			~GLTexture2D();
+			GLTexture(const GLvoid* a_PixelData, GLTextureContext& a_Context);
+
+			//Inherited via ITexture
+			~GLTexture() override;
 
 			GLuint BindUniform(GLuint a_Program, const std::string& a_Attribute) const;
 			GLuint BindUniform(GLuint a_Program, const GLint a_AttributeLocation) const;
@@ -34,7 +37,6 @@ namespace Graphics
 			GLuint GetHandle() const;
 
 		private:
-			void LoadPixel(GLvoid* a_PixelData, GLTextureContext& a_Context);
 			GLuint m_Handle;
 
 

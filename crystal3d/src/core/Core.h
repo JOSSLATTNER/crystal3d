@@ -1,7 +1,5 @@
 #pragma once
-
 #include "Platform.h"
-#include "Singleton.hpp"
 #include "Utility.h"
 
 #include <vector>
@@ -18,7 +16,6 @@
 #include <fstream>
 #include <sstream>
 #include <bitset>
-#include <mutex>
 #include <filesystem>
 
 //###########
@@ -49,12 +46,34 @@ namespace std
 	};
 }
 
+
+//##############
+//##EXCEPTIONS##
+//##############
+class CrException
+	: public std::exception
+{
+public:
+	CrException(const std::string& message)
+		: message_(message) {}
+
+	const char* what() const noexcept override
+	{
+		return message_.c_str();
+	}
+private:
+	const std::string message_;
+};
+
 //###########
 //##LOGGING##
 //###########
 #ifdef CR_PLATFORM_WINDOWS
-static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-static std::once_flag _DebugClearFlag;
+namespace
+{
+	static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	static bool _DebugClearFlag = false;
+}
 
 enum ConsoleColor : WORD
 {
@@ -73,12 +92,16 @@ inline void _CrSetConsoleColor(const ConsoleColor a_Color)
 }
 
 template<typename...Args>
-void _CrDebugOutput(const std::string& a_Format, Args...a_Args)
+void _CrDebugOutput(const std::string& a_Func, const std::string& a_Format, Args...a_Args)
 {
-	std::call_once(_DebugClearFlag, []()
+	if (!_DebugClearFlag)
 	{
-		OutputDebugString("\n###########\nDEBUG SESSION\n###########\n");
-	});
+		OutputDebugString("\n\n#########Debug Session#########\n\n");
+		_DebugClearFlag = true;
+	}
+
+	const std::string fStr = "[" + a_Func + "]\n";
+	OutputDebugString(fStr.c_str());
 
 	const std::string buff = Util::sprintf_safe(a_Format + "\n", a_Args...);
 	OutputDebugString(buff.c_str());
@@ -88,7 +111,7 @@ void _CrDebugOutput(const std::string& a_Format, Args...a_Args)
 #endif
 
 
-inline void _CrPrintFunction(char* a_Function)
+inline void _CrPrintFunction(const std::string& a_Function)
 {
 #if CR_DEBUG
 	_CrSetConsoleColor(CONSOLE_COLOR_GREY);
@@ -97,7 +120,7 @@ inline void _CrPrintFunction(char* a_Function)
 }
 
 template<typename...Args>
-void _CrLog(char* a_Function, ConsoleColor a_Color, const std::string& a_Format, Args...a_Args)
+void _CrLog(const std::string& a_Function, ConsoleColor a_Color, const std::string& a_Format, Args...a_Args)
 {
 	_CrPrintFunction(a_Function);
 	_CrSetConsoleColor(a_Color);
@@ -105,7 +128,7 @@ void _CrLog(char* a_Function, ConsoleColor a_Color, const std::string& a_Format,
 }
 
 template<typename...Args>
-bool _CrAssert(const bool a_Condition, char* a_Function, const std::string& a_Format, Args...a_Args)
+bool _CrAssert(const bool a_Condition, const std::string& a_Function, const std::string& a_Format, Args...a_Args)
 {
 	if (!a_Condition)
 	{	
@@ -124,23 +147,4 @@ bool _CrAssert(const bool a_Condition, char* a_Function, const std::string& a_Fo
 #define CrLogSuccess(format, ...) CrLogColor(format, CONSOLE_COLOR_GREEN, ##__VA_ARGS__)
 #define CrLogWarning(format, ...) CrLogColor(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
 #define CrLogInfo(format, ...) CrLogColor(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
-#define CrDebugOutput(format, ...) _CrDebugOutput(format, ##__VA_ARGS__)
-
-
-//##############
-//##EXCEPTIONS##
-//##############
-class CrException
-	: public std::exception
-{
-public:
-	CrException(const std::string& message)
-		: message_(message) {}
-
-	const char* what() const noexcept override
-	{
-		return message_.c_str(); 
-	}
-private:
-	const std::string message_;
-};
+#define CrDebugOutput(format, ...) _CrDebugOutput(__FUNCTION__, format, ##__VA_ARGS__)

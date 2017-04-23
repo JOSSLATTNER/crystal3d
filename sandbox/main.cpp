@@ -5,10 +5,7 @@ void main()
 	try
 	{
 		Core::CrEngine engine;
-
-		//Initialize Engine
-		Core::CrEngineContext ctx;
-		engine.Initialize(ctx);
+		engine.Initialize();
 
 		//Create game Scene
 		Scene::CrScene* gameScene = new Scene::CrScene("Scripts\\Scene.lua");
@@ -18,7 +15,7 @@ void main()
 	}
 	catch (const CrException& e)
 	{
-		std::cout << e.what() << std::endl;
+		CrAssert(0, e.what());
 	}
 
 }

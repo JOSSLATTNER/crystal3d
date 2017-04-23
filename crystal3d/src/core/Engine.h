@@ -3,25 +3,23 @@
 #include "Platform.h"
 #include "GameTimer.hpp"
 
+#include "Configuration.h"
+#include "core\allocator\StackAllocator.hpp"
+
 #include "window\interface\IWindow.h"
 #include "graphics\interface\IRenderer.h"
 #include "input\interface\IInputManager.h"
-
+#include "resources\ResourceManager.h"
 #include "scene\Scene.h"
 
-//Global engine instance
+//Global Instances
 #define SEngine Core::CrEngine::s_SharedInstance
+#define SGameTimer SEngine->GetGameTimer()
+#define SEngineConfig SEngine->GetConfiguration()
+#define SResourceManager SEngine->GetResourceManager()
 
 namespace Core
 {
-	struct CrEngineContext
-	{
-		uint32_t maxFps = 100U;
-		std::string windowTitle = "sandbox|60fps";
-		glm::ivec2 windowDimensions = {1920, 1080};
-		bool windowFullscreen = false;
-	};
-
 	class CrEngine
 	{
 	public:
@@ -31,17 +29,20 @@ namespace Core
 		static CrEngine* s_SharedInstance;
 
 	public:
-		void Initialize(CrEngineContext& a_Context);
+		void Initialize();
 		void Run();
 		void SetScene(Scene::CrScene* a_GameScene);
 		void Quit();
 
 	public:
+		Core::CrConfiguration* GetConfiguration();
+
 		Window::IWindow* GetMainWindow();
 		Scene::CrScene* GetCurrentScene();
 		Core::CrGameTimer* GetGameTimer();
 		Input::IInputManager* GetInputManager();
 		Graphics::IRenderer* GetRenderer();
+		Resources::CrResourceManager* GetResourceManager();
 
 	private:
 		Window::IWindow* m_MainWindow;
@@ -49,13 +50,14 @@ namespace Core
 		Core::CrGameTimer* m_GameTimer;
 		Input::IInputManager* m_InputManager;
 		Graphics::IRenderer* m_Renderer;
+		Resources::CrResourceManager* m_ResourceManager;
 
 	private:
-		void Update(const float delta) const;
+		void Update(const float a_Delta) const;
 		void Render();
 	
 	private:
-		CrEngineContext m_Context;
+		CrConfiguration m_Config;
 		bool m_IsRunning;
 
 	};

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{768F92A1-4897-48A4-A8E4-5524B2BEB4B0}</ProjectGuid>
     <RootNamespace>crystal3d</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -87,7 +87,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ASSET_PATH=LR"($(ProjectDir)assets\)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CR_ENGINE_CONFIG=LR"($(ProjectDir)config\)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)src\packages\lua-5.2.4;$(ProjectDir)src\packages\glew\lib\x64;$(ProjectDir)src\packages\OpenAL 1.1\libs\Win64</AdditionalLibraryDirectories>
@@ -115,7 +115,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ASSET_PATH=LR"($(ProjectDir)assets\)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CR_ENGINE_CONFIG=LR"($(ProjectDir)config\)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -127,27 +127,29 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\opengl\GLResourceFactory.h" />
     <ClInclude Include="src\audio\openal\ALAudioSystem.h" />
     <ClInclude Include="src\audio\interface\AudioFile.h" />
     <ClInclude Include="src\audio\interface\IAudioSystem.h" />
     <ClInclude Include="src\audio\openal\AL.h" />
+    <ClInclude Include="src\core\allocator\PoolAllocator.hpp" />
+    <ClInclude Include="src\core\Configuration.h" />
     <ClInclude Include="src\core\FlagSet.hpp" />
-    <ClInclude Include="src\graphics\opengl\GLCache.h" />
-    <ClInclude Include="src\core\allocator\LinearAllocator.hpp" />
+    <ClInclude Include="src\graphics\interface\IResourceFactory.h" />
+    <ClInclude Include="src\graphics\interface\IShader.h" />
+    <ClInclude Include="src\graphics\interface\ITexture.h" />
+    <ClInclude Include="src\core\allocator\StackAllocator.hpp" />
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
     <ClInclude Include="src\core\profiling\Benchmark.hpp" />
     <ClInclude Include="src\input\interface\Mappings.h" />
-    <ClInclude Include="src\resources\import\Common.h" />
-    <ClInclude Include="src\resources\import\Import.hpp" />
-    <ClInclude Include="src\resources\import\OBJ.hpp" />
-    <ClInclude Include="src\resources\import\TGA.hpp" />
-    <ClInclude Include="src\resources\Resources.h" />
+    <ClInclude Include="src\resources\parser\OBJ.hpp" />
+    <ClInclude Include="src\resources\parser\TGA.hpp" />
+    <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\scripting\Framework.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\Engine.h" />
     <ClInclude Include="src\core\GameTimer.hpp" />
     <ClInclude Include="src\core\Platform.h" />
-    <ClInclude Include="src\core\Singleton.hpp" />
     <ClInclude Include="src\crystal3d.h" />
     <ClInclude Include="src\graphics\interface\IRenderable.h" />
     <ClInclude Include="src\graphics\interface\IRenderer.h" />
@@ -166,12 +168,12 @@
     <ClInclude Include="src\graphics\opengl\GLSkyboxPass.h" />
     <ClInclude Include="src\graphics\opengl\GLSSAOPass.h" />
     <ClInclude Include="src\graphics\opengl\GLState.h" />
-    <ClInclude Include="src\graphics\opengl\GLTexture2D.h" />
+    <ClInclude Include="src\graphics\opengl\GLTexture.h" />
     <ClInclude Include="src\graphics\opengl\GLUniformBuffer.hpp" />
     <ClInclude Include="src\graphics\opengl\GLVertexArray.h" />
     <ClInclude Include="src\graphics\Primitives.h" />
     <ClInclude Include="src\graphics\interface\RendererContext.h" />
-    <ClInclude Include="src\graphics\RenderMode.h" />
+    <ClInclude Include="src\graphics\interface\RenderMode.h" />
     <ClInclude Include="src\input\interface\IInputManager.h" />
     <ClInclude Include="src\input\xinput\XIInputManager.h" />
     <ClInclude Include="src\math\AABB.h" />
@@ -354,8 +356,10 @@
     <ClInclude Include="src\window\win32\Win32Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\opengl\GLResourceFactory.cpp" />
     <ClCompile Include="src\audio\openal\ALAudioSystem.cpp" />
-    <ClCompile Include="src\graphics\opengl\GLCache.cpp" />
+    <ClCompile Include="src\core\Configuration.cpp" />
+    <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\scripting\Framework.cpp" />
     <ClCompile Include="src\core\Engine.cpp" />
     <ClCompile Include="src\graphics\opengl\GLContext.cpp" />
@@ -368,7 +372,7 @@
     <ClCompile Include="src\graphics\opengl\GLShader.cpp" />
     <ClCompile Include="src\graphics\opengl\GLShaderProgram.cpp" />
     <ClCompile Include="src\graphics\opengl\GLState.cpp" />
-    <ClCompile Include="src\graphics\opengl\GLTexture2D.cpp" />
+    <ClCompile Include="src\graphics\opengl\GLTexture.cpp" />
     <ClCompile Include="src\graphics\opengl\GLVertexArray.cpp" />
     <ClCompile Include="src\input\xinput\XIInputManager.cpp" />
     <ClCompile Include="src\math\Transform.cpp" />
@@ -384,6 +388,7 @@
     <ClCompile Include="src\window\win32\Win32Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="config\Engine.ini" />
     <None Include="src\packages\glm\detail\func_common.inl" />
     <None Include="src\packages\glm\detail\func_exponential.inl" />
     <None Include="src\packages\glm\detail\func_geometric.inl" />

@@ -9,8 +9,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		class GLDebugRenderer 
-			: public Core::CrSingleton<GLDebugRenderer>
+		class GLDebugRenderer
 		{
 			
 		public:

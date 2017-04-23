@@ -11,7 +11,7 @@ function Init()
 	this:AddNode(cameraNode)
 
 	--Player
-	model1 = ImportModel("Meshes\\cube.obj")
+	model1 = ImportModel("Meshes\\gunslinger_triangle.obj")
 	playerTransform = Transform.new(Vector3.new(0,80,0), Vector3.new(0,0,0), Vector3.new(3,3,3))
 	playerNode = SceneNode.Create(playerTransform)
 

@@ -5,24 +5,13 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLShader::GLShader(const IO::CrPath& a_Filename, GLenum a_Type)
-			: m_Type(a_Type)
+		GLShader::GLShader(const GLchar* a_Source, GLenum a_Type)
+			: m_Type(a_Type), m_Compiled(false)
 		{
-			std::ifstream stream(a_Filename);
-			CrAssert(stream.good(), "Shader file not found! (%ls)", a_Filename.c_str());
-
-			//Read shader file
-			m_Source = { std::istreambuf_iterator<char>(stream),
-				std::istreambuf_iterator<char>() };
-
-			//Create handle
 			m_Handle = glCreateShader(m_Type);
 			CrAssert(m_Handle != 0, "Invalid shader handle.");
 
-			//Supply shader source
-			const GLchar* srcBuffer = reinterpret_cast<const GLchar*>(m_Source.c_str());
-			glShaderSource(m_Handle, 1, &srcBuffer, 0);
-
+			glShaderSource(m_Handle, 1, &a_Source, 0);
 			this->CheckError();
 		}
 
@@ -31,10 +20,14 @@ namespace Graphics
 			glDeleteShader(m_Handle);
 		}
 
-		void GLShader::Compile() const
+		void GLShader::Compile()
 		{
-			glCompileShader(m_Handle);
-			this->CheckError();
+			if (!m_Compiled)
+			{
+				glCompileShader(m_Handle);
+				this->CheckError();
+				m_Compiled = true;
+			}
 		}
 
 		GLuint GLShader::GetHandle() const
@@ -45,11 +38,6 @@ namespace Graphics
 		GLenum GLShader::GetType() const
 		{
 			return m_Type;
-		}
-
-		const std::string GLShader::GetSource() const
-		{
-			return m_Source;
 		}
 
 		void GLShader::CheckError() const

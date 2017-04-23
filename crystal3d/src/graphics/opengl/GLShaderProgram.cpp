@@ -8,17 +8,17 @@ namespace Graphics
 		GLShaderProgram::GLShaderProgram(Graphics::CrMaterial* a_Material) 
 			: GLShaderProgram()
 		{
-			auto vertShader = GLCache::LoadShader(a_Material->vertexShader, GL_VERTEX_SHADER);
+			GLShader* vertShader = static_cast<GLShader*>(a_Material->vertexShader);
 			vertShader->Compile();
 			this->AttachShader(vertShader);
 
-			auto fragShader = GLCache::LoadShader(a_Material->fragmentShader, GL_FRAGMENT_SHADER);
+			GLShader* fragShader = static_cast<GLShader*>(a_Material->fragmentShader);
 			fragShader->Compile();
 			this->AttachShader(fragShader);
 
-			if (!a_Material->geometryShader.empty())
+			if (a_Material->geometryShader != nullptr)
 			{
-				auto geoShader = GLCache::LoadShader(a_Material->geometryShader, GL_GEOMETRY_SHADER);
+				GLShader* geoShader = static_cast<GLShader*>(a_Material->geometryShader);
 				geoShader->Compile();
 				this->AttachShader(geoShader);
 			}
@@ -27,15 +27,12 @@ namespace Graphics
 
 			for (auto &g : a_Material->textures)
 			{
-				auto texture = GLCache::LoadTexture(g.second);
-				this->AttachTexture(texture, g.first);
+				this->AttachTexture(static_cast<GLTexture*>(g.second), g.first);
 			}
 
-			for (auto &g : a_Material->cubemaps)
-			{
-				auto cubemap = GLCache::LoadCubemap(g.second);
-				this->AttachCubemap(cubemap, g.first);
-			}
+			//for (auto &g : a_Material->cubemaps)
+			//{
+			//}
 
 			m_Uniforms = std::move(a_Material->properties);
 		}
@@ -61,12 +58,12 @@ namespace Graphics
 			CrAssert(m_IsLinked, "Shader program not linked!");
 			glUseProgram(m_Handle);
 
-			for (auto& texture: m2DTextures)
+			for (auto& texture: m_Textures)
 			{
 				texture.second->Bind(texture.first);
 			}
 
-			for (auto& texture : m_CubemapTextures)
+			for (auto& texture : m_Cubemaps)
 			{
 				texture.second->Bind(texture.first);
 			}
@@ -89,20 +86,20 @@ namespace Graphics
 			m_Shader[a_Shader->GetType()] = a_Shader;
 		}
 
-		void GLShaderProgram::AttachTexture(GLTexture2D* a_Texture, const std::string& a_Attribute)
+		void GLShaderProgram::AttachTexture(GLTexture* a_Texture, const std::string& a_Attribute)
 		{
 			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_Attribute);
-			m2DTextures[slot] = a_Texture;
+			m_Textures[slot] = a_Texture;
 		}
 
-		void GLShaderProgram::AttachTexture(GLTexture2D* a_Texture, const GLuint a_AttributeLocation)
+		void GLShaderProgram::AttachTexture(GLTexture* a_Texture, const GLuint a_AttributeLocation)
 		{
 			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_AttributeLocation);
-			m2DTextures[slot] = a_Texture;
+			m_Textures[slot] = a_Texture;
 		}
 
 		void GLShaderProgram::AttachCubemap(GLCubemap* a_Texture, const std::string& a_Attribute)
@@ -110,7 +107,7 @@ namespace Graphics
 			CrAssert(m_IsLinked, "Shader program not linked!");
 
 			GLuint slot = a_Texture->BindUniform(m_Handle, a_Attribute);
-			m_CubemapTextures[slot] = a_Texture;
+			m_Cubemaps[slot] = a_Texture;
 		}
 
 		void GLShaderProgram::Link()

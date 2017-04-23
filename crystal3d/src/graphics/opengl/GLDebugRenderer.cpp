@@ -1,6 +1,4 @@
 #include "core\Engine.h"
-
-#include "GLCache.h"
 #include "GLDebugRenderer.h"
 #include "GLRenderer.h"
 
@@ -10,10 +8,10 @@ namespace Graphics
 	{
 		GLDebugRenderer::GLDebugRenderer()
 		{
-			auto vertShader = GLCache::LoadShader("Shader\\debugDraw.vert", GL_VERTEX_SHADER);
+			auto vertShader = SResourceManager->LoadShader<GLShader>("Shader\\debugDraw.vert", EShaderType::VertexShader);
 			vertShader->Compile();
 
-			auto fragShader = GLCache::LoadShader("Shader\\debugDraw.frag", GL_FRAGMENT_SHADER);
+			auto fragShader = SResourceManager->LoadShader<GLShader>("Shader\\debugDraw.frag", EShaderType::VertexShader);
 			fragShader->Compile();
 
 			m_ShaderProgram = new GLShaderProgram();

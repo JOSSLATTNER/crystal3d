@@ -4,9 +4,8 @@
 #include "GL.h"
 #include "GLState.h"
 #include "GLCubemap.h"
-#include "GLTexture2D.h"
+#include "GLTexture.h"
 #include "GLShader.h"
-#include "GLCache.h"
 
 namespace Graphics
 {
@@ -23,8 +22,8 @@ namespace Graphics
 			void Unbind() const;
 
 			void AttachShader(GLShader* a_Shader);
-			void AttachTexture(GLTexture2D* a_Texture, const std::string& a_Attribute);
-			void AttachTexture(GLTexture2D* a_Texture, const GLuint a_AttributeLocation);
+			void AttachTexture(GLTexture* a_Texture, const std::string& a_Attribute);
+			void AttachTexture(GLTexture* a_Texture, const GLuint a_AttributeLocation);
 			void AttachCubemap(GLCubemap* a_Texture, const std::string& a_Attribute);
 			void Link();
 
@@ -36,8 +35,8 @@ namespace Graphics
 			bool m_IsLinked;
 
 		protected:
-			std::unordered_map<GLuint, GLTexture2D*> m2DTextures;
-			std::unordered_map<GLuint, GLCubemap*> m_CubemapTextures;
+			std::unordered_map<GLuint, GLTexture*> m_Textures;
+			std::unordered_map<GLuint, GLCubemap*> m_Cubemaps;
 			std::unordered_map<GLenum, GLShader*> m_Shader;
 			std::unordered_map<std::string, float> m_Uniforms;
 

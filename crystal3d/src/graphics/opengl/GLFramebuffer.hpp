@@ -2,7 +2,7 @@
 #include "core\Core.h"
 
 #include "GL.h"
-#include "GLTexture2D.h"
+#include "GLTexture.h"
 
 namespace Graphics
 {
@@ -19,7 +19,6 @@ namespace Graphics
 		class GLFramebuffer 
 		{
 		public:
-
 			GLFramebuffer(GLFramebufferContext& a_Context) 
 				: m_Height(a_Context.height), m_Width(a_Context.width)
 			{
@@ -28,7 +27,7 @@ namespace Graphics
 				glBindFramebuffer(GL_FRAMEBUFFER, m_Handle);
 
 				//Register Render textures
-				uint32_t numTextures = uint32_t(a_Context.formats.size());
+				size_t numTextures = a_Context.formats.size();
 				m_Textures.resize(numTextures);
 
 				for (uint32_t i = 0; i < numTextures; i++)
@@ -40,7 +39,7 @@ namespace Graphics
 					ctx.internalFormat = a_Context.formats[i];
 					ctx.type = GL_UNSIGNED_BYTE;
 
-					m_Textures[i] = new GLTexture2D(nullptr, ctx);
+					m_Textures[i] = new GLTexture(nullptr, ctx);
 					m_Textures[i]->SetParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 					m_Textures[i]->SetParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -64,7 +63,7 @@ namespace Graphics
 					ctx.internalFormat = GL_DEPTH_COMPONENT24;
 					ctx.type = GL_UNSIGNED_BYTE;
 
-					m_DepthTexture = new GLTexture2D(nullptr, ctx);
+					m_DepthTexture = new GLTexture(nullptr, ctx);
 
 					m_DepthTexture->SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					m_DepthTexture->SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -75,13 +74,13 @@ namespace Graphics
 				}
 
 				std::vector<GLenum> buffers(numTextures);
-				for (uint32_t i = 0; i < numTextures; i++)
+				for (GLsizei i = 0; i < numTextures; i++)
 				{
 					buffers[i] = GL_COLOR_ATTACHMENT0 + i;
 				}
 
 				//Assign color attachments to color buffer
-				glDrawBuffers(numTextures, buffers.data());
+				glDrawBuffers(static_cast<GLsizei>(numTextures), buffers.data());
 
 				GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 				if (status != GL_FRAMEBUFFER_COMPLETE)
@@ -117,12 +116,12 @@ namespace Graphics
 				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			}
 
-			std::vector<GLTexture2D*>& GetTextures()
+			std::vector<GLTexture*>& GetTextures()
 			{
 				return m_Textures;
 			}
 
-			GLTexture2D * GetDepthTexture()
+			GLTexture * GetDepthTexture()
 			{
 				return m_DepthTexture;
 			}
@@ -138,8 +137,8 @@ namespace Graphics
 			uint32_t m_Height;
 			uint32_t m_Width;
 
-			std::vector<GLTexture2D*> m_Textures;
-			GLTexture2D* m_DepthTexture;
+			std::vector<GLTexture*> m_Textures;
+			GLTexture* m_DepthTexture;
 
 		};
 	}

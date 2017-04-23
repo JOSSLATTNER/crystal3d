@@ -3,18 +3,18 @@
 #include <packages/sol/sol.hpp>
 
 #include "Framework.h"
-#include "resources\Resources.h"
 
 namespace Scripting
 {
 	class CrScript
 	{
 	public:
-		CrScript(const IO::CrPath& a_File);
+		CrScript(const std::string& a_Source);
 		~CrScript();
 
 	public:
 		void Run();
+
 
 		template <typename T>
 		void BindGlobal(const std::string& a_Name, T&& a_Value) 

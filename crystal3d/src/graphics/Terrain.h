@@ -1,6 +1,7 @@
 #pragma once
 #include "core\Core.h"
 #include "math\glm\GLM.h"
+#include "graphics\interface\ITexture.h"
 
 namespace Graphics
 {
@@ -11,11 +12,12 @@ namespace Graphics
 
 		float displacementScale;
 		glm::ivec2 size;
-		std::string heightmap;
-		std::string normalMap;
-		std::vector<std::string> diffuseTextures;
-		std::vector<std::string> normalMaps;
-		std::string grassMap;
-		std::string grassTexture;
+
+		Graphics::ITexture* heightmap;
+		Graphics::ITexture* normalMap;
+		std::vector<Graphics::ITexture*> diffuseTextures;
+		std::vector<Graphics::ITexture*> normalMaps;
+		Graphics::ITexture* grassMap;
+		Graphics::ITexture* grassTexture;
 	};
 }

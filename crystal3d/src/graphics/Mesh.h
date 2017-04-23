@@ -5,7 +5,7 @@ namespace Graphics
 {
 	struct CrMesh
 	{
-		uint32_t materialIndex;
+		size_t materialIndex;
 		std::vector<float> vertices;
 		std::vector<uint32_t> indices;
 		std::vector<float> texCoords;

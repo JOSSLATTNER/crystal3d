@@ -1,28 +1,32 @@
 #pragma once
 #include "core\Core.h"
+
+#include "graphics\interface\IShader.h"
 #include "GL.h"
 
-#define SHADER_DEBUG_BUFFER_SIZE 500
+#define SHADER_DEBUG_BUFFER_SIZE 300
 
 namespace Graphics
 {
 	namespace OpenGL
 	{
 		class GLShader
+			: public Graphics::IShader
 		{
 		public:
-			GLShader(const IO::CrPath& a_Filename, GLenum a_Type);
-			~GLShader();
+			GLShader(const GLchar* a_Source, GLenum a_Type);
 
-			void Compile() const;
+			//Inherited via IShader
+			~GLShader() override;
+
+			void Compile();
+
 			GLuint GetHandle() const;
 			GLenum GetType() const;
-			const std::string GetSource() const;
-
 		private:
+			bool m_Compiled;
 			GLuint m_Handle;
 			GLenum m_Type;
-			std::string m_Source;
 
 		private:
 			void CheckError() const;

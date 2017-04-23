@@ -1,5 +1,7 @@
 #pragma once
 #include "graphics\interface\IRenderer.h"
+#include "graphics\interface\RenderMode.h"
+#include "core\allocator\StackAllocator.hpp"
 
 #include "GL.h"
 #include "GLContext.h"
@@ -7,9 +9,7 @@
 #include "GLRenderEntity.h"
 #include "GLUniformBuffer.hpp"
 #include "GLFramebuffer.hpp"
-#include "GLCache.h"
-
-#define G_BUFFER_FORMATS GL_RGBA32F, GL_RGBA32F, GL_RGBA32F, GL_RGBA32F
+#include "GLResourceFactory.h"
 
 namespace Graphics
 {
@@ -38,6 +38,7 @@ namespace Graphics
 			void Initialize(CrRendererContext& a_RendererContext) override;
 			void Render(Scene::CrScene* a_Scene) override;
 			void LoadAssets(Scene::CrScene* a_Scene) override;
+			IResourceFactory* CreateFactory() override;
 
 		public:
 			static GLUniformBuffer<MVP>* MVPBuffer;
@@ -55,12 +56,13 @@ namespace Graphics
 				{ ERenderMode::Triangle_Strip, GL_TRIANGLE_STRIP },
 			};
 
-			GLContext* m_CurrentContext;
+			GLResourceFactory m_Factory;
 
+			GLContext* m_CurrentContext;
 			GLFramebuffer* m_GeometryBuffer;
 			GLDeferredRenderer* m_DeferredRenderer;
-
 			Window::IWindow* m_Window;
+
 			std::unordered_map<Graphics::IRenderable*, GLRenderEntity*> m_RenderEntities;
 
 		};

@@ -5,9 +5,9 @@ layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec2 inUV;
 
 //UNIFORM
-uniform sampler2D tHeightmap;
-uniform sampler2D tNormalMap;
-uniform float displacementScale;
+uniform sampler2D u_height_map;
+uniform sampler2D u_normal_map;
+uniform float u_displacement_scale;
 
 //Model, View, Projection
 layout(std140) uniform MVPBuffer
@@ -27,12 +27,12 @@ out VertexData{
 
 void main()
 {
-	float sampledHeight = texture2D(tHeightmap, inUV).r;
+	float sampledHeight = texture2D(u_height_map, inUV).r;
 
-	vec3 displacement = vec3(0,sampledHeight*displacementScale,0);
-	vec3 pos = inPosition+displacement;
-	vec4 world = vec4(pos,1)*transformMatrix;
-	vec3 sampledNormal = texture2D(tNormalMap, inUV).xyz;
+	vec3 displacement = vec3(0, sampledHeight * u_displacement_scale, 0);
+	vec3 pos = inPosition + displacement;
+	vec4 world = vec4(pos,1) * transformMatrix;
+	vec3 sampledNormal = texture2D(u_normal_map, inUV).xyz;
 
 	VertexOut.UV = inUV;
 	VertexOut.Normal = sampledNormal;

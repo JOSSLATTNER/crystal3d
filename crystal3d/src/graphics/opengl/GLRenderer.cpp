@@ -8,10 +8,11 @@ namespace Graphics
 		GLUniformBuffer<MVP>* GLRenderer::MVPBuffer = nullptr;
 		GLUniformBuffer<ShaderUtil>* GLRenderer::UtilBuffer = nullptr;
 
-		GLRenderer::GLRenderer()
+		GLRenderer::GLRenderer() 
+			: m_CurrentContext(nullptr),
+			m_GeometryBuffer(nullptr),
+			m_DeferredRenderer(nullptr)
 		{
-			m_GeometryBuffer = nullptr;
-			m_CurrentContext = nullptr;
 		}
 
 		GLRenderer::~GLRenderer()
@@ -19,11 +20,9 @@ namespace Graphics
 			delete m_GeometryBuffer;
 			delete GLRenderer::MVPBuffer;
 			delete GLRenderer::UtilBuffer;
-
+			delete m_DeferredRenderer;
 			for (auto& re : m_RenderEntities)
 				delete re.second;
-
-			GLCache::Clear();
 			delete m_CurrentContext;
 		}
 
@@ -49,10 +48,9 @@ namespace Graphics
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE,
 			GL_DONT_CARE, 0, &unusedIds, GL_TRUE);
 #endif
-
 			//Geometry Buffer
 			GLFramebufferContext ctx{};
-			ctx.formats = { G_BUFFER_FORMATS };
+			ctx.formats = { GL_RGBA32F, GL_RGBA32F, GL_RGBA32F, GL_RGBA32F };
 			ctx.width = a_Context.viewportWidth;
 			ctx.height = a_Context.viewportHeight;
 			ctx.useDepthTexture = true;
@@ -92,7 +90,7 @@ namespace Graphics
 			GLRenderer::MVPBuffer->Subdata(&mvp,0);
 
 			ShaderUtil util{};
-			util.globalTime = SEngine->GetGameTimer()->GetTotal<float_t>();
+			util.globalTime = SGameTimer->GetTotal<float_t>();
 			GLRenderer::UtilBuffer->Subdata(&util,0);
 
 			m_GeometryBuffer->Bind();
@@ -113,6 +111,11 @@ namespace Graphics
 			for (auto& renderable : renderList)
 				this->CreateEntity(renderable);
 			CrLogSuccess("Assets loaded!");
+		}
+
+		IResourceFactory * GLRenderer::CreateFactory()
+		{
+			return &m_Factory;
 		}
 
 		void GLRenderer::CreateEntity(IRenderable * a_Renderable)

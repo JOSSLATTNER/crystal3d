@@ -1,7 +1,5 @@
 #include "Engine.h"
-
 #include "graphics\opengl\GLRenderer.h"
-#include "resources\Resources.h"
 
 #ifdef CR_PLATFORM_WINDOWS
 #include "window\win32\Win32Window.h"
@@ -13,8 +11,13 @@ Core::CrEngine* Core::CrEngine::s_SharedInstance = nullptr;
 namespace Core
 {
 	CrEngine::CrEngine()
-		: m_MainWindow(nullptr), m_ActiveScene(nullptr), m_GameTimer(nullptr),
-		m_InputManager(nullptr), m_Renderer(nullptr)
+		: m_IsRunning(false),
+		m_MainWindow(nullptr),
+		m_ActiveScene(nullptr),
+		m_GameTimer(nullptr),
+		m_InputManager(nullptr),
+		m_Renderer(nullptr),
+		m_Config("Engine.ini")
 	{
 		CrEngine::s_SharedInstance = this;
 	}
@@ -26,9 +29,10 @@ namespace Core
 		delete m_GameTimer;
 		delete m_InputManager;
 		delete m_Renderer;
+		delete m_ResourceManager;
 	}
 
-	void CrEngine::Initialize(CrEngineContext& a_Context)
+	void CrEngine::Initialize()
 	{
 #ifdef CR_PLATFORM_WINDOWS
 		m_MainWindow = new Window::Windows32::Win32Window();
@@ -36,19 +40,23 @@ namespace Core
 #endif
 		m_GameTimer = new Core::CrGameTimer();
 		m_Renderer = new Graphics::OpenGL::GLRenderer();
+		m_ResourceManager = new Resources::CrResourceManager();
 
 		//Initialize Window
 		Window::CrWindowContext windowContext{};
-		windowContext.title = a_Context.windowTitle;
-		windowContext.width = a_Context.windowDimensions.x;
-		windowContext.height = a_Context.windowDimensions.y;
-		windowContext.fullscreen = a_Context.windowFullscreen;
+		windowContext.title = "Sandbox";
+		windowContext.width = 1920;
+		windowContext.height = 1080;
+		windowContext.fullscreen = false;
 
 		m_MainWindow->Initialize(windowContext);
 		m_MainWindow->OnClose(std::bind(&CrEngine::Quit, this));
 
 		//Initialize Input Manager
 		m_InputManager->Initialize();
+
+		//Initialize Resources
+		m_ResourceManager->Initialize(m_Renderer->CreateFactory());
 
 		//Initialize Renderer
 		Graphics::CrRendererContext rendererContext{};
@@ -57,19 +65,19 @@ namespace Core
 		rendererContext.viewportWidth = windowContext.width;
 
 		m_Renderer->Initialize(rendererContext);
-		m_Context = a_Context;
 	}
 
 	void CrEngine::Run()
 	{
 		m_MainWindow->Show();
 		m_IsRunning = true;
+		auto maxFps = m_Config.GetValue<int>("Engine", "MaxFPS");
 
 		while (m_IsRunning)
 		{
 			const float_t delta = m_GameTimer->GetDelta<float_t>();
 
-			if (delta >= 1 / m_Context.maxFps)
+			if (delta >= 1 / maxFps)
 			{
 				//TODO: MOVE WIN32 STUFF
 				MSG msg{};
@@ -103,29 +111,39 @@ namespace Core
 		m_IsRunning = false;
 	}
 
-	Window::IWindow * CrEngine::GetMainWindow()
+	Core::CrConfiguration* CrEngine::GetConfiguration()
+	{
+		return &m_Config;
+	}
+
+	Window::IWindow* CrEngine::GetMainWindow()
 	{
 		return m_MainWindow;
 	}
 
-	Scene::CrScene * CrEngine::GetCurrentScene()
+	Scene::CrScene* CrEngine::GetCurrentScene()
 	{
 		return m_ActiveScene;
 	}
 
-	Core::CrGameTimer * CrEngine::GetGameTimer()
+	Core::CrGameTimer* CrEngine::GetGameTimer()
 	{
 		return m_GameTimer;
 	}
 
-	Input::IInputManager * CrEngine::GetInputManager()
+	Input::IInputManager* CrEngine::GetInputManager()
 	{
 		return m_InputManager;
 	}
 
-	Graphics::IRenderer * CrEngine::GetRenderer()
+	Graphics::IRenderer* CrEngine::GetRenderer()
 	{
 		return m_Renderer;
+	}
+
+	Resources::CrResourceManager * CrEngine::GetResourceManager()
+	{
+		return m_ResourceManager;
 	}
 
 	void CrEngine::Render()
@@ -136,11 +154,11 @@ namespace Core
 		}
 	}
 
-	void CrEngine::Update(const float delta) const
+	void CrEngine::Update(const float a_Delta) const
 	{
 		if (m_ActiveScene != nullptr)
 		{
-			m_ActiveScene->Update(delta);
+			m_ActiveScene->Update(a_Delta);
 		}
 	}
 }

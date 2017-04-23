@@ -12,8 +12,8 @@ namespace Graphics
 		{
 			uint32_t viewportHeight;
 			uint32_t viewportWidth;
-			std::string  vertexShaderFile;
-			std::string  fragmentShaderFile;
+			GLShader*  vertexShaderFile;
+			GLShader*  fragmentShaderFile;
 		};
 
 		class GLRenderPass
@@ -29,7 +29,6 @@ namespace Graphics
 
 			GLfloat m_ViewportWidth;
 			GLfloat m_ViewportHeight;
-
 		};
 	}
 }

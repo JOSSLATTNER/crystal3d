@@ -3,7 +3,7 @@
 #include "graphics\Mesh.h"
 #include "math\AABB.h"
 #include "math\Transform.h"
-#include "graphics\RenderMode.h"
+#include "graphics\interface\RenderMode.h"
 
 namespace Graphics
 {

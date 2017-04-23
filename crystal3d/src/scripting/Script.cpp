@@ -1,12 +1,11 @@
 #include "Script.h"
+#include "core\Engine.h"
 
 namespace Scripting
 {
-
-	CrScript::CrScript(const IO::CrPath& a_File)
+	CrScript::CrScript(const std::string& a_Source)
 	{
-		auto path = Resources::ResolvePath(a_File);
-		m_Script = m_State.load_file(path.string());
+		m_Script = m_State.load(a_Source);
 		CrFramework::RegisterTypes(m_State);
 	}
 

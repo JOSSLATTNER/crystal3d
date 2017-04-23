@@ -1,4 +1,5 @@
 #include "GLContext.h"
+#include "core\Engine.h"
 
 namespace Graphics
 {
@@ -38,19 +39,31 @@ namespace Graphics
 				throw CrException(reinterpret_cast<const char*>(errStr));
 			}
 
+			//Read config
+			auto major = SEngineConfig->GetValue<GLint>("Graphics.OpenGL", "VersionMajor");
+			auto minor = SEngineConfig->GetValue<GLint>("Graphics.OpenGL", "VersionMinor");
+			auto useCoPr  = SEngineConfig->GetValue<bool>("Graphics.OpenGL", "UseCoreProfile");
+			auto vsync = SEngineConfig->GetValue<bool>("Graphics", "VSync");
+
+			GLenum profileBit = useCoPr ?
+				WGL_CONTEXT_CORE_PROFILE_BIT_ARB 
+				: WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB;
+
 			int attribs[] =
 			{
-				WGL_CONTEXT_MAJOR_VERSION_ARB, CR_GL_VERSION_MAJOR,
-				WGL_CONTEXT_MINOR_VERSION_ARB, CR_GL_VERSION_MINOR,
-				WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+				WGL_CONTEXT_MAJOR_VERSION_ARB, major,
+				WGL_CONTEXT_MINOR_VERSION_ARB, minor,
+				WGL_CONTEXT_PROFILE_MASK_ARB, profileBit,
 				0
 			};
 
 			if (wglewIsSupported("WGL_ARB_create_context"))
 			{
+				//Delete temporary context
 				wglMakeCurrent(NULL, NULL);
 				wglDeleteContext(tempContext);
 
+				//Create final context
 				m_HGLRC = wglCreateContextAttribsARB(m_HDC, 0, attribs);
 				if (!wglMakeCurrent(m_HDC, m_HGLRC))
 					throw CrException("wglMakeCurrent() failed.");
@@ -63,11 +76,10 @@ namespace Graphics
 				CrLogInfo("wglCreateContextAttribsARB() not available.");
 			}
 
-			//if (wglewIsSupported("wglSwapIntervalEXT"))
-			//{
-			//	//V-SYNC
-			//	wglSwapIntervalEXT(0);
-			//}
+			if (wglewIsSupported("wglSwapIntervalEXT") && vsync)
+			{
+				wglSwapIntervalEXT(0);
+			}
 
 			CrLogInfo("Version: %s\nVendor: %s\nShader Version: %s",
 				glGetString(GL_VERSION),

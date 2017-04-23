@@ -43,8 +43,8 @@ namespace Graphics
 
 			//Lighting pass
 			GLRenderPassContext lpCx{};
-			lpCx.vertexShaderFile = "shader\\Deferred.vert";
-			lpCx.fragmentShaderFile = "shader\\Lighting.frag";
+			lpCx.vertexShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
+			lpCx.fragmentShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Lighting.frag", EShaderType::FragmentShader);
 			lpCx.viewportHeight = m_ViewportHeight;
 			lpCx.viewportWidth = m_ViewportWidth;
 
@@ -53,8 +53,8 @@ namespace Graphics
 
 			//Skybox pass
 			GLRenderPassContext sbpCx{};
-			sbpCx.vertexShaderFile = "shader\\Deferred.vert";
-			sbpCx.fragmentShaderFile = "shader\\Skybox.frag";
+			sbpCx.vertexShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
+			sbpCx.fragmentShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Skybox.vert", EShaderType::FragmentShader);
 			sbpCx.viewportHeight = m_ViewportHeight;
 			sbpCx.viewportWidth = m_ViewportWidth;
 
@@ -104,7 +104,7 @@ namespace Graphics
 
 			if (a_Flags.Test(BUFFER_FLAG_PREVIOUS_PASS))
 			{
-				GLTexture2D* previousPass = m_RenderPassFramebuffer->GetTextures()[0];
+				GLTexture* previousPass = m_RenderPassFramebuffer->GetTextures()[0];
 				a_RenderPass->m_ShaderProgram->AttachTexture(previousPass, "tPreviousPass");
 			}
 
