@@ -4,7 +4,7 @@ namespace Graphics
 {
 	namespace OpenGL
 	{
-		GLTexture::GLTexture(const GLvoid * a_PixelData, GLTextureContext& a_Context)
+		GLTexture::GLTexture(const GLvoid* a_PixelData, GLTextureContext& a_Context)
 		{
 			glGenTextures(1, &m_Handle);
 			glBindTexture(GL_TEXTURE_2D, m_Handle);

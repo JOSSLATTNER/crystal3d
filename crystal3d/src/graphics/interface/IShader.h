@@ -13,6 +13,7 @@ namespace Graphics
 	{
 	public:
 		virtual ~IShader() = default;
+		virtual void Compile() = 0;
 
 	};
 }

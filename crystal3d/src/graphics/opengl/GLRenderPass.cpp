@@ -11,11 +11,8 @@ namespace Graphics
 		{
 			m_ShaderProgram = new GLShaderProgram();
 
-			auto vertShader = SResourceManager->LoadShader<GLShader>(a_Context.vertexShaderFile, EShaderType::VertexShader);
-			auto fragShader = SResourceManager->LoadShader<GLShader>(a_Context.fragmentShaderFile, EShaderType::VertexShader);
-
-			m_ShaderProgram->AttachShader(vertShader);
-			m_ShaderProgram->AttachShader(fragShader);
+			m_ShaderProgram->AttachShader(a_Context.vertexShader);
+			m_ShaderProgram->AttachShader(a_Context.fragmentShader);
 			m_ShaderProgram->Link();
 
 			m_ViewportWidth = static_cast<GLfloat>(a_Context.viewportWidth);

@@ -212,6 +212,7 @@ namespace Resources
 
 		inline void Parse(const IO::CrPath& a_Filename, Attribs& a_Data, std::vector<Geometry>& a_Shapes, std::vector<Material>& a_Materials)
 		{
+			CrDebugSection("OBJ Importer");
 			std::ifstream ifs(a_Filename, std::ifstream::in | std::ifstream::binary);
 
 			//Buffer entire file

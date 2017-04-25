@@ -43,8 +43,8 @@ namespace Graphics
 
 			//Lighting pass
 			GLRenderPassContext lpCx{};
-			lpCx.vertexShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
-			lpCx.fragmentShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Lighting.frag", EShaderType::FragmentShader);
+			lpCx.vertexShader = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
+			lpCx.fragmentShader = SResourceManager->LoadShader<GLShader>("shader\\Lighting.frag", EShaderType::FragmentShader);
 			lpCx.viewportHeight = m_ViewportHeight;
 			lpCx.viewportWidth = m_ViewportWidth;
 
@@ -53,8 +53,8 @@ namespace Graphics
 
 			//Skybox pass
 			GLRenderPassContext sbpCx{};
-			sbpCx.vertexShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
-			sbpCx.fragmentShaderFile = SResourceManager->LoadShader<GLShader>("shader\\Skybox.vert", EShaderType::FragmentShader);
+			sbpCx.vertexShader = SResourceManager->LoadShader<GLShader>("shader\\Deferred.vert", EShaderType::VertexShader);
+			sbpCx.fragmentShader = SResourceManager->LoadShader<GLShader>("shader\\Skybox.frag", EShaderType::FragmentShader);
 			sbpCx.viewportHeight = m_ViewportHeight;
 			sbpCx.viewportWidth = m_ViewportWidth;
 

@@ -10,8 +10,8 @@ namespace Graphics
 		std::unordered_map<std::string, Graphics::ITexture*> textures;
 		std::unordered_map<std::string, float> properties;
 
-		Graphics::IShader* vertexShader;
-		Graphics::IShader* fragmentShader;
-		Graphics::IShader* geometryShader;
+		Graphics::IShader* vertexShader = nullptr;
+		Graphics::IShader* fragmentShader = nullptr;
+		Graphics::IShader* geometryShader = nullptr;
 	};
 }

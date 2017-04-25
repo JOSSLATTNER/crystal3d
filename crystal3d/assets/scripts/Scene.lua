@@ -11,7 +11,7 @@ function Init()
 	this:AddNode(cameraNode)
 
 	--Player
-	model1 = ImportModel("Meshes\\gunslinger_triangle.obj")
+	model1 = Resources:LoadModel("Meshes\\gunslinger_triangle.obj")
 	playerTransform = Transform.new(Vector3.new(0,80,0), Vector3.new(0,0,0), Vector3.new(3,3,3))
 	playerNode = SceneNode.Create(playerTransform)
 
@@ -31,21 +31,22 @@ function Init()
 	this:AddNode(playerNode)
 	
 	--Terrain
-	terrainNode01 = TerrainNode.Create(Transform.new(Vector3.new(-200,0,-200), Vector3.new(0,0,0), Vector3.new(5,1,5)))
+	terrainTransform = Transform.new(Vector3.new(-200,0,-200), Vector3.new(0,0,0), Vector3.new(5,1,5))
+	terrainNode01 = TerrainNode.Create(terrainTransform)
 	
 	terrain = Terrain.new()
-	terrain.Heightmap = "Textures\\Heightmaps\\heightmap.tga"
-	terrain.NormalMap = "Textures\\NormalMap.tga"
+	terrain.Heightmap = Resources:LoadTexture("Textures\\Heightmaps\\heightmap.tga")
+	terrain.NormalMap = Resources:LoadTexture("Textures\\NormalMap.tga")
 	terrain.DisplacementScale = 120
 	terrain.Size = iVector2.new(500,500)
 	
-	terrain.DiffuseTextures[1] = "Textures\\stone02.tga"
-	terrain.DiffuseTextures[2] = "Textures\\Seamless-Rock-Wall-2.tga"
-	terrain.NormalMaps[1] = "Textures\\stone02_normal.tga"
-	terrain.NormalMaps[2] = "Textures\\Seamless-Rock-Wall-2_normal.tga"
+	terrain.DiffuseTextures[1] = Resources:LoadTexture("Textures\\stone02.tga")
+	terrain.DiffuseTextures[2] = Resources:LoadTexture("Textures\\Seamless-Rock-Wall-2.tga")
+	terrain.NormalMaps[1] = Resources:LoadTexture("Textures\\stone02_normal.tga")
+	terrain.NormalMaps[2] = Resources:LoadTexture("Textures\\Seamless-Rock-Wall-2_normal.tga")
 	
-	terrain.GrassTexture = "Textures\\d3cb5d5d2cfa938f42677906370fecba.tga"
-	terrain.GrassMap = "Textures\\grassMap.tga"
+	terrain.GrassTexture = Resources:LoadTexture("Textures\\d3cb5d5d2cfa938f42677906370fecba.tga")
+	terrain.GrassMap = Resources:LoadTexture("Textures\\grassMap.tga")
 	
 	terrainNode01:SetTerrain(terrain)
 	this:AddNode(terrainNode01)

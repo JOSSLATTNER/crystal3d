@@ -87,6 +87,7 @@ namespace Resources
 
 		inline void Parse(const IO::CrPath& a_Filename, std::vector<CrByte>& a_Buffer, Header& a_Header)
 		{
+			CrDebugSection("TGA IMPORT");
 			std::ifstream ifs(a_Filename, std::ifstream::in | std::ifstream::binary);
 
 			if (!ifs.good())
@@ -105,8 +106,12 @@ namespace Resources
 			if (bytePerPixel != 3 && bytePerPixel != 4)
 				throw CrException("Invalid bitCount!");
 
-
 			size_t imageSize = a_Header.width * a_Header.height * bytePerPixel;
+
+			//@Debug
+			CrDebugOutput("%ls", a_Filename.filename().c_str());
+			CrDebugOutput("Size: %dx%d", a_Header.width, a_Header.height);
+			CrDebugOutput("BitCount: %d", a_Header.bitCount);
 
 			if (a_Header.type == RGB24_UNCOMPRESSED || a_Header.type == MONO_UNCOMPRESSED)
 			{

@@ -19,7 +19,7 @@ namespace Graphics
 			GLuint GetHandle() const;
 
 		public:
-			size_t m_ElementCount;
+			GLsizei m_ElementCount;
 
 		private:
 			GLuint m_Vbo[4]{ 0 };

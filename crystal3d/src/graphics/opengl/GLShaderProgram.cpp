@@ -9,17 +9,14 @@ namespace Graphics
 			: GLShaderProgram()
 		{
 			GLShader* vertShader = static_cast<GLShader*>(a_Material->vertexShader);
-			vertShader->Compile();
 			this->AttachShader(vertShader);
 
 			GLShader* fragShader = static_cast<GLShader*>(a_Material->fragmentShader);
-			fragShader->Compile();
 			this->AttachShader(fragShader);
 
 			if (a_Material->geometryShader != nullptr)
 			{
 				GLShader* geoShader = static_cast<GLShader*>(a_Material->geometryShader);
-				geoShader->Compile();
 				this->AttachShader(geoShader);
 			}
 

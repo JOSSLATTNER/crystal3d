@@ -9,7 +9,7 @@
 namespace Util
 {
 	template<typename ... Args>
-	std::string sprintf_safe(const std::string& format, Args ... args)
+	std::string sprintf_safe(const std::string& format, Args...args)
 	{
 		size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1;
 		std::unique_ptr<char[]> buf(new char[size]);

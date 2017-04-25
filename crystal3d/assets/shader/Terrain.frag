@@ -58,7 +58,7 @@ vec3 BlendNormals()
 
 void main()
 {
-	output[0] = vec4(BlendTextures(),0);
+	output[0] = BlendTextures();
 	output[1] = vec4(1,1,1,0);
 	output[2] = vec4(VertexIn.Position,0);
 	output[3] = vec4(BlendNormals(),0);

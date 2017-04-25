@@ -4,6 +4,8 @@ namespace Core
 {
 	CrConfiguration::CrConfiguration(const IO::CrPath & a_Filename)
 	{
+		CrDebugSection("Configuration Parser");
+
 		IO::CrPath configFolder( _CR_ENGINE_CONFIG );
 		IO::CrPath iniFile = a_Filename;
 

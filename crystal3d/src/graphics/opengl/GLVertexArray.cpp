@@ -48,7 +48,7 @@ namespace Graphics
 			glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			m_ElementCount = a_Mesh->indices.size();
+			m_ElementCount = static_cast<GLsizei>(a_Mesh->indices.size());
 		}
 
 		GLVertexArray::~GLVertexArray()

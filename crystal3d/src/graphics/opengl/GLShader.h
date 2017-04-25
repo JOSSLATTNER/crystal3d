@@ -18,8 +18,7 @@ namespace Graphics
 
 			//Inherited via IShader
 			~GLShader() override;
-
-			void Compile();
+			void Compile() override;
 
 			GLuint GetHandle() const;
 			GLenum GetType() const;

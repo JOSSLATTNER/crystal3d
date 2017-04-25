@@ -36,6 +36,9 @@ namespace Resources
 		}
 
 	private:
+		std::unordered_map<IO::CrPath, Graphics::ITexture*> m_TextureCache;
+		std::unordered_map<IO::CrPath, Graphics::IShader*> m_ShaderCache;
+
 		const IO::CrPath ResolvePath(const IO::CrPath& a_Path);
 
 	private:

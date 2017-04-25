@@ -16,6 +16,7 @@ using namespace Graphics;
 using namespace Scene;
 using namespace Input;
 using namespace Components;
+using namespace Resources;
 using namespace Window;
 
 namespace Scripting
@@ -32,6 +33,24 @@ namespace Scripting
 		a_State["Input"] = SEngine->GetInputManager();
 		a_State["GameWindow"] = SEngine->GetMainWindow();
 		a_State["Resources"] = SEngine->GetResourceManager();
+
+		a_State.new_usertype<CrResourceManager>("_ResourceManager", 
+		"LoadTexture", [](CrResourceManager* thiz, const std::string path)
+		{
+			return thiz->LoadTexture(path);
+		},
+		"LoadShader", [](CrResourceManager* thiz, const std::string path, Graphics::EShaderType type)
+		{
+			return thiz->LoadShader(path, type);
+		},
+		"LoadModel", [](CrResourceManager* thiz, const std::string path)
+		{
+			return thiz->LoadModel(path);
+		},
+		"LoadScript", [](CrResourceManager* thiz, const std::string path)
+		{
+			return thiz->LoadScript(path);
+		});
 
 		auto addNodeGeneric = [](CrScene* thiz, CrSceneNode* node)
 		{ thiz->AddNode<CrSceneNode>(node); };

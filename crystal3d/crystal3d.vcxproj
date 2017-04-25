@@ -142,6 +142,8 @@
     <ClInclude Include="src\core\allocator\MemoryArena.hpp" />
     <ClInclude Include="src\core\profiling\Benchmark.hpp" />
     <ClInclude Include="src\input\interface\Mappings.h" />
+    <ClInclude Include="src\io\FileWatcher.hpp" />
+    <ClInclude Include="src\io\IO.h" />
     <ClInclude Include="src\resources\parser\OBJ.hpp" />
     <ClInclude Include="src\resources\parser\TGA.hpp" />
     <ClInclude Include="src\resources\ResourceManager.h" />

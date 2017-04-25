@@ -72,7 +72,7 @@ vec3 GetNormal()
 	//#2: WITHOUT TANGENTS: http://www.thetenthplanet.de/archives/1180
 	vec3 camPos = inverse(viewMatrix)[3].xyz;
 	vec3 view = normalize(camPos - fragVertex.xyz);
-	vec3 mappedNormal = perturb_normal(fragNormal, view, fragUV);
+	vec3 mappedNormal = perturb_normal(u_normal, fragNormal, view, fragUV);
 #endif
 
 	mat3 rotation = mat3(transformMatrix);

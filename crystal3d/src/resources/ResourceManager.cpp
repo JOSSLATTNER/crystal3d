@@ -159,9 +159,9 @@ namespace Resources
 					? "Textures\\white.tga"
 					: "Textures\\" + mat.bumpMap;
 
-				material.textures["tDiffuse"] = this->LoadTexture(diffuse);
-				material.textures["tSpecular"] = this->LoadTexture(spec);
-				material.textures["tNormal"] = this->LoadTexture(normal);
+				material.textures["u_diffuse"] = this->LoadTexture(diffuse);
+				material.textures["u_specular"] = this->LoadTexture(spec);
+				material.textures["u_normal"] = this->LoadTexture(normal);
 
 				//TODO: ADDITIONAL VALUES
 				model->m_MaterialEntries.push_back(material);
@@ -171,14 +171,20 @@ namespace Resources
 		}
 		else
 		{
-			throw CrException("Format not supported.");
+			throw CrException("Format %ls not supported.", ext.c_str());
 		}
 	}
 
 	Graphics::ITexture * CrResourceManager::LoadTexture(const IO::CrPath & a_Path)
 	{
-		auto ext = a_Path.extension();
+		auto it = m_TextureCache.find(a_Path);
+		if (it != m_TextureCache.end())
+		{
+			CrLog("%ls [CACHED]", a_Path.c_str());
+			return it->second;
+		}
 
+		auto ext = a_Path.extension();
 		if (ext == ".tga")
 		{
 			auto fullPath = this->ResolvePath(a_Path);
@@ -186,29 +192,42 @@ namespace Resources
 			TGA::Header header;
 			TGA::Parse(fullPath, data, header);
 
-			return m_GraphicsFactory->LoadTexture(data, header.width, header.height, header.bitCount);
+			auto texture = m_GraphicsFactory->LoadTexture(data, header.width, header.height, header.bitCount);
+			CrLog("%ls", a_Path.c_str());
+
+			return m_TextureCache[a_Path] = texture;
 		}
 		else
 		{
-			throw CrException("Format not supported.");
+			throw CrException("Format %ls not supported.", ext.c_str());
 		}
 	}
 
 	Graphics::IShader * CrResourceManager::LoadShader(const IO::CrPath & a_Path, Graphics::EShaderType a_Type)
 	{
-		auto fullPath = this->ResolvePath(a_Path);
+		auto it = m_ShaderCache.find(a_Path);
+		if (it != m_ShaderCache.end())
+		{
+			CrLog("%ls [CACHED]", a_Path.c_str());
+			return it->second;
+		}
 
+		auto fullPath = this->ResolvePath(a_Path);
 		std::ifstream stream(fullPath);
 		if (!stream.good())
-			throw CrException("Failed to load shader!");
+			throw CrException("Failed to load shader file (%ls)!", fullPath.c_str());
 
-		std::string source = 
+		std::string source
 		{ 
 			std::istreambuf_iterator<char>(stream),
 			std::istreambuf_iterator<char>() 
 		};
 
-		return m_GraphicsFactory->LoadShader(source, a_Type);
+		auto myShader = m_GraphicsFactory->LoadShader(source, a_Type);
+		myShader->Compile();
+		CrLog("Compiling %ls...", a_Path.c_str());
+
+		return m_ShaderCache[a_Path] = myShader;
 	}
 
 	const IO::CrPath CrResourceManager::ResolvePath(const IO::CrPath & a_Path)

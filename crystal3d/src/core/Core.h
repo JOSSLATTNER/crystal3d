@@ -2,6 +2,9 @@
 #include "Platform.h"
 #include "Utility.h"
 
+#define CR_USE_STD_FILESYSTEM
+#include "io\IO.h"
+
 #include <vector>
 #include <cstdint>
 #include <map>
@@ -16,7 +19,9 @@
 #include <fstream>
 #include <sstream>
 #include <bitset>
-#include <filesystem>
+
+//#include <thread>
+//#include <mutex>
 
 //###########
 //###TYPES###
@@ -26,26 +31,6 @@ typedef WORD CrWord;
 typedef BYTE CrByte;
 #endif
 
-//######
-//##IO##
-//######
-namespace IO
-{
-	typedef std::experimental::filesystem::path CrPath;
-}
-
-namespace std
-{
-	//Provide std::hash specialization for path
-	template<> struct hash<std::experimental::filesystem::path>
-	{
-		size_t operator()(const std::experimental::filesystem::path& p) const
-		{
-			return std::experimental::filesystem::hash_value(p);
-		}
-	};
-}
-
 
 //##############
 //##EXCEPTIONS##
@@ -54,8 +39,9 @@ class CrException
 	: public std::exception
 {
 public:
-	CrException(const std::string& message)
-		: message_(message) {}
+	template<typename...Args>
+	CrException(const std::string& message, Args...a_Args)
+		: message_(Util::sprintf_safe(message, a_Args...)) {}
 
 	const char* what() const noexcept override
 	{
@@ -68,13 +54,10 @@ private:
 //###########
 //##LOGGING##
 //###########
-#ifdef CR_PLATFORM_WINDOWS
-namespace
-{
-	static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-	static bool _DebugClearFlag = false;
-}
+#define _CR_LOG_FUNCTION 0
+#define _CR_DEBUG_LOG_FUNCTION 0
 
+#ifdef CR_PLATFORM_WINDOWS
 enum ConsoleColor : WORD
 {
 	CONSOLE_COLOR_BLACK = 0,
@@ -88,20 +71,17 @@ enum ConsoleColor : WORD
 
 inline void _CrSetConsoleColor(const ConsoleColor a_Color)
 {
+	static HANDLE ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(ConsoleHandle, a_Color);
 }
 
 template<typename...Args>
 void _CrDebugOutput(const std::string& a_Func, const std::string& a_Format, Args...a_Args)
 {
-	if (!_DebugClearFlag)
-	{
-		OutputDebugString("\n\n#########Debug Session#########\n\n");
-		_DebugClearFlag = true;
-	}
-
+#if _CR_DEBUG_LOG_FUNCTION
 	const std::string fStr = "[" + a_Func + "]\n";
 	OutputDebugString(fStr.c_str());
+#endif
 
 	const std::string buff = Util::sprintf_safe(a_Format + "\n", a_Args...);
 	OutputDebugString(buff.c_str());
@@ -110,10 +90,9 @@ void _CrDebugOutput(const std::string& a_Func, const std::string& a_Format, Args
 #define _CR_DEBUG_BREAK DebugBreak
 #endif
 
-
 inline void _CrPrintFunction(const std::string& a_Function)
 {
-#if CR_DEBUG
+#if CR_DEBUG && _CR_LOG_FUNCTION
 	_CrSetConsoleColor(CONSOLE_COLOR_GREY);
 	std::cout << "[" << a_Function << "]" << std::endl;
 #endif
@@ -148,3 +127,4 @@ bool _CrAssert(const bool a_Condition, const std::string& a_Function, const std:
 #define CrLogWarning(format, ...) CrLogColor(format, CONSOLE_COLOR_YELLOW, ##__VA_ARGS__)
 #define CrLogInfo(format, ...) CrLogColor(format, CONSOLE_COLOR_BLUE, ##__VA_ARGS__)
 #define CrDebugOutput(format, ...) _CrDebugOutput(__FUNCTION__, format, ##__VA_ARGS__)
+#define CrDebugSection(section) CrDebugOutput("\n\n###%s###\n\n", section)
