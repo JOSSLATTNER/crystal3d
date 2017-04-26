@@ -4,6 +4,7 @@
 #include "graphics\interface\IResourceFactory.h"
 #include "graphics\interface\ITexture.h"
 #include "graphics\interface\IShader.h"
+#include "io\DirectoryWatcher.hpp"
 
 #include "graphics\Model.h"
 #include "scripting\Script.h"
@@ -39,9 +40,11 @@ namespace Resources
 		std::unordered_map<IO::CrPath, Graphics::ITexture*> m_TextureCache;
 		std::unordered_map<IO::CrPath, Graphics::IShader*> m_ShaderCache;
 
+		const std::string ReadFile(const IO::CrPath& a_Path);
 		const IO::CrPath ResolvePath(const IO::CrPath& a_Path);
 
 	private:
+		IO::CrDirectoryWatcher m_DirWatcher;
 		IO::CrPath m_ResourcePath;
 		Graphics::IResourceFactory* m_GraphicsFactory;
 	};

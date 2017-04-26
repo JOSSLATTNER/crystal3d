@@ -17,24 +17,18 @@ namespace Resources
 	{
 		m_GraphicsFactory = a_ResourceFactory;
 		m_ResourcePath = SEngineConfig->GetValue<IO::CrPath>("Resources", "ResourcePath");
+		
+		m_DirWatcher.SetWatch(m_ResourcePath, [](const std::wstring& file)
+		{
+			std::wcout << file << std::endl;
+		});
 
 		CrLogSuccess("Resource Manager initialized [OK]");
 	}
 
 	Scripting::CrScript * CrResourceManager::LoadScript(const IO::CrPath & a_Path)
 	{
-		auto fullPath = this->ResolvePath(a_Path);
-
-		std::ifstream stream(fullPath);
-		if (!stream.good())
-			throw CrException("Failed to load script!");
-
-		std::string source =
-		{
-			std::istreambuf_iterator<char>(stream),
-			std::istreambuf_iterator<char>()
-		};
-
+		auto source = this->ReadFile(a_Path);
 		return new Scripting::CrScript(source);
 	}
 
@@ -212,22 +206,23 @@ namespace Resources
 			return it->second;
 		}
 
-		auto fullPath = this->ResolvePath(a_Path);
-		std::ifstream stream(fullPath);
-		if (!stream.good())
-			throw CrException("Failed to load shader file (%ls)!", fullPath.c_str());
-
-		std::string source
-		{ 
-			std::istreambuf_iterator<char>(stream),
-			std::istreambuf_iterator<char>() 
-		};
-
+		auto source = this->ReadFile(a_Path);
 		auto myShader = m_GraphicsFactory->LoadShader(source, a_Type);
 		myShader->Compile();
 		CrLog("Compiling %ls...", a_Path.c_str());
 
 		return m_ShaderCache[a_Path] = myShader;
+	}
+
+	const std::string CrResourceManager::ReadFile(const IO::CrPath & a_Path)
+	{
+		auto fullPath = this->ResolvePath(a_Path);
+
+		std::ifstream stream(fullPath);
+		if (!stream.good())
+			throw CrException("Failed to load file %ls!", a_Path.c_str());
+
+		return { std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() };
 	}
 
 	const IO::CrPath CrResourceManager::ResolvePath(const IO::CrPath & a_Path)

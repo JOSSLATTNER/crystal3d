@@ -14,6 +14,7 @@ namespace Core
 		template<typename T>
 		T GetValue(const std::string& a_Group, const std::string& a_Key)
 		{
+			//Cast value string into T
 			const std::string str = this->GetStringValue(a_Group, a_Key);
 			return Util::string_parse<T>(str);
 		}

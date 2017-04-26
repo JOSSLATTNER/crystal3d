@@ -3,11 +3,15 @@
 #include <sstream>
 #include <memory>
 
-#define FORWARD_DECL(t) class t
-#define BIT_HAS_FLAG(b,f) (b & f) == f
-
+#define _CR_FORWARD_DECL(t) class t
 namespace Util
 {
+	template<typename T1, typename T2>
+	bool check_bit(const T1 a, const T2 b)
+	{
+		return (a & b) == b;
+	}
+
 	template<typename ... Args>
 	std::string sprintf_safe(const std::string& format, Args...args)
 	{

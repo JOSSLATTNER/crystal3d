@@ -4,7 +4,7 @@
 
 namespace Scene
 {
-	FORWARD_DECL(CrSceneNode);
+	_CR_FORWARD_DECL(CrSceneNode);
 
 	namespace Components
 	{

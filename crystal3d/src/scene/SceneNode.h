@@ -7,7 +7,7 @@ namespace Scene
 {
 	namespace Components
 	{
-		FORWARD_DECL(IComponent);
+		_CR_FORWARD_DECL(IComponent);
 	}
 
 	class CrSceneNode

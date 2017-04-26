@@ -51,7 +51,7 @@ namespace Input
 				XINPUT_STATE state = m_InputStates[a_ControllerID];
 				WORD btn = m_Mappings.at(a_Button);
 
-				return BIT_HAS_FLAG(state.Gamepad.wButtons, btn);
+				return Util::check_bit(state.Gamepad.wButtons, btn);
 			}
 			return false;
 		}

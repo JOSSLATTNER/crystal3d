@@ -699,7 +699,7 @@
     <ClInclude Include="src\io\IO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\io\FileWatcher.hpp">
+    <ClInclude Include="src\io\DirectoryWatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
