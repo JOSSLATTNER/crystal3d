@@ -35,7 +35,7 @@ namespace Core
 		void Deallocate(T* a_Ptr)
 		{
 			//Check if deallocation possible
-			if (m_Current < m_Arena.Begin() + sizeof(T))
+			if (a_Ptr < m_Arena.Begin() || a_Ptr > m_Arena.End())
 				throw std::bad_alloc();
 
 			//Destruct
