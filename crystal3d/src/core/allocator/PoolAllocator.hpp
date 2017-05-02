@@ -47,11 +47,11 @@ namespace Core
 
 		void Deallocate(T* a_Ptr)
 		{
-			if (a_Ptr < m_Arena.Begin() || a_Ptr > m_Data)
+			if (a_Ptr < m_Data || a_Ptr > m_Arena.End())
 				throw std::bad_alloc();
 
 			//Find index
-			size_t index = (a_Ptr - m_Arena.Begin()) / sizeof(CrPoolHeader);
+			size_t index = (a_Ptr - m_Data) / sizeof(T);
 
 			//Set flag
 			auto header = this->GetHeader(index);
